@@ -3,6 +3,7 @@ package org.poo.main;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.poo.bank.BankSettup;
 import org.poo.checker.Checker;
 import org.poo.checker.CheckerConstants;
 import org.poo.fileio.ObjectInput;
@@ -74,6 +75,8 @@ public final class Main {
 
         ArrayNode output = objectMapper.createArrayNode();
 
+        BankSettup bankSettup = new BankSettup(inputData, output);
+        bankSettup.ExecuteCommands();
         /*
          * TODO Implement your function here
          *

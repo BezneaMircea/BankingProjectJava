@@ -1,5 +1,7 @@
 package org.poo.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.Random;
 
 public final class Utils {
@@ -17,6 +19,8 @@ public final class Utils {
 
     private static Random ibanRandom = new Random(IBAN_SEED);
     private static Random cardRandom = new Random(CARD_SEED);
+
+    public final static ObjectMapper mapper = new ObjectMapper();
 
     /**
      * Utility method for generating an IBAN code.
