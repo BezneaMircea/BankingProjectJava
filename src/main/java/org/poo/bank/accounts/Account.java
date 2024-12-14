@@ -18,6 +18,7 @@ public abstract class Account {
     private final String accountType;
     private final String iban;
     private double balance;
+    private double minBalance;
     private final List<Card> cards;
 
     public Account(String ownerEmail, String currency, String accountType) {
@@ -27,6 +28,32 @@ public abstract class Account {
         iban = Utils.generateIBAN();
         cards = new ArrayList<>();
         balance = 0;
+        minBalance = 0;
+    }
+
+    public boolean hasCard(Card card) {
+        return cards.contains(card);
+    }
+
+    public void addCard(Card card) {
+        cards.add(card);
+    }
+
+    public void removeCard(Card card) {
+        cards.remove(card);
+    }
+
+    /**
+     * Performs a money transfer to accountToTransfer
+     * @param accountToTransfer the account that receives the money
+     * @param amountToTransfer the amount to transfer from the current account
+     * @param amountToReceive the amount that the receiver account gets (the converted amount)
+     */
+    public void transfer(final Account accountToTransfer,
+                         final double amountToTransfer,
+                         final double amountToReceive) {
+        balance -= amountToTransfer;
+        accountToTransfer.balance += amountToReceive;
     }
 
     public ObjectNode accountToObjectNode() {

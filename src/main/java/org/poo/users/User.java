@@ -32,12 +32,7 @@ abstract public class User {
     }
 
     public boolean hasAccount(Account account) {
-        for (Account acc : accounts) {
-            if (acc.equals(account))
-                return true;
-        }
-
-        return false;
+        return accounts.contains(account);
     }
 
     public ObjectNode userToObjectNode() {

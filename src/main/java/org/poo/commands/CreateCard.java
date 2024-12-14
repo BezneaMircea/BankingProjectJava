@@ -33,7 +33,7 @@ public class CreateCard implements Command {
             return;
         }
 
-        Card cardToAdd = bank.createCard("active", associatedAccount, command);
+        Card cardToAdd = bank.createCard(Card.ACTIVE, associatedAccount, command);
         /// maybe check for fails here
 
         associatedAccount.getCards().add(cardToAdd);

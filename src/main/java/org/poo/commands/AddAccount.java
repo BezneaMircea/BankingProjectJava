@@ -33,6 +33,7 @@ public class AddAccount implements Command {
         User user = bank.getEmailToUser().get(email);
         if (user == null) {
             System.out.println("User not found");
+            return;
         }
 
         Account accountToAdd = bank.createAccount(email, currency, accountType, interestRate);

@@ -2,11 +2,17 @@ package org.poo.bank.accounts.cards;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
+import lombok.Setter;
+import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
 @Getter
+@Setter
 public abstract class Card {
+    public final static String ACTIVE = "active";
+    public final static String FROZEN = "frozen";
+
     private final String cardNumber;
     private String status;
     private final Account account;
@@ -24,4 +30,6 @@ public abstract class Card {
 
         return cardNode;
     }
+
+    public abstract ObjectNode pay(final Bank bank, final double amount);
 }

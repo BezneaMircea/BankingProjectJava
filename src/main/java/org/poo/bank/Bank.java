@@ -2,6 +2,9 @@ package org.poo.bank;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.Getter;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.shortestpath.FloydWarshallShortestPaths;
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.accounts.cards.Card;
 import org.poo.bank.accounts.cards.cardfactory.CardFactory;
@@ -24,19 +27,29 @@ public class Bank {
     private final Map<String, Card> cardNrToCard;
 
     private final List<User> users;
-    private final List<ExchangeRate> exchangeRates;
+    private final CustomFloydWarshallShortestPaths<String, DefaultWeightedEdge> exchangeRates;
 
     private final ArrayNode output;
 
-    public Bank(List<User> users, List<ExchangeRate> exchangeRates, ArrayNode output) {
+    public Bank(final List<User> users,
+                final Graph<String, DefaultWeightedEdge> exchangeRates,
+                final ArrayNode output) {
         this.users = users;
-        this.exchangeRates = exchangeRates;
         this.output = output;
 
+        this.exchangeRates = initializeExchangeRates(exchangeRates);
         ibanToAccount = new HashMap<>();
         cardNrToCard = new HashMap<>();
         emailToUser = new HashMap<>();
         mapEmailToUser();
+    }
+
+    private CustomFloydWarshallShortestPaths<String, DefaultWeightedEdge>
+    initializeExchangeRates(final Graph<String, DefaultWeightedEdge> exchangeRates) {
+        if (exchangeRates == null)
+            return null;
+
+        return new CustomFloydWarshallShortestPaths<>(exchangeRates);
     }
 
     private void mapEmailToUser() {
@@ -77,6 +90,7 @@ public class Bank {
 
         return factory.createCard();
     }
+
 
 
 }
