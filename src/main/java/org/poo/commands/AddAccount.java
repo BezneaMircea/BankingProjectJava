@@ -3,10 +3,15 @@ package org.poo.commands;
 import lombok.Getter;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
+import org.poo.commands.transactions.AddAccountTransaction;
+import org.poo.commands.transactions.Transaction;
+import org.poo.commands.transactions.TransactionInput;
+import org.poo.commands.transactions.transactionsfactory.AddAccountTransactionFactory;
+import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
 import org.poo.users.User;
 
 @Getter
-public class AddAccount implements Command {
+public class AddAccount implements Command, Transactionable {
     private final Bank bank;
     private final String command;
     private final String email;
@@ -38,7 +43,17 @@ public class AddAccount implements Command {
 
         Account accountToAdd = bank.createAccount(email, currency, accountType, interestRate);
         bank.getIbanToAccount().put(accountToAdd.getIban(), accountToAdd);
-
         user.addAccount(accountToAdd);
+
+        TransactionInput input = new TransactionInput.Builder(timestamp, AddAccountTransaction.ACCOUNT_CREATED)
+                        .build();
+        user.getTransactions().add(generateTransaction(input));
+    }
+
+    @Override
+    public Transaction generateTransaction(TransactionInput input) {
+        TransactionFactory factory = new AddAccountTransactionFactory(input);
+        return factory.createTransaction();
     }
 }
+

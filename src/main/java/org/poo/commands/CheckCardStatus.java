@@ -1,10 +1,18 @@
 package org.poo.commands;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.accounts.cards.Card;
+import org.poo.commands.transactions.CheckCardStatusTransaction;
+import org.poo.commands.transactions.Transaction;
+import org.poo.commands.transactions.TransactionInput;
+import org.poo.commands.transactions.transactionsfactory.CheckCardStatusTransactionFactory;
+import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
+import org.poo.users.User;
+import org.poo.utils.Utils;
 
-public class CheckCardStatus implements Command {
+public class CheckCardStatus implements Command, Transactionable {
     private final Bank bank;
     private final String command;
     private final String cardNumber;
@@ -22,17 +30,42 @@ public class CheckCardStatus implements Command {
     public void execute() {
         Card cardToCheck = bank.getCardNrToCard().get(cardNumber);
         if (cardToCheck == null) {
-            /// TODO: add logic here
+            ObjectNode node = Utils.mapper.createObjectNode();
+            node.put("command", command);
+
+            ObjectNode outputNode = Utils.mapper.createObjectNode();
+            outputNode.put("timestamp", timestamp);
+            outputNode.put("description", "Card not found");
+
+            node.set("output", outputNode);
+            node.put("timestamp", timestamp);
+
+            bank.getOutput().add(node);
             return;
         }
 
-        Account associatedAccount = cardToCheck.getAccount();
+        if (cardToCheck.getStatus().equals(Card.FROZEN))
+            return;
 
+        Account associatedAccount = cardToCheck.getAccount();
         if (associatedAccount.getBalance() < associatedAccount.getMinBalance()) {
             cardToCheck.setStatus(Card.FROZEN);
-        } else {
-            /// TODO: add logic here
+        } else if (associatedAccount.getBalance() - associatedAccount.getMinBalance() < 30) {
+            cardToCheck.setStatus(Card.FROZEN);
+
+            User owner = bank.getEmailToUser().get(associatedAccount.getOwnerEmail());
+            TransactionInput input = new TransactionInput.Builder(timestamp, CheckCardStatusTransaction.LIMIT_REACHED).build();
+            owner.getTransactions().add(generateTransaction(input));
         }
 
     }
+
+    @Override
+    public Transaction generateTransaction(TransactionInput input) {
+        TransactionFactory factory = new CheckCardStatusTransactionFactory(input);
+        return factory.createTransaction();
+    }
+
+    /// TODO: check this out later pls MIRCEA
+
 }

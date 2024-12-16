@@ -75,6 +75,8 @@ public class BankSettup {
             case "payOnline" -> factory = new PayOnlineFactory(bank, command);
             case "sendMoney" -> factory = new SendMoneyFactory(bank, command);
             case "printTransactions" -> factory = new PrintTransactionsFactory(bank, command);
+            case "setAlias" -> factory = new SetAliasFactory(bank, command);
+            case "splitPayment" -> factory = new SplitPaymentFactory(bank, command);
             ///default -> throw new IllegalArgumentException("Invalid command");
             default -> {
                 return null;

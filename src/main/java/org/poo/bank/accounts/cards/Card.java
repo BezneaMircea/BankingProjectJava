@@ -12,6 +12,8 @@ import org.poo.utils.Utils;
 public abstract class Card {
     public final static String ACTIVE = "active";
     public final static String FROZEN = "frozen";
+    public final static String WARNING = "will be frozen";
+    public final static String INSUFFICIENT_FUNDS = "Insufficient funds";
 
     private final String cardNumber;
     private String status;
@@ -31,5 +33,5 @@ public abstract class Card {
         return cardNode;
     }
 
-    public abstract ObjectNode pay(final Bank bank, final double amount);
+    public abstract String pay(final Bank bank, final double amount);
 }

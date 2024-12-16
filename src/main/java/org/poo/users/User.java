@@ -1,15 +1,17 @@
 package org.poo.users;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Data;
 import org.poo.bank.accounts.Account;
+import org.poo.commands.transactions.Transaction;
 import org.poo.fileio.UserInput;
 import org.poo.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 abstract public class User {
@@ -17,6 +19,8 @@ abstract public class User {
     private String lastName;
     private String email;
     private List<Account> accounts;
+    private List<Transaction> transactions;
+    private Map<String, Account> aliases;
     /* Add the transactions list */
 
     public User(UserInput userInput) {
@@ -25,7 +29,10 @@ abstract public class User {
         this.email = userInput.getEmail();
 
         accounts = new ArrayList<>();
+        transactions = new ArrayList<>();
+        aliases = new HashMap<>();
     }
+
 
     public void addAccount(Account account) {
         accounts.add(account);

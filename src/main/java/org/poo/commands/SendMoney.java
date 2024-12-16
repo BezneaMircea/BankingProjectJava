@@ -2,8 +2,16 @@ package org.poo.commands;
 
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
+import org.poo.commands.transactions.SendMoneyTransaction;
+import org.poo.commands.transactions.Transaction;
+import org.poo.commands.transactions.TransactionInput;
+import org.poo.commands.transactions.transactionsfactory.AddAccountTransactionFactory;
+import org.poo.commands.transactions.transactionsfactory.CreateCardTransactionFactory;
+import org.poo.commands.transactions.transactionsfactory.SendMoneyTransactionFactory;
+import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
+import org.poo.users.User;
 
-public class SendMoney implements Command {
+public class SendMoney implements Command, Transactionable {
     private final Bank bank;
     private final String command;
     private final String account;
@@ -28,19 +36,64 @@ public class SendMoney implements Command {
     @Override
     public void execute() {
         Account senderAccount = bank.getIbanToAccount().get(account);
-        Account receiverAccount = bank.getIbanToAccount().get(receiver);
-
-        if (senderAccount == null || receiverAccount == null)
+        if (senderAccount == null)
             return;
 
-        if (senderAccount.getBalance() < amount) {
-            /// TODO: add logic here
+        User senderUser = bank.getEmailToUser().get(senderAccount.getOwnerEmail());
+        if (senderUser == null)
+            return;
+
+        Account receiverAccount = bank.getIbanToAccount().get(receiver);
+        if (senderUser.getAliases().containsKey(receiver))
+            receiverAccount = senderUser.getAliases().get(receiver);
+
+        if (receiverAccount == null)
+            return;
+
+        User receiverUser = bank.getEmailToUser().get(receiverAccount.getOwnerEmail());
+        if (receiverUser == null) {
             return;
         }
 
-        double convertRate = bank.getExchangeRates().getRate(senderAccount.getCurrency(), receiverAccount.getCurrency());
-        double receivedSum = amount * convertRate;
+        String error = null;
+        if (senderAccount.getBalance() < amount) {
+            TransactionInput input = new TransactionInput.Builder(timestamp, description)
+                    .error(SendMoneyTransaction.INSUFFICIENT_FUNDS)
+                    .build();
+            senderUser.getTransactions().add(generateTransaction(input));
+            return;
+        }
 
-        senderAccount.transfer(receiverAccount, amount, receivedSum);
+            double convertRate = bank.getExchangeRates().getRate(senderAccount.getCurrency(), receiverAccount.getCurrency());
+            double receivedSum = amount * convertRate;
+
+            senderAccount.transfer(receiverAccount, amount, receivedSum);
+
+        TransactionInput transactionSent = new TransactionInput.Builder(timestamp, description)
+                .senderIBAN(account)
+                .receiverIBAN(receiver)
+                .amount(amount)
+                .currency(senderAccount.getCurrency())
+                .transferType(SendMoneyTransaction.SENT)
+                .error(null)
+                .build();
+
+        TransactionInput transactionReceived = new TransactionInput.Builder(timestamp, description)
+                .senderIBAN(account)
+                .receiverIBAN(receiver)
+                .amount(receivedSum)
+                .currency(receiverAccount.getCurrency())
+                .transferType(SendMoneyTransaction.RECEIVED)
+                .error(null)
+                .build();
+
+        senderUser.getTransactions().add(generateTransaction(transactionSent));
+        receiverUser.getTransactions().add(generateTransaction(transactionReceived));
+    }
+
+    @Override
+    public Transaction generateTransaction(TransactionInput input) {
+        TransactionFactory factory = new SendMoneyTransactionFactory(input);
+        return factory.createTransaction();
     }
 }

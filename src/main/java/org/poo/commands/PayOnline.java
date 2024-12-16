@@ -5,11 +5,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.accounts.cards.Card;
+import org.poo.commands.transactions.Transaction;
+import org.poo.commands.transactions.TransactionInput;
+import org.poo.commands.transactions.transactionsfactory.PayOnlineTransactionFactory;
+import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
 import org.poo.users.User;
 import org.poo.utils.Utils;
 
 @JsonAppend
-public class PayOnline implements Command {
+public class PayOnline implements Command, Transactionable {
     private final Bank bank;
     private final String command;
     private final String cardNumber;
@@ -66,7 +70,19 @@ public class PayOnline implements Command {
         double exchangeRate = bank.getExchangeRates().getRate(currency, associatedAccount.getCurrency());
         double totalSumToPay = amount * exchangeRate;
 
+        String error = usedCard.pay(bank, totalSumToPay);
+        TransactionInput input = new TransactionInput.Builder(timestamp, "Card payment")
+                .amount(totalSumToPay)
+                .commerciant(commerciant)
+                .error(error)
+                .build();
 
-        usedCard.pay(bank, totalSumToPay);
+        cardOwner.getTransactions().add(generateTransaction(input));
+    }
+
+    @Override
+    public Transaction generateTransaction(TransactionInput input) {
+        TransactionFactory factory = new PayOnlineTransactionFactory(input);
+        return factory.createTransaction();
     }
 }

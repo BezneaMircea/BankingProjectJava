@@ -3,9 +3,14 @@ package org.poo.commands;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.accounts.cards.Card;
+import org.poo.commands.transactions.CreateCardTransaction;
+import org.poo.commands.transactions.Transaction;
+import org.poo.commands.transactions.TransactionInput;
+import org.poo.commands.transactions.transactionsfactory.CreateCardTransactionFactory;
+import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
 import org.poo.users.User;
 
-public class CreateCard implements Command {
+public class CreateCard implements Command, Transactionable {
     private final Bank bank;
     private final String command;
     private final String account;
@@ -34,9 +39,22 @@ public class CreateCard implements Command {
         }
 
         Card cardToAdd = bank.createCard(Card.ACTIVE, associatedAccount, command);
-        /// maybe check for fails here
-
         associatedAccount.getCards().add(cardToAdd);
         bank.getCardNrToCard().put(cardToAdd.getCardNumber(), cardToAdd);
+
+        TransactionInput input = new TransactionInput.Builder(timestamp, CreateCardTransaction.CARD_CREATED)
+                .card(cardToAdd.getCardNumber())
+                .cardHolder(owner.getEmail())
+                .account(account)
+                .error(null)
+                .build();
+
+        owner.getTransactions().add(generateTransaction(input));
+    }
+
+    @Override
+    public Transaction generateTransaction(TransactionInput input) {
+        TransactionFactory factory = new CreateCardTransactionFactory(input);
+        return factory.createTransaction();
     }
 }
