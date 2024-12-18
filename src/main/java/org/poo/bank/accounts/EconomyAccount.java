@@ -33,16 +33,22 @@ public final class EconomyAccount extends Account {
     }
 
     @Override
-    public ArrayNode generateReport(int startTimestamp, int endTimestamp) {
-        ArrayNode reportArray = Utils.mapper.createArrayNode();
+    public ObjectNode generateReport(int startTimestamp, int endTimestamp) {
+        ObjectNode reportNode = Utils.mapper.createObjectNode();
+        reportNode.put("balance", getBalance());
+        reportNode.put("currency", getCurrency());
+        reportNode.put("IBAN", getIban());
+
+        ArrayNode transactionArray = Utils.mapper.createArrayNode();
         for (Transaction transaction : getTransactions()) {
             if (transaction.getTimestamp() >= startTimestamp && transaction.getTimestamp() <= endTimestamp) {
-                reportArray.add(transaction.toJson());
+                transactionArray.add(transaction.toJson());
             } else if (transaction.getTimestamp() > endTimestamp)
                 break;
         }
+        reportNode.set("transactions", transactionArray);
 
-        return reportArray;
+        return reportNode;
     }
 
     @Override

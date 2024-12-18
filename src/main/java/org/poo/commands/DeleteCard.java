@@ -34,14 +34,13 @@ public class DeleteCard implements Command, Transactionable {
         associatedAccount.getCards().remove(cardToDelete);
 
         User owner = bank.getEmailToUser().get(associatedAccount.getOwnerEmail());
-        TransactionInput input = new TransactionInput.Builder(timestamp, DeleteCardTransaction.DELETED_CARD)
+        TransactionInput input = new TransactionInput.Builder(Transaction.Type.DELETE_CARD, timestamp, DeleteCardTransaction.DELETED_CARD)
                 .card(cardNumber)
                 .cardHolder(owner.getEmail())
                 .account(associatedAccount.getIban())
                 .build();
 
-
-        owner.getTransactions().add(generateTransaction(input));
+        bank.generateTransaction(input).addTransaction(owner, associatedAccount);
     }
 
     @Override

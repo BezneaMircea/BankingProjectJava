@@ -1,6 +1,7 @@
 package org.poo.bank;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.shortestpath.FloydWarshallShortestPaths;
@@ -13,6 +14,9 @@ import org.poo.bank.accounts.cards.cardfactory.StandardCardFactory;
 import org.poo.bank.accounts.factory.AccountFactory;
 import org.poo.bank.accounts.factory.EconomyAccountFactory;
 import org.poo.bank.accounts.factory.StandardAccountFactory;
+import org.poo.commands.transactions.Transaction;
+import org.poo.commands.transactions.TransactionInput;
+import org.poo.commands.transactions.transactionsfactory.*;
 import org.poo.users.User;
 import org.poo.utils.Utils;
 
@@ -20,15 +24,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class used to represent a Bank
+ */
 @Getter
 public class Bank {
     private final Map<String, User> emailToUser;
     private final Map<String, Account> ibanToAccount;
     private final Map<String, Card> cardNrToCard;
-
-    private final List<User> users;
     private final CustomFloydWarshallShortestPaths<String, DefaultWeightedEdge> exchangeRates;
-
+    private final List<User> users;
     private final ArrayNode output;
 
     public Bank(final List<User> users,
@@ -42,6 +47,103 @@ public class Bank {
         cardNrToCard = new HashMap<>();
         emailToUser = new HashMap<>();
         mapEmailToUser();
+    }
+
+    /**
+     * Method used to write the Users in an arrayNode. Internaly it calls a user
+     * method that writes a single user into an ObjectNode
+     * @return ArrayNode of users
+     */
+    public ArrayNode usersToArrayNode() {
+        ArrayNode usersArray = Utils.mapper.createArrayNode();
+        for (User user : users) {
+            usersArray.add(user.userToObjectNode());
+        }
+
+        return usersArray;
+    }
+
+    /**
+     * Method used to create an account
+     * @param email email of the account owner
+     * @param currency the currency of the account
+     * @param accountType the type of the account (currently "savings" or "classic")
+     * @param interestRate optional field, used only for the construction of a savings account
+     * @return the created Account
+     * @throws IllegalArgumentException if the account type doesn't correspond to the account types
+     */
+    public Account createAccount(String email, String currency, String accountType, double interestRate) {
+        AccountFactory factory;
+
+        switch (accountType) {
+            case "savings" -> factory = new EconomyAccountFactory(email, currency, accountType, interestRate);
+            case "classic" -> factory = new StandardAccountFactory(email, currency, accountType);
+            default -> throw new IllegalArgumentException("Invalid account type");
+        }
+
+        return factory.createAccount();
+    }
+
+    /**
+     * Method used to create a card
+     * @param status the status of the card (initially should be "active")
+     * @param account the account that owns the card
+     * @param type the type of card
+     * @return the created Card
+     */
+    public Card createCard(String status, Account account, String type) {
+        CardFactory factory;
+        switch (type) {
+            case "createOneTimeCard" -> factory = new OneTimeCardFactory(status, account);
+            case "createCard" -> factory = new StandardCardFactory(status, account);
+            default -> throw new IllegalArgumentException("Invalid card type");
+        }
+
+        return factory.createCard();
+    }
+
+    /**
+     * Method used to add an account to the bank. It adds the account both in the
+     * bank account database (Map ibanToAccount) and in the users accounts list
+     * @param account the account to be added
+     * @return null if no error occurs, an appropriate error String otherwise
+     */
+    public String addAccount(Account account) {
+        User owner = emailToUser.get(account.getOwnerEmail());
+        if (owner == null)
+            return "User not found";
+
+        ibanToAccount.put(account.getIban(), account);
+        owner.addAccount(account);
+
+        return null;
+    }
+
+    /**
+     * Method used to create a specific transaction based on a transaction input
+     * @param input the transaction input
+     * @return the transaction.
+     * @throws IllegalArgumentException if the input doesn't correspond to any transaction
+     */
+    public Transaction generateTransaction(TransactionInput input) {
+        if (input == null)
+            return null;
+
+        TransactionFactory factory;
+        switch (input.getTransactionType()) {
+            case ADD_ACCOUNT -> factory = new AddAccountTransactionFactory(input);
+            case CHANGE_INT_RATE -> factory = new ChangeIntRateTransactionFactory(input);
+            case CHECK_CARD_STAT -> factory = new CheckCardStatusTransactionFactory(input);
+            case CREATE_CARD -> factory = new CreateCardTransactionFactory(input);
+            case DELETE_ACCOUNT -> factory = new DeleteAccountTransactionFactory(input);
+            case DELETE_CARD -> factory = new DeleteCardTransactionFactory(input);
+            case PAY_ONLINE -> factory = new PayOnlineTransactionFactory(input);
+            case SEND_MONEY -> factory = new SendMoneyTransactionFactory(input);
+            case SPLIT_PAYMENT -> factory = new SplitPaymenTransactionFactory(input);
+            default -> throw new IllegalArgumentException("Invalid transaction type");
+        }
+
+        return factory.createTransaction();
     }
 
     private CustomFloydWarshallShortestPaths<String, DefaultWeightedEdge>
@@ -58,39 +160,51 @@ public class Bank {
         }
     }
 
+    /**
+     * Method used to check and perform an action if an error occurs.
+     * It adds an ObjectNode to the output array containing the command,
+     * the timestamp of the command and the error that occured
+     * @param timestamp the timestamp of the command
+     * @param command the command name
+     * @param error the error. Nothing happens if null
+     */
+    public void errorOccured(final int timestamp, final String command,final String error) {
+        if (error == null)
+            return;
 
-    public ArrayNode usersToArrayNode() {
-        ArrayNode usersArray = Utils.mapper.createArrayNode();
-        for (User user : users) {
-            usersArray.add(user.userToObjectNode());
-        }
+        ObjectNode outputNode = Utils.mapper.createObjectNode();
+        outputNode.put("timestamp", timestamp);
+        outputNode.put("description", error);
 
-        return usersArray;
+        ObjectNode errorNode = Utils.mapper.createObjectNode();
+        errorNode.put("command", command);
+        errorNode.set("output", outputNode);
+        errorNode.put("timestamp", timestamp);
+
+        output.add(errorNode);
     }
 
-    public Account createAccount(String email, String currency, String accountType, double interestRate) {
-        AccountFactory factory;
+    /**
+     * Method used to delete an account
+     * @param accountToDelete
+     */
+    public String deleteAccount(Account accountToDelete) {
+        if (accountToDelete.getBalance() == 0) {
+            ibanToAccount.remove(accountToDelete.getIban());
 
-        switch (accountType) {
-            case "savings" -> factory = new EconomyAccountFactory(email, currency, accountType, interestRate);
-            case "classic" -> factory = new StandardAccountFactory(email, currency, accountType);
-            default -> throw new IllegalArgumentException("Invalid account type");
+            for (Card card : accountToDelete.getCards())
+                cardNrToCard.remove(card.getCardNumber());
+            accountToDelete.getCards().clear();
+
+            User owner = emailToUser.get(accountToDelete.getOwnerEmail());
+            owner.getAccounts().remove(accountToDelete);
+
+            return Account.DELETED;
+        } else {
+            return Account.FUNDS_REMAINING;
         }
 
-        return factory.createAccount();
     }
-
-    public Card createCard(String status, Account account, String type) {
-        CardFactory factory;
-        switch (type) {
-            case "createOneTimeCard" -> factory = new OneTimeCardFactory(status, account);
-            case "createCard" -> factory = new StandardCardFactory(status, account);
-            default -> throw new IllegalArgumentException("Invalid card type");
-        }
-
-        return factory.createCard();
-    }
-
 
 
 }

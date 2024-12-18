@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
+import static java.lang.Math.round;
+
 public class SendMoneyTransaction extends Transaction {
     public static String SENT = "sent";
     public static String RECEIVED = "received";
@@ -16,11 +18,11 @@ public class SendMoneyTransaction extends Transaction {
     private final String transferType;
     private final String error;
 
-    public SendMoneyTransaction(int timestamp, String description,
+    public SendMoneyTransaction(final Type transactionType, int timestamp, String description,
                                 String senderIBAN, String receiverIBAN,
                                 double amount, String currency,
                                 String transferType, String error) {
-        super(timestamp, description);
+        super(transactionType, timestamp, description);
         this.senderIBAN = senderIBAN;
         this.receiverIBAN = receiverIBAN;
         this.amount = amount;
@@ -38,7 +40,8 @@ public class SendMoneyTransaction extends Transaction {
             jsonNode.put("description", getDescription());
             jsonNode.put("senderIBAN", senderIBAN);
             jsonNode.put("receiverIBAN", receiverIBAN);
-            jsonNode.put("amount", amount + " " + currency);
+            jsonNode.put("amount", round(amount * 1000) / 1000.0 + " " + currency);
+
             jsonNode.put("transferType", transferType);
         } else {
             jsonNode.put("timestamp", getTimestamp());

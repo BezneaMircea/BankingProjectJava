@@ -7,6 +7,8 @@ import org.poo.utils.Utils;
 
 import java.util.List;
 
+import static java.lang.Math.round;
+
 public class SplitPaymentTranscation extends Transaction {
     public static String SPLIT_PAYMENT_ERROR = "Account %s has insufficient funds for a split payment.";
     public static String SPLIT_PAYMENT_DESCRIPTION = "Split payment of %.2f %s";
@@ -16,10 +18,10 @@ public class SplitPaymentTranscation extends Transaction {
     private final List<String> involvedAccounts;
     private final String error;
 
-    public SplitPaymentTranscation(final int timestamp, final String description,
+    public SplitPaymentTranscation(final Type transactionType, final int timestamp, final String description,
                                    final String currency, final double amount,
                                    final List<String> involvedAccounts, final String error) {
-        super(timestamp, description);
+        super(transactionType, timestamp, description);
         this.currency = currency;
         this.amount = amount;
         this.involvedAccounts = involvedAccounts;

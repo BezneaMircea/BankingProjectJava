@@ -42,16 +42,14 @@ public class CreateCard implements Command, Transactionable {
         associatedAccount.getCards().add(cardToAdd);
         bank.getCardNrToCard().put(cardToAdd.getCardNumber(), cardToAdd);
 
-        TransactionInput input = new TransactionInput.Builder(timestamp, CreateCardTransaction.CARD_CREATED)
+        TransactionInput input = new TransactionInput.Builder(Transaction.Type.CREATE_CARD, timestamp, CreateCardTransaction.CARD_CREATED)
                 .card(cardToAdd.getCardNumber())
                 .cardHolder(owner.getEmail())
                 .account(account)
                 .error(null)
                 .build();
 
-        Transaction transaction = generateTransaction(input);
-        owner.getTransactions().add(transaction);
-        associatedAccount.getTransactions().add(transaction);
+        bank.generateTransaction(input).addTransaction(owner, associatedAccount);
     }
 
     @Override

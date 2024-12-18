@@ -39,29 +39,17 @@ public class PayOnline implements Command, Transactionable {
     }
     @Override
     public void execute() {
-        User cardOwner = bank.getEmailToUser().get(email);
         Card usedCard = bank.getCardNrToCard().get(cardNumber);
-
-        if (cardOwner == null || usedCard == null) {
-            ObjectNode outputNode = Utils.mapper.createObjectNode();
-            outputNode.put("description", "Card not found");
-            outputNode.put("timestamp", timestamp);
-
-            ObjectNode errorNode = Utils.mapper.createObjectNode();
-            errorNode.put("command", command);
-            errorNode.set("output", outputNode);
-            errorNode.put("timestamp", timestamp);
-            bank.getOutput().add(errorNode);
-
+        if (usedCard == null) {
+            bank.errorOccured(timestamp, command, "Card not found");
             return;
         }
+
+
         Account associatedAccount = usedCard.getAccount();
-
-
-
-        /* Check if the owner owns the card by checking if the
-         * owner owns the account associated with the card
-         */
+        User cardOwner = bank.getEmailToUser().get(email);
+        if (cardOwner == null || associatedAccount == null)
+            return;
 
         if (!(cardOwner.hasAccount(associatedAccount) && associatedAccount.hasCard(usedCard))) {
             return;
@@ -70,15 +58,7 @@ public class PayOnline implements Command, Transactionable {
         double exchangeRate = bank.getExchangeRates().getRate(currency, associatedAccount.getCurrency());
         double totalSumToPay = amount * exchangeRate;
 
-        String error = usedCard.pay(bank, totalSumToPay);
-        TransactionInput input = new TransactionInput.Builder(timestamp, "Card payment")
-                .amount(totalSumToPay)
-                .commerciant(commerciant)
-                .error(error)
-                .build();
-
-        Transaction transaction = generateTransaction(input);
-        transaction.addTransaction(cardOwner, associatedAccount);
+        usedCard.pay(bank, totalSumToPay, timestamp, commerciant);
     }
 
     @Override

@@ -6,10 +6,18 @@ import org.poo.users.User;
 
 @Getter
 public abstract class Transaction {
+
+    public enum Type {
+        ADD_ACCOUNT, CHANGE_INT_RATE, CHECK_CARD_STAT, CREATE_CARD,
+        DELETE_ACCOUNT, DELETE_CARD, PAY_ONLINE, SEND_MONEY, SPLIT_PAYMENT
+    }
+
+    private final Type transactionType;
     private final int timestamp;
     private final String description;
 
-    public Transaction(final int timestamp, final String description) {
+    public Transaction(final Type transactionType,  int timestamp, final String description) {
+        this.transactionType = transactionType;
         this.timestamp = timestamp;
         this.description = description;
     }

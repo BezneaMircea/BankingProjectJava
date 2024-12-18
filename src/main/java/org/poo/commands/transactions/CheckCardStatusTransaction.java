@@ -7,8 +7,8 @@ import org.poo.utils.Utils;
 public class CheckCardStatusTransaction extends Transaction {
     public static String LIMIT_REACHED = "You have reached the minimum amount of funds, the card will be frozen";
 
-    public CheckCardStatusTransaction(int timestamp, String description) {
-        super(timestamp, description);
+    public CheckCardStatusTransaction(final Type transactionType, int timestamp, String description) {
+        super(transactionType, timestamp, description);
     }
 
     @Override

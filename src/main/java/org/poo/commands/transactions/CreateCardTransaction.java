@@ -12,9 +12,9 @@ public class CreateCardTransaction extends Transaction {
     private final String account;
     private final String error;
 
-    public CreateCardTransaction(int timestamp, String description, String card,
+    public CreateCardTransaction(final Type transactionType, int timestamp, String description, String card,
                                  String cardHolder, String account, String error) {
-        super(timestamp, description);
+        super(transactionType, timestamp, description);
         this.card = card;
         this.cardHolder = cardHolder;
         this.account = account;

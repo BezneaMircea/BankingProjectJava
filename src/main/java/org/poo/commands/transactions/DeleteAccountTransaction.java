@@ -4,12 +4,16 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
-public class ChangeIntRateTransaction extends Transaction {
-    public static String IRATE_CHANGED= "Interest rate of the account changed to %.2f";
+public class DeleteAccountTransaction extends Transaction {
+    public static String FUNDS_REMAINING = "Account couldn't be deleted - there are funds remaining";
 
-
-    public ChangeIntRateTransaction(final Type transactionType, final int timestamp, final String description) {
+    public DeleteAccountTransaction(final Type transactionType, final int timestamp, final String description) {
         super(transactionType, timestamp, description);
+    }
+
+    @Override
+    public void addTransactionToAccount(Account account) {
+        account.addTransaction(this);
     }
 
     @Override
@@ -19,9 +23,5 @@ public class ChangeIntRateTransaction extends Transaction {
         jsonNode.put("description", getDescription());
 
         return jsonNode;
-    }
-
-    public void addTransactionToAccount(final Account account) {
-        account.addTransaction(this);
     }
 }

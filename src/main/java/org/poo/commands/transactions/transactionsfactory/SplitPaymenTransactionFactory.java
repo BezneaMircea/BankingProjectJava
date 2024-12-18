@@ -7,6 +7,7 @@ import org.poo.commands.transactions.TransactionInput;
 import java.util.List;
 
 public class SplitPaymenTransactionFactory implements TransactionFactory {
+    private final Transaction.Type transactionType;
     private final int timestamp;
     private final String description;
     private final String currency;
@@ -15,6 +16,7 @@ public class SplitPaymenTransactionFactory implements TransactionFactory {
     private final String error;
 
     public SplitPaymenTransactionFactory(TransactionInput input) {
+        transactionType = input.getTransactionType();
         timestamp = input.getTimestamp();
         description = input.getDescription();
         currency = input.getCurrency();
@@ -26,6 +28,6 @@ public class SplitPaymenTransactionFactory implements TransactionFactory {
 
     @Override
     public Transaction createTransaction() {
-        return new SplitPaymentTranscation(timestamp, description, currency, amount, involvedAccounts, error);
+        return new SplitPaymentTranscation(transactionType, timestamp, description, currency, amount, involvedAccounts, error);
     }
 }

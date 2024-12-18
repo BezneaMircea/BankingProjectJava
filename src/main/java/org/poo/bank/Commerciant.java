@@ -11,6 +11,8 @@ import org.poo.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.round;
+
 @Getter
 @Setter
 public final class Commerciant implements Comparable<Commerciant> {
@@ -49,7 +51,7 @@ public final class Commerciant implements Comparable<Commerciant> {
 
         ObjectNode nodeToReturn = Utils.mapper.createObjectNode();
         nodeToReturn.put("commerciant", name);
-        nodeToReturn.put("total", totalSumPayed);
+        nodeToReturn.put("total", round(totalSumPayed * 1000) / 1000.0);
 
         return nodeToReturn;
     }

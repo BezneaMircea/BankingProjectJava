@@ -11,9 +11,9 @@ public class DeleteCardTransaction extends Transaction {
     private final String cardHolder;
     private final String account;
 
-    public DeleteCardTransaction(final int timestamp, final String description, final String card,
+    public DeleteCardTransaction(final Type transactionType, final int timestamp, final String description, final String card,
                                  final String cardHolder, final String account) {
-        super(timestamp, description);
+        super(transactionType, timestamp, description);
         this.card = card;
         this.cardHolder = cardHolder;
         this.account = account;

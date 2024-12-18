@@ -57,19 +57,19 @@ public class SendMoney implements Command, Transactionable {
 
         String error = null;
         if (senderAccount.getBalance() < amount) {
-            TransactionInput input = new TransactionInput.Builder(timestamp, description)
+            TransactionInput input = new TransactionInput.Builder(Transaction.Type.SEND_MONEY, timestamp, description)
                     .error(SendMoneyTransaction.INSUFFICIENT_FUNDS)
                     .build();
-            senderUser.getTransactions().add(generateTransaction(input));
+            bank.generateTransaction(input).addTransaction(senderUser, senderAccount);
             return;
         }
 
-            double convertRate = bank.getExchangeRates().getRate(senderAccount.getCurrency(), receiverAccount.getCurrency());
-            double receivedSum = amount * convertRate;
+        double convertRate = bank.getExchangeRates().getRate(senderAccount.getCurrency(), receiverAccount.getCurrency());
+        double receivedSum = amount * convertRate;
 
-            senderAccount.transfer(receiverAccount, amount, receivedSum);
+        senderAccount.transfer(receiverAccount, amount, receivedSum);
 
-        TransactionInput transactionSent = new TransactionInput.Builder(timestamp, description)
+        TransactionInput transactionSent = new TransactionInput.Builder(Transaction.Type.SEND_MONEY, timestamp, description)
                 .senderIBAN(account)
                 .receiverIBAN(receiver)
                 .amount(amount)
@@ -78,7 +78,7 @@ public class SendMoney implements Command, Transactionable {
                 .error(null)
                 .build();
 
-        TransactionInput transactionReceived = new TransactionInput.Builder(timestamp, description)
+        TransactionInput transactionReceived = new TransactionInput.Builder(Transaction.Type.SEND_MONEY, timestamp, description)
                 .senderIBAN(account)
                 .receiverIBAN(receiver)
                 .amount(receivedSum)
@@ -87,13 +87,9 @@ public class SendMoney implements Command, Transactionable {
                 .error(null)
                 .build();
 
-        Transaction sendTransaction = generateTransaction(transactionSent);
-        senderUser.getTransactions().add(sendTransaction);
-        senderAccount.getTransactions().add(sendTransaction);
+        generateTransaction(transactionSent).addTransaction(senderUser, senderAccount);
+        generateTransaction(transactionReceived).addTransaction(receiverUser, receiverAccount);
 
-        Transaction receivedTransaction = generateTransaction(transactionReceived);
-        receiverUser.getTransactions().add(receivedTransaction);
-        receiverAccount.getTransactions().add(receivedTransaction);
     }
 
     @Override

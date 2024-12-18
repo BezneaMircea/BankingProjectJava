@@ -5,12 +5,12 @@ import org.poo.commands.transactions.Transaction;
 import org.poo.commands.transactions.TransactionInput;
 
 public class ChangeIntRateTransactionFactory implements TransactionFactory {
-//    "timestamp" : 2,
-//            "description" : "Interest rate of the account changed to 0.81"
+    private final Transaction.Type transactionType;
     private final int timestamp;
     private final String description;
 
     public ChangeIntRateTransactionFactory(TransactionInput input) {
+        transactionType = input.getTransactionType();
         timestamp = input.getTimestamp();
         description = input.getDescription();
     }
@@ -18,6 +18,6 @@ public class ChangeIntRateTransactionFactory implements TransactionFactory {
 
     @Override
     public Transaction createTransaction() {
-        return new ChangeIntRateTransaction(timestamp, description);
+        return new ChangeIntRateTransaction(transactionType, timestamp, description);
     }
 }

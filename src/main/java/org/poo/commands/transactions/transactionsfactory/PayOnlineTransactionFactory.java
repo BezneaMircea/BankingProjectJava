@@ -5,6 +5,7 @@ import org.poo.commands.transactions.Transaction;
 import org.poo.commands.transactions.TransactionInput;
 
 public class PayOnlineTransactionFactory implements TransactionFactory {
+    private final Transaction.Type transactionType;
     private final int timestamp;
     private final String description;
     private final double amount;
@@ -12,6 +13,7 @@ public class PayOnlineTransactionFactory implements TransactionFactory {
     private final String error;
 
     public PayOnlineTransactionFactory(TransactionInput input) {
+        transactionType = input.getTransactionType();
         timestamp = input.getTimestamp();
         description = input.getDescription();
         amount = input.getAmount();
@@ -21,6 +23,6 @@ public class PayOnlineTransactionFactory implements TransactionFactory {
 
     @Override
     public Transaction createTransaction() {
-        return new PayOnlineTransaction(timestamp, description, amount, commerciant, error);
+        return new PayOnlineTransaction(transactionType, timestamp, description, amount, commerciant, error);
     }
 }

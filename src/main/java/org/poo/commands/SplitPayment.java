@@ -35,7 +35,7 @@ public class SplitPayment implements Command, Transactionable {
 
         int nrAccounts = accountsForSplit.size();
         double amountToPay = amount / nrAccounts;
-        for (String account : accountsForSplit) {
+        for (String account : accountsForSplit.reversed()) {
             Account currentAccount = bank.getIbanToAccount().get(account);
             if (currentAccount == null)
                 return;
@@ -44,29 +44,28 @@ public class SplitPayment implements Command, Transactionable {
             if (owner == null)
                 return;
 
-            double exchangeRate = bank.getExchangeRates().getRate(currentAccount.getCurrency(), currency);
+            double exchangeRate = bank.getExchangeRates().getRate(currency, currentAccount.getCurrency());
             double totalSumToPay = exchangeRate * amountToPay;
-            if (error == null && currentAccount.getBalance() < totalSumToPay)
+            if (currentAccount.getBalance() < totalSumToPay) {
                 error = String.format(SplitPaymentTranscation.SPLIT_PAYMENT_ERROR, currentAccount.getIban());
-
-
+                break;
+            }
         }
 
         String description = String.format(SplitPaymentTranscation.SPLIT_PAYMENT_DESCRIPTION, amount, currency);
-        TransactionInput input = new TransactionInput.Builder(timestamp, description)
+        TransactionInput input = new TransactionInput.Builder(Transaction.Type.SPLIT_PAYMENT, timestamp, description)
                 .currency(currency)
                 .amount(amountToPay)
                 .involvedAccounts(accountsForSplit)
                 .error(error)
                 .build();
 
-        Transaction transaction = generateTransaction(input);
+        Transaction transaction = bank.generateTransaction(input);
         if (error != null) {
             for (String account : accountsForSplit) {
                 Account currentAccount = bank.getIbanToAccount().get(account);
                 User owner = bank.getEmailToUser().get(currentAccount.getOwnerEmail());
-                owner.getTransactions().add(transaction);
-                currentAccount.getTransactions().add(transaction);
+                transaction.addTransaction(owner, currentAccount);
             }
         } else {
             for (String account : accountsForSplit) {
@@ -75,8 +74,7 @@ public class SplitPayment implements Command, Transactionable {
                 double exchangeRate = bank.getExchangeRates().getRate(currency, currentAccount.getCurrency());
                 double totalSumToPay = exchangeRate * amountToPay;
                 currentAccount.setBalance(currentAccount.getBalance() - totalSumToPay);
-                owner.getTransactions().add(transaction);
-                currentAccount.getTransactions().add(transaction);
+                transaction.addTransaction(owner, currentAccount);
             }
         }
     }
@@ -84,6 +82,6 @@ public class SplitPayment implements Command, Transactionable {
     @Override
     public Transaction generateTransaction(TransactionInput input) {
         TransactionFactory factory = new SplitPaymenTransactionFactory(input);
-        return  factory.createTransaction();
+        return factory.createTransaction();
     }
 }

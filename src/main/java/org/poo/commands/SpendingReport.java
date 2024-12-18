@@ -26,8 +26,20 @@ public class SpendingReport implements Command {
     @Override
     public void execute() {
         Account accountToCreateReport = bank.getIbanToAccount().get(account);
-        if (accountToCreateReport == null)
+        if (accountToCreateReport == null) {
+            ObjectNode outputNode = Utils.mapper.createObjectNode();
+            outputNode.put("description", Account.NOT_FOUND);
+            outputNode.put("timestamp", timestamp);
+
+            ObjectNode commandNode = Utils.mapper.createObjectNode();
+            commandNode.put("command", command);
+            commandNode.set("output", outputNode);
+            commandNode.put("timestamp", timestamp);
+
+            bank.getOutput().add(commandNode);
+
             return;
+        }
 
         ObjectNode spendingReportNode = Utils.mapper.createObjectNode();
         spendingReportNode.put("command", command);

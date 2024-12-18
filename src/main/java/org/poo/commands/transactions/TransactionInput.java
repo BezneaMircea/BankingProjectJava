@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public final class TransactionInput {
+    private Transaction.Type transactionType;
     private int timestamp;
     private String description;
     private String currency;
@@ -27,6 +28,7 @@ public final class TransactionInput {
     private String commerciant;
 
     private TransactionInput(Builder builder) {
+        transactionType = builder.transactionType;
         timestamp = builder.timestamp;
         description = builder.description;
         currency = builder.currency;
@@ -43,6 +45,7 @@ public final class TransactionInput {
     }
 
     public static class Builder {
+        private final Transaction.Type transactionType;
         private final int timestamp;
         private final String description;
 
@@ -58,7 +61,8 @@ public final class TransactionInput {
         private String account = null;
         private String commerciant = null;
 
-        public Builder(final int timestamp, final String description) {
+        public Builder(final Transaction.Type transactionType, int timestamp, final String description) {
+            this.transactionType = transactionType;
             this.timestamp = timestamp;
             this.description = description;
         }

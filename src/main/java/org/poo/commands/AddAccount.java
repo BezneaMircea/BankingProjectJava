@@ -10,8 +10,11 @@ import org.poo.commands.transactions.transactionsfactory.AddAccountTransactionFa
 import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
 import org.poo.users.User;
 
+/**
+ * Class used to represent the addAccount command
+ */
 @Getter
-public class AddAccount implements Command, Transactionable {
+public final class AddAccount implements Command {
     private final Bank bank;
     private final String command;
     private final String email;
@@ -20,9 +23,19 @@ public class AddAccount implements Command, Transactionable {
     private final int timestamp;
     private final double interestRate;
 
+    /**
+     * Constructor for the AddAccount class
+     * @param bank the receiver bank of the command
+     * @param command the command name
+     * @param email the email of the user that will own the account
+     * @param currency currency of the account
+     * @param accountType the type of the account ("savings", "classic")
+     * @param timestamp the timestamp of the command
+     * @param interestRate the interest rate (optional, used for "savings" account)
+     */
     public AddAccount(final Bank bank, final String command,
                       final String email, final String currency,
-                      final String accountType, int timestamp, double interestRate) {
+                      final String accountType, final int timestamp, final double interestRate) {
         this.bank = bank;
         this.command = command;
         this.email = email;
@@ -33,30 +46,22 @@ public class AddAccount implements Command, Transactionable {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute() {
-        User user = bank.getEmailToUser().get(email);
-        if (user == null) {
-            System.out.println("User not found");
-            return;
-        }
-
         Account accountToAdd = bank.createAccount(email, currency, accountType, interestRate);
-        bank.getIbanToAccount().put(accountToAdd.getIban(), accountToAdd);
-        user.addAccount(accountToAdd);
+        String error = bank.addAccount(accountToAdd);
+        if (error != null)
+            return;
 
-        TransactionInput input = new TransactionInput.Builder(timestamp, AddAccountTransaction.ACCOUNT_CREATED)
+        TransactionInput input = new TransactionInput.Builder(Transaction.Type.ADD_ACCOUNT, timestamp, AddAccountTransaction.ACCOUNT_CREATED)
                         .build();
 
-        Transaction transaction = generateTransaction(input);
-        user.getTransactions().add(transaction);
-        accountToAdd.getTransactions().add(transaction);
+        User owner = bank.getEmailToUser().get(accountToAdd.getOwnerEmail());
+        bank.generateTransaction(input).addTransaction(owner, accountToAdd);
     }
 
-    @Override
-    public Transaction generateTransaction(TransactionInput input) {
-        TransactionFactory factory = new AddAccountTransactionFactory(input);
-        return factory.createTransaction();
-    }
 }
 

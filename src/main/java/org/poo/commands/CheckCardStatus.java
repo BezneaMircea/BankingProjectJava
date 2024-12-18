@@ -30,17 +30,7 @@ public class CheckCardStatus implements Command, Transactionable {
     public void execute() {
         Card cardToCheck = bank.getCardNrToCard().get(cardNumber);
         if (cardToCheck == null) {
-            ObjectNode node = Utils.mapper.createObjectNode();
-            node.put("command", command);
-
-            ObjectNode outputNode = Utils.mapper.createObjectNode();
-            outputNode.put("timestamp", timestamp);
-            outputNode.put("description", "Card not found");
-
-            node.set("output", outputNode);
-            node.put("timestamp", timestamp);
-
-            bank.getOutput().add(node);
+            bank.errorOccured(timestamp, command, "Card not found");
             return;
         }
 
@@ -55,11 +45,8 @@ public class CheckCardStatus implements Command, Transactionable {
 
             User owner = bank.getEmailToUser().get(associatedAccount.getOwnerEmail());
 
-            TransactionInput input = new TransactionInput.Builder(timestamp, CheckCardStatusTransaction.LIMIT_REACHED).build();
-            Transaction transaction = generateTransaction(input);
-
-            owner.getTransactions().add(transaction);
-            associatedAccount.getTransactions().add(transaction);
+            TransactionInput input = new TransactionInput.Builder(Transaction.Type.CHECK_CARD_STAT, timestamp, CheckCardStatusTransaction.LIMIT_REACHED).build();
+            bank.generateTransaction(input).addTransaction(owner, associatedAccount);
         }
 
     }
@@ -69,7 +56,5 @@ public class CheckCardStatus implements Command, Transactionable {
         TransactionFactory factory = new CheckCardStatusTransactionFactory(input);
         return factory.createTransaction();
     }
-
-    /// TODO: check this out later pls MIRCEA
 
 }

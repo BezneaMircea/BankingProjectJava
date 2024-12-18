@@ -11,13 +11,24 @@ import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
 import org.poo.users.User;
 import org.poo.utils.Utils;
 
-public class ChangeInterestRate implements Command, Transactionable {
+/**
+ * Command used to represent the changeInterestRate command
+ */
+public class ChangeInterestRate implements Command {
     private final Bank bank;
     private final String command;
     private final String account;
     private final double interestRate;
     private final int timestamp;
 
+    /**
+     *
+     * @param bank the receiver bank of the command
+     * @param command the command name
+     * @param account the account to change the interest rate to
+     * @param interestRate the new interest rate
+     * @param timestamp the timestamp of the command
+     */
     public ChangeInterestRate(final Bank bank, final String command, final String account,
                               final double interestRate, final int timestamp) {
         this.bank = bank;
@@ -27,6 +38,9 @@ public class ChangeInterestRate implements Command, Transactionable {
         this.timestamp = timestamp;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute() {
         Account accountToChangeInterest = bank.getIbanToAccount().get(account);
@@ -40,32 +54,16 @@ public class ChangeInterestRate implements Command, Transactionable {
         String error = accountToChangeInterest.changeInterest(interestRate);
 
         if (error != null) {
-            ObjectNode outputNode = Utils.mapper.createObjectNode();
-            outputNode.put("timestamp", timestamp);
-            outputNode.put("description", error);
-
-            ObjectNode errorNode = Utils.mapper.createObjectNode();
-            errorNode.put("command", command);
-            errorNode.set("output", outputNode);
-            errorNode.put("timestamp", timestamp);
-
-            bank.getOutput().add(errorNode);
-
+            bank.errorOccured(timestamp, command, error);
             return;
         }
 
         String description = String.format(ChangeIntRateTransaction.IRATE_CHANGED, interestRate);
-        TransactionInput input = new TransactionInput.Builder(timestamp, description)
+        TransactionInput input = new TransactionInput.Builder(Transaction.Type.CHANGE_INT_RATE, timestamp, description)
                 .build();
 
-        Transaction transaction = generateTransaction(input);
-        owner.getTransactions().add(transaction);
-        accountToChangeInterest.getTransactions().add(transaction);
+        bank.generateTransaction(input).addTransaction(owner, accountToChangeInterest);
     }
 
-    @Override
-    public Transaction generateTransaction(TransactionInput input) {
-        TransactionFactory factory = new ChangeIntRateTransactionFactory(input);
-        return factory.createTransaction();
-    }
+
 }

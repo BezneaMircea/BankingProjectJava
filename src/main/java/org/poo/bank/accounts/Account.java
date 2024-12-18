@@ -9,14 +9,21 @@ import org.poo.commands.AddInterest;
 import org.poo.commands.transactions.*;
 import org.poo.utils.Utils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Math.round;
 
 @Getter
 @Setter
 public abstract class Account {
     public static String NOT_SAVINGS_ACCOUNT = "This is not a savings account";
     public static String NOT_FOR_SAVINGS_ACCOUNT = "This kind of report is not supported for a saving account";
+    public static String NOT_FOUND = "Account not found";
+    public static String DELETED = "Account deleted";
+    public static String FUNDS_REMAINING = "Account couldn't be deleted - see org.poo.transactions for details";
 
     private final String ownerEmail;
     private final String currency;
@@ -122,9 +129,13 @@ public abstract class Account {
 //    }
     /// MORE TO BE ADDED
 
+    /**
+     * Method used to add interest to an account
+     * @return null if no error occurred or an appropriate error otherwise
+     */
     public abstract String addInterest();
     public abstract String changeInterest(double interestRate);
-    public abstract ArrayNode generateReport(int startTimestamp, int endTimestamp);
+    public abstract ObjectNode generateReport(int startTimestamp, int endTimestamp);
     public abstract ObjectNode spendingsReport(int startTimestamp, int endTimestamp);
 
 }

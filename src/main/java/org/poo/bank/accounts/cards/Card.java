@@ -33,5 +33,5 @@ public abstract class Card {
         return cardNode;
     }
 
-    public abstract String pay(final Bank bank, final double amount);
+    public abstract void pay(final Bank bank, final double amount, final int timestamp, final String commerciant);
 }

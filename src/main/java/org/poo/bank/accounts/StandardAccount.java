@@ -3,6 +3,7 @@ package org.poo.bank.accounts;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import jdk.jshell.execution.Util;
 import lombok.Getter;
 import org.poo.bank.Commerciant;
 import org.poo.commands.transactions.PayOnlineTransaction;
@@ -10,6 +11,8 @@ import org.poo.commands.transactions.Transaction;
 import org.poo.utils.Utils;
 
 import java.util.*;
+
+import static java.lang.Math.round;
 
 @Getter
 public final class StandardAccount extends Account {
@@ -33,16 +36,22 @@ public final class StandardAccount extends Account {
     }
 
     @Override
-    public ArrayNode generateReport(int startTimestamp, int endTimestamp) {
-        ArrayNode reportArray = Utils.mapper.createArrayNode();
+    public ObjectNode generateReport(int startTimestamp, int endTimestamp) {
+        ObjectNode reportNode = Utils.mapper.createObjectNode();
+        reportNode.put("balance", getBalance());
+        reportNode.put("currency", getCurrency());
+        reportNode.put("IBAN", getIban());
+
+        ArrayNode transactionArray = Utils.mapper.createArrayNode();
         for (Transaction transaction : getTransactions()) {
             if (transaction.getTimestamp() >= startTimestamp && transaction.getTimestamp() <= endTimestamp) {
-                reportArray.add(transaction.toJson());
+                transactionArray.add(transaction.toJson());
             } else if (transaction.getTimestamp() > endTimestamp)
                 break;
         }
+        reportNode.set("transactions", transactionArray);
 
-        return reportArray;
+        return reportNode;
     }
 
     @Override
@@ -76,6 +85,9 @@ public final class StandardAccount extends Account {
     @Override
     public void addTransaction(PayOnlineTransaction transaction) {
         if (transaction == null)
+            return;
+
+        if (transaction.getError() != null)
             return;
 
         getTransactions().add(transaction);

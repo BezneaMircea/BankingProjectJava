@@ -8,8 +8,8 @@ public class AddAccountTransaction extends Transaction {
     public static String ACCOUNT_CREATED = "New account created";
 
 
-    public AddAccountTransaction(final int timestamp, final String description) {
-        super(timestamp, description);
+    public AddAccountTransaction(final Type transactionType, final int timestamp, final String description) {
+        super(transactionType, timestamp, description);
     }
 
     @Override

@@ -3,11 +3,15 @@ package org.poo.commands;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
-import org.poo.bank.accounts.cards.Card;
+import org.poo.commands.transactions.DeleteAccountTransaction;
+import org.poo.commands.transactions.Transaction;
+import org.poo.commands.transactions.TransactionInput;
+import org.poo.commands.transactions.transactionsfactory.DeleteAccountTransactionFactory;
+import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
 import org.poo.users.User;
 import org.poo.utils.Utils;
 
-public class DeleteAccount implements Command {
+public class DeleteAccount implements Command, Transactionable {
     private final Bank bank;
     private final String command;
     private final String account;
@@ -28,30 +32,37 @@ public class DeleteAccount implements Command {
         Account accountToDelete = bank.getIbanToAccount().get(account);
         User ownerOfAccount = bank.getEmailToUser().get(email);
 
+        if (accountToDelete == null || ownerOfAccount == null)
+            return;
 
         ObjectNode deleteAccountNode = Utils.mapper.createObjectNode();
         deleteAccountNode.put("command", command);
 
         ObjectNode outputNode = Utils.mapper.createObjectNode();
-        if (accountToDelete != null && accountToDelete.getBalance() == 0) {
-            bank.getIbanToAccount().remove(account);
+        String ret = bank.deleteAccount(accountToDelete);
 
-            for (Card card : accountToDelete.getCards())
-                bank.getCardNrToCard().remove(card.getCardNumber());
-            accountToDelete.getCards().clear();
-
-            ownerOfAccount.getAccounts().remove(accountToDelete);
-
-            outputNode.put("success", "Account deleted");
+        if (ret.equals(Account.DELETED)) {
+            outputNode.put("success", ret);
             outputNode.put("timestamp", timestamp);
-        } else {
-            outputNode.put("error", "Account couldn't be deleted - see org.poo.transactions for details");
+        } else if (ret.equals(Account.FUNDS_REMAINING)){
+            outputNode.put("error", ret);
             outputNode.put("timestamp", timestamp);
+
+            TransactionInput input = new TransactionInput.Builder(Transaction.Type.DELETE_ACCOUNT, timestamp, DeleteAccountTransaction.FUNDS_REMAINING)
+                    .build();
+
+            bank.generateTransaction(input).addTransaction(ownerOfAccount, accountToDelete);
         }
 
         deleteAccountNode.set("output", outputNode);
         deleteAccountNode.put("timestamp", timestamp);
 
         bank.getOutput().add(deleteAccountNode);
+    }
+
+    @Override
+    public Transaction generateTransaction(TransactionInput input) {
+        TransactionFactory factory = new DeleteAccountTransactionFactory(input);
+        return factory.createTransaction();
     }
 }

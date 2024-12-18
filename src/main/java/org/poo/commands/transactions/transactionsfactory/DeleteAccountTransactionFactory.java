@@ -1,15 +1,15 @@
 package org.poo.commands.transactions.transactionsfactory;
 
-import org.poo.commands.transactions.AddAccountTransaction;
+import org.poo.commands.transactions.DeleteAccountTransaction;
 import org.poo.commands.transactions.Transaction;
 import org.poo.commands.transactions.TransactionInput;
 
-public class AddAccountTransactionFactory implements TransactionFactory {
+public class DeleteAccountTransactionFactory implements TransactionFactory {
     private final Transaction.Type transactionType;
     private final int timestamp;
     private final String description;
 
-    public AddAccountTransactionFactory(TransactionInput input) {
+    public DeleteAccountTransactionFactory(TransactionInput input) {
         transactionType = input.getTransactionType();
         timestamp = input.getTimestamp();
         description = input.getDescription();
@@ -18,6 +18,6 @@ public class AddAccountTransactionFactory implements TransactionFactory {
 
     @Override
     public Transaction createTransaction() {
-        return new AddAccountTransaction(transactionType, timestamp, description);
+        return new DeleteAccountTransaction(transactionType, timestamp, description);
     }
 }

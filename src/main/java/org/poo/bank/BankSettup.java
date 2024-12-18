@@ -3,7 +3,6 @@ package org.poo.bank;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.poo.commands.CheckCardStatus;
 import org.poo.commands.Command;
 import org.poo.commands.factory.*;
 import org.poo.fileio.*;
@@ -15,12 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Class used for setting up the bank, it also is the
+ * invoker for the Bank class (Creates commands and calls them on bank)
+ */
 public class BankSettup {
     private final UserInput[] users;
     private final ExchangeInput[] exchangeRates;
     private final CommandInput[] commands;
     private final ArrayNode output;
 
+    /**
+     * Constructor for the BankSettup (Invoker)
+     * @param inputData the input data
+     * @param output the output ArrayNode where we will put the commands output
+     */
     public BankSettup(final ObjectInput inputData, final ArrayNode output) {
         users = inputData.getUsers();
         exchangeRates = inputData.getExchangeRates();
@@ -90,6 +98,12 @@ public class BankSettup {
         return factory.createCommand();
     }
 
+    /**
+     * Method used to execute the commands given in input.
+     * Internally, it calls two private methods that create the bank (Receiver) and
+     * commands and thencalls command.execute(). If the given command is not in the
+     * commands list nothing happens
+     */
     public void ExecuteCommands() {
         Bank bank = createBank();
 
