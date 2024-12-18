@@ -54,8 +54,12 @@ public class CheckCardStatus implements Command, Transactionable {
             cardToCheck.setStatus(Card.FROZEN);
 
             User owner = bank.getEmailToUser().get(associatedAccount.getOwnerEmail());
+
             TransactionInput input = new TransactionInput.Builder(timestamp, CheckCardStatusTransaction.LIMIT_REACHED).build();
-            owner.getTransactions().add(generateTransaction(input));
+            Transaction transaction = generateTransaction(input);
+
+            owner.getTransactions().add(transaction);
+            associatedAccount.getTransactions().add(transaction);
         }
 
     }

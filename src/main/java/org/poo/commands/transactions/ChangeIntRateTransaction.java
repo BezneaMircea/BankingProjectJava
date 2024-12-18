@@ -4,10 +4,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
-public class CheckCardStatusTransaction extends Transaction {
-    public static String LIMIT_REACHED = "You have reached the minimum amount of funds, the card will be frozen";
+public class ChangeIntRateTransaction extends Transaction {
+    public static String IRATE_CHANGED= "Interest rate of the account changed to %.2f";
 
-    public CheckCardStatusTransaction(int timestamp, String description) {
+
+    public ChangeIntRateTransaction(final int timestamp, final String description) {
         super(timestamp, description);
     }
 

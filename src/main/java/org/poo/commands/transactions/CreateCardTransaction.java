@@ -1,13 +1,12 @@
 package org.poo.commands.transactions;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
-public class CreateCardTransaction implements Transaction {
+public class CreateCardTransaction extends Transaction {
     public static String CARD_CREATED = "New card created";
 
-    private final int timestamp;
-    private final String description;
     private final String card;
     private final String cardHolder;
     private final String account;
@@ -15,8 +14,7 @@ public class CreateCardTransaction implements Transaction {
 
     public CreateCardTransaction(int timestamp, String description, String card,
                                  String cardHolder, String account, String error) {
-        this.timestamp = timestamp;
-        this.description = description;
+        super(timestamp, description);
         this.card = card;
         this.cardHolder = cardHolder;
         this.account = account;
@@ -28,13 +26,17 @@ public class CreateCardTransaction implements Transaction {
         ObjectNode jsonNode = Utils.mapper.createObjectNode();
 
         if (error == null) {
-            jsonNode.put("timestamp", timestamp);
-            jsonNode.put("description", description);
+            jsonNode.put("timestamp", getTimestamp());
+            jsonNode.put("description", getDescription());
             jsonNode.put("card", card);
             jsonNode.put("cardHolder", cardHolder);
             jsonNode.put("account", account);
         }
 
         return jsonNode;
+    }
+
+    public void addTransactionToAccount(final Account account) {
+        account.addTransaction(this);
     }
 }

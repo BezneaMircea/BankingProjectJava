@@ -1,14 +1,24 @@
 package org.poo.commands.transactions;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.poo.utils.Utils;
+import lombok.Getter;
+import org.poo.bank.accounts.Account;
+import org.poo.users.User;
 
-import java.util.List;
+@Getter
+public abstract class Transaction {
+    private final int timestamp;
+    private final String description;
 
-public interface Transaction {
-    ObjectNode toJson();
+    public Transaction(final int timestamp, final String description) {
+        this.timestamp = timestamp;
+        this.description = description;
+    }
+
+    public void addTransaction(final User user, final Account account) {
+        user.getTransactions().add(this);
+        addTransactionToAccount(account);
+    }
+
+    public abstract void addTransactionToAccount(final Account account);
+    public abstract ObjectNode toJson();
 }

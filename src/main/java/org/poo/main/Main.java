@@ -71,7 +71,7 @@ public final class Main {
     public static void action(final String filePath1,
                               final String filePath2) throws IOException {
 
-//        if (!filePath1.equals("test06_non_existing.json"))
+//        if (!filePath1.equals("test16_report.json"))
 //            return;
 
         ObjectMapper objectMapper = new ObjectMapper();

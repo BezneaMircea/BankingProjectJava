@@ -1,15 +1,14 @@
 package org.poo.commands.transactions;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
-public class SendMoneyTransaction implements Transaction {
+public class SendMoneyTransaction extends Transaction {
     public static String SENT = "sent";
     public static String RECEIVED = "received";
     public static String INSUFFICIENT_FUNDS = "Insufficient funds";
 
-    private final int timestamp;
-    private final String description;
     private final String senderIBAN;
     private final String receiverIBAN;
     private final double amount;
@@ -21,8 +20,7 @@ public class SendMoneyTransaction implements Transaction {
                                 String senderIBAN, String receiverIBAN,
                                 double amount, String currency,
                                 String transferType, String error) {
-        this.timestamp = timestamp;
-        this.description = description;
+        super(timestamp, description);
         this.senderIBAN = senderIBAN;
         this.receiverIBAN = receiverIBAN;
         this.amount = amount;
@@ -36,17 +34,21 @@ public class SendMoneyTransaction implements Transaction {
         ObjectNode jsonNode = Utils.mapper.createObjectNode();
 
         if (error == null) {
-            jsonNode.put("timestamp", timestamp);
-            jsonNode.put("description", description);
+            jsonNode.put("timestamp", getTimestamp());
+            jsonNode.put("description", getDescription());
             jsonNode.put("senderIBAN", senderIBAN);
             jsonNode.put("receiverIBAN", receiverIBAN);
             jsonNode.put("amount", amount + " " + currency);
             jsonNode.put("transferType", transferType);
         } else {
-            jsonNode.put("timestamp", timestamp);
+            jsonNode.put("timestamp", getTimestamp());
             jsonNode.put("description", error);
         }
 
         return jsonNode;
+    }
+
+    public void addTransactionToAccount(final Account account) {
+        account.addTransaction(this);
     }
 }

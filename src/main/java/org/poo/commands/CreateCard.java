@@ -49,7 +49,9 @@ public class CreateCard implements Command, Transactionable {
                 .error(null)
                 .build();
 
-        owner.getTransactions().add(generateTransaction(input));
+        Transaction transaction = generateTransaction(input);
+        owner.getTransactions().add(transaction);
+        associatedAccount.getTransactions().add(transaction);
     }
 
     @Override

@@ -87,8 +87,13 @@ public class SendMoney implements Command, Transactionable {
                 .error(null)
                 .build();
 
-        senderUser.getTransactions().add(generateTransaction(transactionSent));
-        receiverUser.getTransactions().add(generateTransaction(transactionReceived));
+        Transaction sendTransaction = generateTransaction(transactionSent);
+        senderUser.getTransactions().add(sendTransaction);
+        senderAccount.getTransactions().add(sendTransaction);
+
+        Transaction receivedTransaction = generateTransaction(transactionReceived);
+        receiverUser.getTransactions().add(receivedTransaction);
+        receiverAccount.getTransactions().add(receivedTransaction);
     }
 
     @Override

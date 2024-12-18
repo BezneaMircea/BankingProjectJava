@@ -47,7 +47,10 @@ public class AddAccount implements Command, Transactionable {
 
         TransactionInput input = new TransactionInput.Builder(timestamp, AddAccountTransaction.ACCOUNT_CREATED)
                         .build();
-        user.getTransactions().add(generateTransaction(input));
+
+        Transaction transaction = generateTransaction(input);
+        user.getTransactions().add(transaction);
+        accountToAdd.getTransactions().add(transaction);
     }
 
     @Override

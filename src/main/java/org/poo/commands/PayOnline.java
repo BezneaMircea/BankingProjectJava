@@ -77,7 +77,8 @@ public class PayOnline implements Command, Transactionable {
                 .error(error)
                 .build();
 
-        cardOwner.getTransactions().add(generateTransaction(input));
+        Transaction transaction = generateTransaction(input);
+        transaction.addTransaction(cardOwner, associatedAccount);
     }
 
     @Override
