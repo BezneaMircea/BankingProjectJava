@@ -1,20 +1,17 @@
 package org.poo.commands;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
 import org.poo.commands.transactions.ChangeIntRateTransaction;
 import org.poo.commands.transactions.Transaction;
 import org.poo.commands.transactions.TransactionInput;
-import org.poo.commands.transactions.transactionsfactory.ChangeIntRateTransactionFactory;
-import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
 import org.poo.users.User;
-import org.poo.utils.Utils;
+
 
 /**
  * Command used to represent the changeInterestRate command
  */
-public class ChangeInterestRate implements Command {
+public final class ChangeInterestRate implements Command, Transactionable {
     private final Bank bank;
     private final String command;
     private final String account;
@@ -22,7 +19,7 @@ public class ChangeInterestRate implements Command {
     private final int timestamp;
 
     /**
-     *
+     * Constructor for the changeInterestRate command
      * @param bank the receiver bank of the command
      * @param command the command name
      * @param account the account to change the interest rate to
@@ -43,27 +40,33 @@ public class ChangeInterestRate implements Command {
      */
     @Override
     public void execute() {
-        Account accountToChangeInterest = bank.getIbanToAccount().get(account);
+        Account accountToChangeInterest = bank.getAccount(account);
         if (accountToChangeInterest == null)
             return;
 
-        User owner = bank.getEmailToUser().get(accountToChangeInterest.getOwnerEmail());
+        User owner = bank.getUser(accountToChangeInterest.getOwnerEmail());
         if (owner == null)
             return;
 
         String error = accountToChangeInterest.changeInterest(interestRate);
-
         if (error != null) {
             bank.errorOccured(timestamp, command, error);
             return;
         }
 
-        String description = String.format(ChangeIntRateTransaction.IRATE_CHANGED, interestRate);
-        TransactionInput input = new TransactionInput.Builder(Transaction.Type.CHANGE_INT_RATE, timestamp, description)
-                .build();
-
-        bank.generateTransaction(input).addTransaction(owner, accountToChangeInterest);
+        addTransaction(null, owner, accountToChangeInterest);
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addTransaction(TransactionInput input, User user, Account account) {
+        String description = String.format(ChangeIntRateTransaction.IRATE_CHANGED, interestRate);
+        input = new TransactionInput.Builder(Transaction.Type.CHANGE_INT_RATE, timestamp, description)
+                .build();
+
+        bank.generateTransaction(input).addTransaction(user, account);
+    }
 }

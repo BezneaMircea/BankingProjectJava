@@ -6,7 +6,7 @@ import org.poo.bank.accounts.Account;
 /**
  * Class used to represent the addFunds command
  */
-public class AddFunds implements Command {
+public final class AddFunds implements Command {
     private final Bank bank;
     private final String command;
     private final String account;
@@ -35,7 +35,7 @@ public class AddFunds implements Command {
      */
     @Override
     public void execute() {
-        Account accountToAddFunds = bank.getIbanToAccount().get(account);
+        Account accountToAddFunds = bank.getAccount(account);
         if (accountToAddFunds == null)
             return;
 

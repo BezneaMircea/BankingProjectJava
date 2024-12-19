@@ -1,23 +1,30 @@
 package org.poo.commands;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.accounts.cards.Card;
 import org.poo.commands.transactions.CheckCardStatusTransaction;
 import org.poo.commands.transactions.Transaction;
 import org.poo.commands.transactions.TransactionInput;
-import org.poo.commands.transactions.transactionsfactory.CheckCardStatusTransactionFactory;
-import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
 import org.poo.users.User;
-import org.poo.utils.Utils;
 
-public class CheckCardStatus implements Command, Transactionable {
+
+/**
+ * Class used to represent the checkCardStatus command
+ */
+public final class CheckCardStatus implements Command, Transactionable {
     private final Bank bank;
     private final String command;
     private final String cardNumber;
     private final int timestamp;
 
+    /**
+     * Constructor for the checkCardStatusCommand
+     * @param bank the receiver bank of the command
+     * @param command the command name
+     * @param cardNumber the number of the card to be checked
+     * @param timestamp the timestamp of the command
+     */
     public CheckCardStatus(final Bank bank, final String command,
                            final String cardNumber, final int timestamp) {
         this.bank = bank;
@@ -26,11 +33,14 @@ public class CheckCardStatus implements Command, Transactionable {
         this.timestamp = timestamp;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute() {
-        Card cardToCheck = bank.getCardNrToCard().get(cardNumber);
+        Card cardToCheck = bank.getCard(cardNumber);
         if (cardToCheck == null) {
-            bank.errorOccured(timestamp, command, "Card not found");
+            bank.errorOccured(timestamp, command, Card.NOT_FOUND);
             return;
         }
 
@@ -40,21 +50,22 @@ public class CheckCardStatus implements Command, Transactionable {
         Account associatedAccount = cardToCheck.getAccount();
         if (associatedAccount.getBalance() < associatedAccount.getMinBalance()) {
             cardToCheck.setStatus(Card.FROZEN);
-        } else if (associatedAccount.getBalance() - associatedAccount.getMinBalance() < 30) {
+        } else if (associatedAccount.getBalance() - associatedAccount.getMinBalance() < Account.WARNING_THRESHOLD) {
             cardToCheck.setStatus(Card.FROZEN);
 
-            User owner = bank.getEmailToUser().get(associatedAccount.getOwnerEmail());
-
-            TransactionInput input = new TransactionInput.Builder(Transaction.Type.CHECK_CARD_STAT, timestamp, CheckCardStatusTransaction.LIMIT_REACHED).build();
-            bank.generateTransaction(input).addTransaction(owner, associatedAccount);
+            User owner = bank.getUser(associatedAccount.getOwnerEmail());
+            addTransaction(null, owner, associatedAccount);
         }
 
     }
 
-    @Override
-    public Transaction generateTransaction(TransactionInput input) {
-        TransactionFactory factory = new CheckCardStatusTransactionFactory(input);
-        return factory.createTransaction();
-    }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addTransaction(TransactionInput input, User user, Account account) {
+        input = new TransactionInput.Builder(Transaction.Type.CHECK_CARD_STAT, timestamp, CheckCardStatusTransaction.LIMIT_REACHED).build();
+        bank.generateTransaction(input).addTransaction(user, account);
+    }
 }

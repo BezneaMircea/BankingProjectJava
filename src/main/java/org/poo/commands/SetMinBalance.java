@@ -26,6 +26,5 @@ public class SetMinBalance implements Command {
             return;
         
         targetedAccount.setMinBalance(amount);
-
     }
 }

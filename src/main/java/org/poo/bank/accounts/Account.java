@@ -9,6 +9,7 @@ import org.poo.commands.AddInterest;
 import org.poo.commands.transactions.*;
 import org.poo.utils.Utils;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public abstract class Account {
     public static String NOT_FOUND = "Account not found";
     public static String DELETED = "Account deleted";
     public static String FUNDS_REMAINING = "Account couldn't be deleted - see org.poo.transactions for details";
+    public static String INSUFFICIENT_FUNDS = "Insufficient funds";
+    public static int WARNING_THRESHOLD = 30;
 
     private final String ownerEmail;
     private final String currency;
@@ -45,18 +48,6 @@ public abstract class Account {
         minBalance = 0;
     }
 
-    public boolean hasCard(Card card) {
-        return cards.contains(card);
-    }
-
-    public void addCard(Card card) {
-        cards.add(card);
-    }
-
-    public void removeCard(Card card) {
-        cards.remove(card);
-    }
-
     /**
      * Performs a money transfer to accountToTransfer
      * @param accountToTransfer the account that receives the money
@@ -69,6 +60,64 @@ public abstract class Account {
         balance -= amountToTransfer;
         accountToTransfer.balance += amountToReceive;
     }
+
+
+    public boolean hasCard(Card card) {
+        return cards.contains(card);
+    }
+    public void addCard(Card card) {
+        cards.add(card);
+    }
+    public void removeCard(Card card) {
+        cards.remove(card);
+    }
+
+    /**
+     * Here there should also be something like
+     * public void addTransaction(AddIntRateTransaction transaction)
+     * that specifies how AddIntRateTransaction interacts with different account types.
+     * However, this transaction doesn't appear anywhere, even tho it is specified
+     * that the addInterest command may generate a transaction. This is left to be implemented
+     * in case the functionality will be set clear
+     */
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+    }
+    public void addTransaction(ChangeIntRateTransaction transaction) {
+        transactions.add(transaction);
+    }
+    public void addTransaction(PayOnlineTransaction transaction) {
+        transactions.add(transaction);
+    }
+
+
+    public ObjectNode generateReport(int startTimestamp, int endTimestamp) {
+        ObjectNode reportNode = Utils.mapper.createObjectNode();
+        reportNode.put("balance", getBalance());
+        reportNode.put("currency", getCurrency());
+        reportNode.put("IBAN", getIban());
+        reportNode.set("transactions", generateReportTransaction(startTimestamp, endTimestamp));
+
+        return reportNode;
+    }
+
+    /**
+     * Method used to add interest to an account
+     * @return null if no error occurred or an appropriate error otherwise
+     */
+    public abstract String addInterest();
+
+    /**
+     * This method is used to change the interest of an account
+     * @param newInterestRate the new interestRate
+     * @return null if no error occurred or an appropriate error otherwise
+     *         (e.g. the account wasn't a saving account)
+     */
+    public abstract String changeInterest(double newInterestRate);
+    protected abstract ArrayNode generateReportTransaction(int startTimestamp, int endTimestamp);
+    public abstract ObjectNode spendingsReport(int startTimestamp, int endTimestamp);
+
+
 
     public ObjectNode accountToObjectNode() {
         ObjectNode accountNode = Utils.mapper.createObjectNode();
@@ -90,52 +139,4 @@ public abstract class Account {
 
         return cardsNode;
     }
-
-
-    public void addTransaction(Transaction transaction) {
-        transactions.add(transaction);
-    }
-
-//    public void addTransaction(AddAccountTransaction transaction) {
-//        transactions.add(transaction);
-//    }
-//
-//    public void addTransaction(ChangeIntRateTransaction transaction) {
-//        transactions.add(transaction);
-//    }
-//
-//    public void addTransaction(CheckCardStatusTransaction transaction) {
-//        transactions.add(transaction);
-//    }
-//
-//    public void addTransaction(CreateCardTransaction transaction) {
-//        transactions.add(transaction);
-//    }
-//
-//    public void addTransaction(DeleteCardTransaction transaction) {
-//        transactions.add(transaction);
-//    }
-//
-    public void addTransaction(PayOnlineTransaction transaction) {
-        transactions.add(transaction);
-    }
-//
-//    public void addTransaction(SendMoneyTransaction transaction) {
-//        transactions.add(transaction);
-//    }
-//
-//    public void addTransaction(SplitPaymentTranscation transaction) {
-//        transactions.add(transaction);
-//    }
-    /// MORE TO BE ADDED
-
-    /**
-     * Method used to add interest to an account
-     * @return null if no error occurred or an appropriate error otherwise
-     */
-    public abstract String addInterest();
-    public abstract String changeInterest(double interestRate);
-    public abstract ObjectNode generateReport(int startTimestamp, int endTimestamp);
-    public abstract ObjectNode spendingsReport(int startTimestamp, int endTimestamp);
-
 }

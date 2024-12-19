@@ -12,8 +12,8 @@ import org.poo.utils.Utils;
 public abstract class Card {
     public final static String ACTIVE = "active";
     public final static String FROZEN = "frozen";
-    public final static String WARNING = "will be frozen";
-    public final static String INSUFFICIENT_FUNDS = "Insufficient funds";
+    public final static String NOT_FOUND = "Card not found";
+    public final static String DESTROYED = "The card has been destroyed";
 
     private final String cardNumber;
     private String status;

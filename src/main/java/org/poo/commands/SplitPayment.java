@@ -5,8 +5,6 @@ import org.poo.bank.accounts.Account;
 import org.poo.commands.transactions.SplitPaymentTranscation;
 import org.poo.commands.transactions.Transaction;
 import org.poo.commands.transactions.TransactionInput;
-import org.poo.commands.transactions.transactionsfactory.SplitPaymenTransactionFactory;
-import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
 import org.poo.users.User;
 
 import java.util.List;
@@ -60,28 +58,20 @@ public class SplitPayment implements Command, Transactionable {
                 .error(error)
                 .build();
 
-        Transaction transaction = bank.generateTransaction(input);
-        if (error != null) {
-            for (String account : accountsForSplit) {
-                Account currentAccount = bank.getIbanToAccount().get(account);
-                User owner = bank.getEmailToUser().get(currentAccount.getOwnerEmail());
-                transaction.addTransaction(owner, currentAccount);
-            }
-        } else {
-            for (String account : accountsForSplit) {
-                Account currentAccount = bank.getIbanToAccount().get(account);
-                User owner = bank.getEmailToUser().get(currentAccount.getOwnerEmail());
+        for (String account : accountsForSplit) {
+            Account currentAccount = bank.getIbanToAccount().get(account);
+            User owner = bank.getEmailToUser().get(currentAccount.getOwnerEmail());
+            if (error == null) {
                 double exchangeRate = bank.getExchangeRates().getRate(currency, currentAccount.getCurrency());
                 double totalSumToPay = exchangeRate * amountToPay;
                 currentAccount.setBalance(currentAccount.getBalance() - totalSumToPay);
-                transaction.addTransaction(owner, currentAccount);
             }
+            addTransaction(input, owner, currentAccount);
         }
     }
 
     @Override
-    public Transaction generateTransaction(TransactionInput input) {
-        TransactionFactory factory = new SplitPaymenTransactionFactory(input);
-        return factory.createTransaction();
+    public void addTransaction(TransactionInput input, User user, Account account) {
+        bank.generateTransaction(input).addTransaction(user, account);
     }
 }

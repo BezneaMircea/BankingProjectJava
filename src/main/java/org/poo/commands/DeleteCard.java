@@ -6,46 +6,60 @@ import org.poo.bank.accounts.cards.Card;
 import org.poo.commands.transactions.DeleteCardTransaction;
 import org.poo.commands.transactions.Transaction;
 import org.poo.commands.transactions.TransactionInput;
-import org.poo.commands.transactions.transactionsfactory.DeleteCardTransactionFactory;
-import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
 import org.poo.users.User;
 
-public class DeleteCard implements Command, Transactionable {
+/**
+ * Class used to represent the deleteCard command
+ */
+public final class DeleteCard implements Command, Transactionable {
     private final Bank bank;
+    private final String command;
     private final String cardNumber;
     private final int timestamp;
 
-    public DeleteCard(final Bank bank, final String cardNumber, final int timestamp) {
+    /**
+     * Constructor for the deleteCard command
+     * @param bank the receiver bank of the command
+     * @param command the command name
+     * @param cardNumber the number of the card to be deleted
+     * @param timestamp timestamp of the command
+     */
+    public DeleteCard(final Bank bank, final String command, final String cardNumber, final int timestamp) {
         this.bank = bank;
+        this.command = command;
         this.cardNumber = cardNumber;
         this.timestamp = timestamp;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute() {
         Card cardToDelete = bank.getCardNrToCard().get(cardNumber);
         if (cardToDelete == null)
             return;
 
-
-        bank.getCardNrToCard().remove(cardNumber);
         Account associatedAccount = cardToDelete.getAccount();
-        associatedAccount.getCards().remove(cardToDelete);
-
         User owner = bank.getEmailToUser().get(associatedAccount.getOwnerEmail());
-        TransactionInput input = new TransactionInput.Builder(Transaction.Type.DELETE_CARD, timestamp, DeleteCardTransaction.DELETED_CARD)
-                .card(cardNumber)
-                .cardHolder(owner.getEmail())
-                .account(associatedAccount.getIban())
-                .build();
 
-        bank.generateTransaction(input).addTransaction(owner, associatedAccount);
+        bank.deleteCard(cardToDelete);
+
+        addTransaction(null, owner, associatedAccount);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Transaction generateTransaction(TransactionInput input) {
-        TransactionFactory factory = new DeleteCardTransactionFactory(input);
-        return factory.createTransaction();
+    public void addTransaction(TransactionInput input, User user, Account account) {
+        input = new TransactionInput.Builder(Transaction.Type.DELETE_CARD, timestamp, Card.DESTROYED)
+                .card(cardNumber)
+                .cardHolder(user.getEmail())
+                .account(account.getIban())
+                .build();
+
+        bank.generateTransaction(input).addTransaction(user, account);
     }
 }

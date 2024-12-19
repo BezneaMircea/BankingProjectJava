@@ -42,7 +42,7 @@ public class OneTimeCard extends Card {
         User owner = bank.getEmailToUser().get(getAccount().getOwnerEmail());
 
         if (associatedAccount.getBalance() < amount && error == null) {
-            error = INSUFFICIENT_FUNDS;
+            error = Account.INSUFFICIENT_FUNDS;
         }
 
         TransactionInput payOnline = new TransactionInput.Builder(Transaction.Type.PAY_ONLINE, timestamp, "Card payment")
@@ -68,7 +68,7 @@ public class OneTimeCard extends Card {
 
 
 
-        TransactionInput deleteCard = new TransactionInput.Builder(Transaction.Type.DELETE_CARD, timestamp, DeleteCardTransaction.DELETED_CARD)
+        TransactionInput deleteCard = new TransactionInput.Builder(Transaction.Type.DELETE_CARD, timestamp, Card.DESTROYED)
                 .card(getCardNumber())
                 .cardHolder(getAccount().getOwnerEmail())
                 .account(getAccount().getIban())

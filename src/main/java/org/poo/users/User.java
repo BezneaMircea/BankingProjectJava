@@ -15,6 +15,8 @@ import java.util.Map;
 
 @Data
 abstract public class User {
+    public static String NOT_FOUND = "User not found";
+
     private String firstName;
     private String lastName;
     private String email;

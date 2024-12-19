@@ -36,12 +36,7 @@ public final class StandardAccount extends Account {
     }
 
     @Override
-    public ObjectNode generateReport(int startTimestamp, int endTimestamp) {
-        ObjectNode reportNode = Utils.mapper.createObjectNode();
-        reportNode.put("balance", getBalance());
-        reportNode.put("currency", getCurrency());
-        reportNode.put("IBAN", getIban());
-
+    protected ArrayNode generateReportTransaction(int startTimestamp, int endTimestamp) {
         ArrayNode transactionArray = Utils.mapper.createArrayNode();
         for (Transaction transaction : getTransactions()) {
             if (transaction.getTimestamp() >= startTimestamp && transaction.getTimestamp() <= endTimestamp) {
@@ -49,9 +44,8 @@ public final class StandardAccount extends Account {
             } else if (transaction.getTimestamp() > endTimestamp)
                 break;
         }
-        reportNode.set("transactions", transactionArray);
 
-        return reportNode;
+        return transactionArray;
     }
 
     @Override

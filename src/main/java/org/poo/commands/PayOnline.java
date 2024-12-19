@@ -41,7 +41,7 @@ public class PayOnline implements Command, Transactionable {
     public void execute() {
         Card usedCard = bank.getCardNrToCard().get(cardNumber);
         if (usedCard == null) {
-            bank.errorOccured(timestamp, command, "Card not found");
+            bank.errorOccured(timestamp, command, Card.NOT_FOUND);
             return;
         }
 
@@ -62,8 +62,6 @@ public class PayOnline implements Command, Transactionable {
     }
 
     @Override
-    public Transaction generateTransaction(TransactionInput input) {
-        TransactionFactory factory = new PayOnlineTransactionFactory(input);
-        return factory.createTransaction();
+    public void addTransaction(TransactionInput input, User user, Account account) {
     }
 }

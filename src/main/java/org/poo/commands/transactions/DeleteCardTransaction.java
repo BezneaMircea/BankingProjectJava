@@ -5,8 +5,6 @@ import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
 public class DeleteCardTransaction extends Transaction {
-    public static String DELETED_CARD = "The card has been destroyed";
-
     private final String card;
     private final String cardHolder;
     private final String account;

@@ -6,17 +6,26 @@ import org.poo.bank.accounts.cards.Card;
 import org.poo.commands.transactions.CreateCardTransaction;
 import org.poo.commands.transactions.Transaction;
 import org.poo.commands.transactions.TransactionInput;
-import org.poo.commands.transactions.transactionsfactory.CreateCardTransactionFactory;
-import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
 import org.poo.users.User;
 
-public class CreateCard implements Command, Transactionable {
+/**
+ * Class used to represent the createCard command
+ */
+public final class CreateCard implements Command, Transactionable {
     private final Bank bank;
     private final String command;
     private final String account;
     private final String email;
     private final int timestamp;
 
+    /**
+     * Constructor for the createCard command
+     * @param bank the receiver bank of the command
+     * @param command the command name
+     * @param account the associatedAccount IBAN
+     * @param email the email of the User that owns the account && newCard
+     * @param timestamp the timestamp of the command
+     */
     public CreateCard(final Bank bank, final String command, final String account,
                       final String email, final int timestamp) {
         this.bank = bank;
@@ -26,21 +35,23 @@ public class CreateCard implements Command, Transactionable {
         this.timestamp = timestamp;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute() {
         User owner = bank.getEmailToUser().get(email);
-        if (owner == null)
+        Account associatedAccount = bank.getIbanToAccount().get(account);
+
+         /* The last condition in this if statement might be
+          * a separate case, but tests don't check this so
+          * it can t be treated properly yet */
+        if (owner == null || associatedAccount == null || !email.equals(associatedAccount.getOwnerEmail()))
             return;
 
-        Account associatedAccount = bank.getIbanToAccount().get(account);
-        if (!owner.hasAccount(associatedAccount)) {
-            // TODO: add transaction logic;
-            return;
-        }
 
         Card cardToAdd = bank.createCard(Card.ACTIVE, associatedAccount, command);
-        associatedAccount.getCards().add(cardToAdd);
-        bank.getCardNrToCard().put(cardToAdd.getCardNumber(), cardToAdd);
+        bank.addCard(cardToAdd);
 
         TransactionInput input = new TransactionInput.Builder(Transaction.Type.CREATE_CARD, timestamp, CreateCardTransaction.CARD_CREATED)
                 .card(cardToAdd.getCardNumber())
@@ -49,12 +60,14 @@ public class CreateCard implements Command, Transactionable {
                 .error(null)
                 .build();
 
-        bank.generateTransaction(input).addTransaction(owner, associatedAccount);
+        addTransaction(input, owner, associatedAccount);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Transaction generateTransaction(TransactionInput input) {
-        TransactionFactory factory = new CreateCardTransactionFactory(input);
-        return factory.createTransaction();
+    public void addTransaction(TransactionInput input, User user, Account account) {
+        bank.generateTransaction(input).addTransaction(user, account);
     }
 }

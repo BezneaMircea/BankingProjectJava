@@ -60,7 +60,8 @@ public class SendMoney implements Command, Transactionable {
             TransactionInput input = new TransactionInput.Builder(Transaction.Type.SEND_MONEY, timestamp, description)
                     .error(SendMoneyTransaction.INSUFFICIENT_FUNDS)
                     .build();
-            bank.generateTransaction(input).addTransaction(senderUser, senderAccount);
+
+            addTransaction(input, senderUser, senderAccount);
             return;
         }
 
@@ -87,14 +88,13 @@ public class SendMoney implements Command, Transactionable {
                 .error(null)
                 .build();
 
-        generateTransaction(transactionSent).addTransaction(senderUser, senderAccount);
-        generateTransaction(transactionReceived).addTransaction(receiverUser, receiverAccount);
-
+        addTransaction(transactionSent, senderUser, senderAccount);
+        addTransaction(transactionReceived, receiverUser, receiverAccount);
     }
 
+
     @Override
-    public Transaction generateTransaction(TransactionInput input) {
-        TransactionFactory factory = new SendMoneyTransactionFactory(input);
-        return factory.createTransaction();
+    public void addTransaction(TransactionInput input, User user, Account account) {
+        bank.generateTransaction(input).addTransaction(user, account);
     }
 }

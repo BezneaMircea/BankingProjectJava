@@ -24,7 +24,7 @@ public class StandardCard extends Card {
         User owner = bank.getEmailToUser().get(associatedAccount.getOwnerEmail());
 
         if (associatedAccount.getBalance() < amount && error == null)
-            error = INSUFFICIENT_FUNDS;
+            error = Account.INSUFFICIENT_FUNDS;
 
         TransactionInput payOnline = new TransactionInput.Builder(Transaction.Type.PAY_ONLINE, timestamp, "Card payment")
                 .amount(amount)

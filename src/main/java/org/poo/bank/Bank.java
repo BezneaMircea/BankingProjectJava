@@ -49,6 +49,10 @@ public class Bank {
         mapEmailToUser();
     }
 
+    public Card getCard(String cardNr) {return cardNrToCard.get(cardNr);}
+    public User getUser(String email) {return emailToUser.get(email);}
+    public Account getAccount(String iban) {return ibanToAccount.get(iban);}
+
     /**
      * Method used to write the Users in an arrayNode. Internaly it calls a user
      * method that writes a single user into an ObjectNode
@@ -111,10 +115,25 @@ public class Bank {
     public String addAccount(Account account) {
         User owner = emailToUser.get(account.getOwnerEmail());
         if (owner == null)
-            return "User not found";
+            return User.NOT_FOUND;
 
         ibanToAccount.put(account.getIban(), account);
         owner.addAccount(account);
+
+        return null;
+    }
+
+    public String addCard(Card card) {
+        Account associatedAccount = card.getAccount();
+        if(!ibanToAccount.containsValue(associatedAccount))
+            return Account.NOT_FOUND;
+
+        User owner = emailToUser.get(card.getAccount().getOwnerEmail());
+        if (owner == null)
+            return User.NOT_FOUND;
+
+        associatedAccount.getCards().add(card);
+        cardNrToCard.put(card.getCardNumber(), card);
 
         return null;
     }
@@ -186,7 +205,9 @@ public class Bank {
 
     /**
      * Method used to delete an account
-     * @param accountToDelete
+     * @param accountToDelete account to be deleted
+     * @return a String stating that if was successfully deleted
+     *         or a String saying why it couldn't be deleted (e.g. funds remaining)
      */
     public String deleteAccount(Account accountToDelete) {
         if (accountToDelete.getBalance() == 0) {
@@ -206,5 +227,21 @@ public class Bank {
 
     }
 
+    /**
+     * Method used to delete a card from a bank and of course an account.
+     * @param cardToDelete the card that needs to be deleted
+     */
+    public void deleteCard(Card cardToDelete) {
+        if (cardToDelete == null)
+            return;
+
+        cardNrToCard.remove(cardToDelete.getCardNumber());
+
+        Account associatedAccount = cardToDelete.getAccount();
+        if (associatedAccount == null)
+            return;
+
+        associatedAccount.removeCard(cardToDelete);
+    }
 
 }

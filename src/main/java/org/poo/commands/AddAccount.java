@@ -6,15 +6,13 @@ import org.poo.bank.accounts.Account;
 import org.poo.commands.transactions.AddAccountTransaction;
 import org.poo.commands.transactions.Transaction;
 import org.poo.commands.transactions.TransactionInput;
-import org.poo.commands.transactions.transactionsfactory.AddAccountTransactionFactory;
-import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
 import org.poo.users.User;
 
 /**
  * Class used to represent the addAccount command
  */
 @Getter
-public final class AddAccount implements Command {
+public final class AddAccount implements Command, Transactionable {
     private final Bank bank;
     private final String command;
     private final String email;
@@ -53,15 +51,23 @@ public final class AddAccount implements Command {
     public void execute() {
         Account accountToAdd = bank.createAccount(email, currency, accountType, interestRate);
         String error = bank.addAccount(accountToAdd);
+
+        /// Logic could be added here to print the error (if the given email wasn't valid)
         if (error != null)
             return;
 
-        TransactionInput input = new TransactionInput.Builder(Transaction.Type.ADD_ACCOUNT, timestamp, AddAccountTransaction.ACCOUNT_CREATED)
-                        .build();
-
-        User owner = bank.getEmailToUser().get(accountToAdd.getOwnerEmail());
-        bank.generateTransaction(input).addTransaction(owner, accountToAdd);
+        addTransaction(null, bank.getEmailToUser().get(accountToAdd.getOwnerEmail()), accountToAdd);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addTransaction(TransactionInput input, User user, Account account) {
+        input = new TransactionInput.Builder(Transaction.Type.ADD_ACCOUNT, timestamp, AddAccountTransaction.ACCOUNT_CREATED)
+                .build();
+
+        bank.generateTransaction(input).addTransaction(user, account);
+    }
 }
 

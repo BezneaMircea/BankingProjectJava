@@ -1,14 +1,12 @@
 package org.poo.commands;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
-import org.poo.utils.Utils;
 
 /**
  * Class used to represend the addInterest command
  */
-public class AddInterest implements Command {
+public final class AddInterest implements Command {
     private final Bank bank;
     private final String command;
     private final String account;
@@ -34,12 +32,10 @@ public class AddInterest implements Command {
      */
     @Override
     public void execute() {
-        Account accountToAddInterest = bank.getIbanToAccount().get(account);
+        Account accountToAddInterest = bank.getAccount(account);
         if (accountToAddInterest == null)
             return;
 
         bank.errorOccured(timestamp, command, accountToAddInterest.addInterest());
     }
-
-
 }
