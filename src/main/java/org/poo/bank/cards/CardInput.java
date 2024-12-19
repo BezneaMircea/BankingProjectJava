@@ -1,4 +1,4 @@
-package org.poo.bank.accounts.cards;
+package org.poo.bank.cards;
 
 import lombok.Getter;
 import org.poo.bank.accounts.Account;

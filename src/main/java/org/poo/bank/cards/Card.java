@@ -1,4 +1,4 @@
-package org.poo.bank.accounts.cards;
+package org.poo.bank.cards;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;

@@ -1,6 +1,6 @@
-package org.poo.bank.accounts.cards.card_factory;
+package org.poo.bank.cards.card_factory;
 
-import org.poo.bank.accounts.cards.Card;
+import org.poo.bank.cards.Card;
 
 /**
  * Interface implemented by specific banking card factories

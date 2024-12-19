@@ -1,7 +1,7 @@
 package org.poo.bank.commands.command_factory;
 
 import org.poo.bank.Bank;
-import org.poo.bank.accounts.cards.Card;
+import org.poo.bank.cards.Card;
 import org.poo.bank.commands.Command;
 import org.poo.bank.commands.CreateCard;
 import org.poo.fileio.CommandInput;

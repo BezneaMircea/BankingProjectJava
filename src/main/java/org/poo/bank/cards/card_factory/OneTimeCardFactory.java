@@ -1,9 +1,9 @@
-package org.poo.bank.accounts.cards.card_factory;
+package org.poo.bank.cards.card_factory;
 
 import org.poo.bank.accounts.Account;
-import org.poo.bank.accounts.cards.Card;
-import org.poo.bank.accounts.cards.CardInput;
-import org.poo.bank.accounts.cards.OneTimeCard;
+import org.poo.bank.cards.Card;
+import org.poo.bank.cards.CardInput;
+import org.poo.bank.cards.OneTimeCard;
 
 /**
  * Class used to represent the OneTimeCardFactory
