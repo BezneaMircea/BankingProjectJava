@@ -4,6 +4,7 @@ import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.transactions.*;
 import org.poo.bank.users.User;
+import org.poo.utils.Utils;
 
 /**
  * Class used to represent a one time card
@@ -42,7 +43,7 @@ public final class OneTimeCard extends Card {
 
         TransactionInput payOnline = new TransactionInput.Builder(Transaction.Type.PAY_ONLINE,
                 timestamp, Card.CARD_PAYMENT)
-                .amount(amount)
+                .amount(Utils.roundIfClose(amount))
                 .commerciant(commerciant)
                 .error(error)
                 .build();

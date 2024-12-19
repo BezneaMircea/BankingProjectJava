@@ -154,7 +154,7 @@ public abstract class Account {
      */
     public ObjectNode generateReport(final int startTimestamp, final int endTimestamp) {
         ObjectNode reportNode = Utils.MAPPER.createObjectNode();
-        reportNode.put("balance", getBalance());
+        reportNode.put("balance", Utils.roundIfClose(getBalance()));
         reportNode.put("currency", getCurrency());
         reportNode.put("IBAN", getIban());
         reportNode.set("transactions", generateReportTransaction(startTimestamp, endTimestamp));
@@ -231,7 +231,7 @@ public abstract class Account {
     public ObjectNode accountToObjectNode() {
         ObjectNode accountNode = Utils.MAPPER.createObjectNode();
         accountNode.put("IBAN", iban);
-        accountNode.put("balance", balance);
+        accountNode.put("balance", Utils.roundIfClose(balance));
         accountNode.put("currency", currency);
         accountNode.put("type", accountType.getValue());
         accountNode.set("cards", writeCards());
@@ -239,7 +239,7 @@ public abstract class Account {
         return accountNode;
     }
 
-    public ArrayNode transactionsToObjectNode(final List<Transaction> transactions,
+    public ArrayNode transactionsToArrayNode(final List<Transaction> transactions,
                                               final int startTimestamp, final int endTimestamp) {
         ArrayNode transactionArray = Utils.MAPPER.createArrayNode();
         for (Transaction transaction : transactions) {

@@ -35,7 +35,7 @@ public final class SplitPaymentTranscation extends Transaction {
         toJson.put("timestamp", getTimestamp());
         toJson.put("description", getDescription());
         toJson.put("currency", currency);
-        toJson.put("amount", amount);
+        toJson.put("amount", Utils.roundIfClose(amount));
 
         ArrayNode involvedAccountsNode = Utils.MAPPER.createArrayNode();
         for (String account : involvedAccounts) {

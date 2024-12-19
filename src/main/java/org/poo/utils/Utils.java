@@ -15,6 +15,7 @@ public final class Utils {
     private static final int DIGIT_GENERATION = 16;
     private static final String RO_STR = "RO";
     private static final String POO_STR = "POOB";
+    private static final double TOLERANCE = 1e-4;
 
 
     private static Random ibanRandom = new Random(IBAN_SEED);
@@ -23,8 +24,24 @@ public final class Utils {
     public static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
+     * rounds a number to integer if it is close enough
+     * @param number number to round if close
+     * @return the new number
+     */
+    public static double roundIfClose(final double number) {
+
+        if (Math.abs(number - Math.round(number)) < TOLERANCE) {
+            return Math.round(number);
+        }
+        return number;
+    }
+
+    public static double approximateToFourthDecimal(final double value) {
+        return Math.round(value * 10000.0) / 10000.0;
+    }
+
+    /**
      * Utility method for generating an IBAN code.
-     *
      * @return the IBAN as String
      */
     public static String generateIBAN() {

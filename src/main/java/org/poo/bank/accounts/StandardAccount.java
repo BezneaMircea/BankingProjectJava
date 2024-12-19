@@ -49,16 +49,16 @@ public final class StandardAccount extends Account {
     @Override
     protected ArrayNode
     generateReportTransaction(final int startTimestamp, final int endTimestamp) {
-        return transactionsToObjectNode(getTransactions(), startTimestamp, endTimestamp);
+        return transactionsToArrayNode(getTransactions(), startTimestamp, endTimestamp);
     }
 
     @Override
     public ObjectNode spendingsReport(final int startTimestamp, final int endTimestamp) {
         ObjectNode spendingsReportNode = Utils.MAPPER.createObjectNode();
         spendingsReportNode.put("IBAN", getIban());
-        spendingsReportNode.put("balance", getBalance());
+        spendingsReportNode.put("balance", Utils.roundIfClose(getBalance()));
         spendingsReportNode.put("currency", getCurrency());
-        spendingsReportNode.set("transactions", transactionsToObjectNode(onlineTransactions,
+        spendingsReportNode.set("transactions", transactionsToArrayNode(onlineTransactions,
                                                                          startTimestamp,
                                                                          endTimestamp));
 

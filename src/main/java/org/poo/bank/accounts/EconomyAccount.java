@@ -52,7 +52,7 @@ public final class EconomyAccount extends Account {
     @Override
     protected ArrayNode
     generateReportTransaction(final int startTimestamp, final int endTimestamp) {
-        return transactionsToObjectNode(interestTransactions, startTimestamp, endTimestamp);
+        return transactionsToArrayNode(interestTransactions, startTimestamp, endTimestamp);
     }
 
 

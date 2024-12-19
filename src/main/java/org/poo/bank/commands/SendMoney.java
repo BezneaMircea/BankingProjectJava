@@ -6,6 +6,7 @@ import org.poo.bank.transactions.SendMoneyTransaction;
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
 import org.poo.bank.users.User;
+import org.poo.utils.Utils;
 
 /**
  * Class used to represent the sendMoney command
@@ -106,7 +107,7 @@ public final class SendMoney implements Command, Transactionable {
         return new TransactionInput.Builder(Transaction.Type.SEND_MONEY, timestamp, description)
                 .senderIBAN(account)
                 .receiverIBAN(receiver)
-                .amount(amount)
+                .amount(Utils.roundIfClose(amount))
                 .currency(senderAccount.getCurrency())
                 .transferType(SendMoneyTransaction.SENT)
                 .error(null)
@@ -118,7 +119,7 @@ public final class SendMoney implements Command, Transactionable {
         return new TransactionInput.Builder(Transaction.Type.SEND_MONEY, timestamp, description)
                 .senderIBAN(account)
                 .receiverIBAN(receiver)
-                .amount(receivedSum)
+                .amount(Utils.roundIfClose(receivedSum))
                 .currency(receiverAccount.getCurrency())
                 .transferType(SendMoneyTransaction.RECEIVED)
                 .error(null)

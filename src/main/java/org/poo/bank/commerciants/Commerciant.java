@@ -76,7 +76,7 @@ public final class Commerciant implements Comparable<Commerciant> {
 
         ObjectNode nodeToReturn = Utils.MAPPER.createObjectNode();
         nodeToReturn.put("commerciant", name);
-        nodeToReturn.put("total", totalSumPayed);
+        nodeToReturn.put("total", Utils.approximateToFourthDecimal(totalSumPayed));
 
         return nodeToReturn;
     }

@@ -24,7 +24,7 @@ import java.util.List;
  * Class used for setting up the bank, it also is the
  * invoker for the Bank class (Creates commands and calls them on bank)
  */
-public class BankSettup {
+public class BankSetup {
     private final UserInput[] users;
     private final ExchangeInput[] exchangeRates;
     private final CommandInput[] commands;
@@ -36,7 +36,7 @@ public class BankSettup {
      * @param inputData the input data
      * @param output    the output ArrayNode where we will put the commands output
      */
-    public BankSettup(final ObjectInput inputData, final ArrayNode output) {
+    public BankSetup(final ObjectInput inputData, final ArrayNode output) {
         users = inputData.getUsers();
         exchangeRates = inputData.getExchangeRates();
         commands = inputData.getCommands();

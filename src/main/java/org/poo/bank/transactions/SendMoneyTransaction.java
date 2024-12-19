@@ -39,7 +39,7 @@ public final class SendMoneyTransaction extends Transaction {
             jsonNode.put("description", getDescription());
             jsonNode.put("senderIBAN", senderIBAN);
             jsonNode.put("receiverIBAN", receiverIBAN);
-            jsonNode.put("amount", amount + " " + currency);
+            jsonNode.put("amount", Utils.roundIfClose(amount) + " " + currency);
 
             jsonNode.put("transferType", transferType);
         } else {

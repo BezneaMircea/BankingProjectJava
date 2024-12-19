@@ -3,7 +3,7 @@ package org.poo.main;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.bank.BankSettup;
+import org.poo.bank.BankSetup;
 import org.poo.checker.Checker;
 import org.poo.checker.CheckerConstants;
 import org.poo.fileio.ObjectInput;
@@ -76,8 +76,8 @@ public final class Main {
 
         ArrayNode output = objectMapper.createArrayNode();
 
-        BankSettup bankSettup = new BankSettup(inputData, output);
-        bankSettup.executeCommands();
+        BankSetup bankSetup = new BankSetup(inputData, output);
+        bankSetup.executeCommands();
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);

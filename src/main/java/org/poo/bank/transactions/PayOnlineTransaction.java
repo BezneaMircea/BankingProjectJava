@@ -28,7 +28,7 @@ public final class PayOnlineTransaction extends Transaction {
         if (error == null) {
             jsonNode.put("timestamp", getTimestamp());
             jsonNode.put("description", getDescription());
-            jsonNode.put("amount", amount);
+            jsonNode.put("amount", Utils.approximateToFourthDecimal(amount));
             jsonNode.put("commerciant", commerciant);
         } else {
             jsonNode.put("timestamp", getTimestamp());
