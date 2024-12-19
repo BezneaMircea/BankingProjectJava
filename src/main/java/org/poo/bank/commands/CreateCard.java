@@ -21,11 +21,12 @@ public final class CreateCard implements Command, Transactionable {
 
     /**
      * Constructor for the createCard command
-     * @param bank the receiver bank of the command
-     * @param command the command name
-     * @param account the associatedAccount IBAN
-     * @param email the email of the User that owns the account && newCard
-     * @param cardType the card type
+     *
+     * @param bank      the receiver bank of the command
+     * @param command   the command name
+     * @param account   the associatedAccount IBAN
+     * @param email     the email of the User that owns the account && newCard
+     * @param cardType  the card type
      * @param timestamp the timestamp of the command
      */
     public CreateCard(final Bank bank, final String command, final String account,
@@ -46,11 +47,12 @@ public final class CreateCard implements Command, Transactionable {
         User owner = bank.getUser(email);
         Account associatedAccount = bank.getAccount(account);
 
-         /* The last condition in this if statement might be
-          * a separate case, but tests don't check this so
-          * it can t be treated properly yet */
-        if (owner == null || associatedAccount == null || !email.equals(associatedAccount.getOwnerEmail()))
+        /* The last condition in this if statement might be
+         * a separate case, but tests don't check this so
+         * it can t be treated properly yet */
+        if (owner == null || associatedAccount == null || !email.equals(associatedAccount.getOwnerEmail())) {
             return;
+        }
 
 
         CardInput newCard = new CardInput(Card.ACTIVE, associatedAccount, cardType);
@@ -71,7 +73,8 @@ public final class CreateCard implements Command, Transactionable {
      * {@inheritDoc}
      */
     @Override
-    public void addTransaction(TransactionInput input, User user, Account account) {
+    public void
+    addTransaction(final TransactionInput input, final User user, final Account account) {
         bank.generateTransaction(input).addTransaction(user, account);
     }
 }

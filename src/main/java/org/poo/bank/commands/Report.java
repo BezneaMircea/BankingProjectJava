@@ -18,12 +18,13 @@ public final class Report implements Command {
 
     /**
      * Constructor for the report command
-     * @param bank the receiver bank of the command
-     * @param command the command name
+     *
+     * @param bank           the receiver bank of the command
+     * @param command        the command name
      * @param startTimestamp starting timestamp for the report
-     * @param endTimestamp ending timestamp for the report
-     * @param account IBAN of the account to generate report to
-     * @param timestamp timestamp of the command
+     * @param endTimestamp   ending timestamp for the report
+     * @param account        IBAN of the account to generate report to
+     * @param timestamp      timestamp of the command
      */
     public Report(final Bank bank, final String command, final int startTimestamp,
                   final int endTimestamp, final String account, final int timestamp) {

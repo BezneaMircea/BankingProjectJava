@@ -42,8 +42,9 @@ public final class SplitPaymentTranscation extends Transaction {
         }
         toJson.set("involvedAccounts", involvedAccountsNode);
 
-        if (error != null)
+        if (error != null) {
             toJson.put("error", error);
+        }
 
         return toJson;
     }

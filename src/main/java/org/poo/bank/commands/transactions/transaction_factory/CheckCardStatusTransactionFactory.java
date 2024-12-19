@@ -4,12 +4,12 @@ import org.poo.bank.commands.transactions.CheckCardStatusTransaction;
 import org.poo.bank.commands.transactions.Transaction;
 import org.poo.bank.commands.transactions.TransactionInput;
 
-public class CheckCardStatusTransactionFactory implements TransactionFactory {
+public final class CheckCardStatusTransactionFactory implements TransactionFactory {
     private final Transaction.Type transactionType;
     private final int timestamp;
     private final String description;
 
-    public CheckCardStatusTransactionFactory(TransactionInput input) {
+    public CheckCardStatusTransactionFactory(final TransactionInput input) {
         transactionType = input.getTransactionType();
         timestamp = input.getTimestamp();
         description = input.getDescription();

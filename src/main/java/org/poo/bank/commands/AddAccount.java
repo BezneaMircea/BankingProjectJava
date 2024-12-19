@@ -23,12 +23,13 @@ public final class AddAccount implements Command, Transactionable {
 
     /**
      * Constructor for the AddAccount class
-     * @param bank the receiver bank of the command
-     * @param command the command name
-     * @param email the email of the user that will own the account
-     * @param currency currency of the account
-     * @param accountType the type of the account ("savings", "classic")
-     * @param timestamp the timestamp of the command
+     *
+     * @param bank         the receiver bank of the command
+     * @param command      the command name
+     * @param email        the email of the user that will own the account
+     * @param currency     currency of the account
+     * @param accountType  the type of the account ("savings", "classic")
+     * @param timestamp    the timestamp of the command
      * @param interestRate the interest rate (optional, used for "savings" account)
      */
     public AddAccount(final Bank bank, final String command,
@@ -57,8 +58,9 @@ public final class AddAccount implements Command, Transactionable {
         String error = bank.addAccount(accountToAdd);
 
         /// Logic could be added here to print the error (if the given email wasn't valid)
-        if (error != null)
+        if (error != null) {
             return;
+        }
 
         addTransaction(null, bank.getEmailToUser().get(accountToAdd.getOwnerEmail()), accountToAdd);
     }
@@ -67,7 +69,7 @@ public final class AddAccount implements Command, Transactionable {
      * {@inheritDoc}
      */
     @Override
-    public void addTransaction(TransactionInput input, User user, Account account) {
+    public void addTransaction(TransactionInput input, final User user, final Account account) {
         input = new TransactionInput.Builder(Transaction.Type.ADD_ACCOUNT, timestamp, Account.ACCOUNT_CREATED)
                 .build();
 

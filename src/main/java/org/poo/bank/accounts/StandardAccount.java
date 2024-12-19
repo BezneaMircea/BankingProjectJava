@@ -9,7 +9,10 @@ import org.poo.bank.commands.transactions.PayOnlineTransaction;
 import org.poo.bank.commands.transactions.Transaction;
 import org.poo.utils.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 
 /**
  * Class used to represent a StandardAccount
@@ -21,8 +24,9 @@ public final class StandardAccount extends Account {
 
     /**
      * Constructor used to the StandardAccount class
-     * @param ownerEmail email of the owner
-     * @param currency currency of the account
+     *
+     * @param ownerEmail  email of the owner
+     * @param currency    currency of the account
      * @param accountType the accountType
      */
     public StandardAccount(final String ownerEmail, final String currency, final Type accountType) {
@@ -43,7 +47,7 @@ public final class StandardAccount extends Account {
      * {@inheritDoc}
      */
     @Override
-    public String changeInterest(double interestRate) {
+    public String changeInterest(final double interestRate) {
         return NOT_SAVINGS_ACCOUNT;
     }
 
@@ -51,13 +55,16 @@ public final class StandardAccount extends Account {
      * {@inheritDoc}
      */
     @Override
-    protected ArrayNode generateReportTransaction(int startTimestamp, int endTimestamp) {
+    protected ArrayNode
+    generateReportTransaction(final int startTimestamp, final int endTimestamp) {
         ArrayNode transactionArray = Utils.MAPPER.createArrayNode();
         for (Transaction transaction : getTransactions()) {
-            if (transaction.getTimestamp() >= startTimestamp && transaction.getTimestamp() <= endTimestamp) {
+            int transactionTimestamp = transaction.getTimestamp();
+            if (transactionTimestamp >= startTimestamp && transactionTimestamp <= endTimestamp) {
                 transactionArray.add(transaction.toJson());
-            } else if (transaction.getTimestamp() > endTimestamp)
+            } else if (transactionTimestamp > endTimestamp) {
                 break;
+            }
         }
 
         return transactionArray;
@@ -67,7 +74,7 @@ public final class StandardAccount extends Account {
      * {@inheritDoc}
      */
     @Override
-    public ObjectNode spendingsReport(int startTimestamp, int endTimestamp) {
+    public ObjectNode spendingsReport(final int startTimestamp, final int endTimestamp) {
         ObjectNode spendingsReportNode = Utils.MAPPER.createObjectNode();
         spendingsReportNode.put("IBAN", getIban());
         spendingsReportNode.put("balance", getBalance());
@@ -75,10 +82,12 @@ public final class StandardAccount extends Account {
 
         ArrayNode transactionsArray = Utils.MAPPER.createArrayNode();
         for (Transaction transaction : onlineTransactions) {
-            if (transaction.getTimestamp() >= startTimestamp && transaction.getTimestamp() <= endTimestamp) {
+            int transactionTimestamp = transaction.getTimestamp();
+            if (transactionTimestamp >= startTimestamp && transactionTimestamp <= endTimestamp) {
                 transactionsArray.add(transaction.toJson());
-            } else if (transaction.getTimestamp() > endTimestamp)
+            } else if (transactionTimestamp > endTimestamp) {
                 break;
+            }
         }
         spendingsReportNode.set("transactions", transactionsArray);
 
@@ -86,8 +95,9 @@ public final class StandardAccount extends Account {
         ArrayNode commerciantsArray = Utils.MAPPER.createArrayNode();
         for (Commerciant commerciant : commerciants) {
             ObjectNode toAdd = commerciant.commerciantToJson(startTimestamp, endTimestamp);
-            if (toAdd != null)
+            if (toAdd != null) {
                 commerciantsArray.add(toAdd);
+            }
         }
         spendingsReportNode.set("commerciants", commerciantsArray);
 
@@ -98,12 +108,14 @@ public final class StandardAccount extends Account {
      * {@inheritDoc}
      */
     @Override
-    public void addTransaction(PayOnlineTransaction transaction) {
-        if (transaction == null)
+    public void addTransaction(final PayOnlineTransaction transaction) {
+        if (transaction == null) {
             return;
+        }
 
-        if (transaction.getError() != null)
+        if (transaction.getError() != null) {
             return;
+        }
 
         getTransactions().add(transaction);
         onlineTransactions.add(transaction);
@@ -119,7 +131,7 @@ public final class StandardAccount extends Account {
 
         /// If it does not exist create it and add the payment to the list
         Commerciant commerciantToAdd = new Commerciant(this, transaction.getCommerciant());
-        Commerciant.Payment payment = new Commerciant.Payment(transaction.getAmount(), transaction.getTimestamp());;
+        Commerciant.Payment payment = new Commerciant.Payment(transaction.getAmount(), transaction.getTimestamp());
         commerciantToAdd.getReceivedPayments().add(payment);
         commerciants.add(commerciantToAdd);
     }

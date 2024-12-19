@@ -4,7 +4,7 @@ import org.poo.bank.commands.transactions.SendMoneyTransaction;
 import org.poo.bank.commands.transactions.Transaction;
 import org.poo.bank.commands.transactions.TransactionInput;
 
-public class SendMoneyTransactionFactory implements TransactionFactory {
+public final class SendMoneyTransactionFactory implements TransactionFactory {
     private final Transaction.Type transactionType;
     private final int timestamp;
     private final String description;
@@ -15,7 +15,7 @@ public class SendMoneyTransactionFactory implements TransactionFactory {
     private final String transferType;
     private final String error;
 
-    public SendMoneyTransactionFactory(TransactionInput input) {
+    public SendMoneyTransactionFactory(final TransactionInput input) {
         transactionType = input.getTransactionType();
         timestamp = input.getTimestamp();
         description = input.getDescription();
@@ -26,10 +26,11 @@ public class SendMoneyTransactionFactory implements TransactionFactory {
         transferType = input.getTransferType();
         error = input.getError();
     }
+
     @Override
     public Transaction createTransaction() {
         return new SendMoneyTransaction(transactionType, timestamp, description,
-                                        senderIBAN, receiverIBAN, amount,
-                                        currency, transferType, error);
+                senderIBAN, receiverIBAN, amount,
+                currency, transferType, error);
     }
 }

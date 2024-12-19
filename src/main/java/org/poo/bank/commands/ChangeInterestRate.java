@@ -20,11 +20,12 @@ public final class ChangeInterestRate implements Command, Transactionable {
 
     /**
      * Constructor for the changeInterestRate command
-     * @param bank the receiver bank of the command
-     * @param command the command name
-     * @param account the account to change the interest rate to
+     *
+     * @param bank         the receiver bank of the command
+     * @param command      the command name
+     * @param account      the account to change the interest rate to
      * @param interestRate the new interest rate
-     * @param timestamp the timestamp of the command
+     * @param timestamp    the timestamp of the command
      */
     public ChangeInterestRate(final Bank bank, final String command, final String account,
                               final double interestRate, final int timestamp) {
@@ -41,12 +42,14 @@ public final class ChangeInterestRate implements Command, Transactionable {
     @Override
     public void execute() {
         Account accountToChangeInterest = bank.getAccount(account);
-        if (accountToChangeInterest == null)
+        if (accountToChangeInterest == null) {
             return;
+        }
 
         User owner = bank.getUser(accountToChangeInterest.getOwnerEmail());
-        if (owner == null)
+        if (owner == null) {
             return;
+        }
 
         String error = accountToChangeInterest.changeInterest(interestRate);
         if (error != null) {
@@ -62,11 +65,11 @@ public final class ChangeInterestRate implements Command, Transactionable {
      * {@inheritDoc}
      */
     @Override
-    public void addTransaction(TransactionInput input, User user, Account account) {
+    public void addTransaction(TransactionInput input, final User user, final Account acc) {
         String description = String.format(ChangeIntRateTransaction.IRATE_CHANGED, interestRate);
         input = new TransactionInput.Builder(Transaction.Type.CHANGE_INT_RATE, timestamp, description)
                 .build();
 
-        bank.generateTransaction(input).addTransaction(user, account);
+        bank.generateTransaction(input).addTransaction(user, acc);
     }
 }

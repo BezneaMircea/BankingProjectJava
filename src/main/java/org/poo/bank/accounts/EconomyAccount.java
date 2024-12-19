@@ -23,9 +23,10 @@ public final class EconomyAccount extends Account {
 
     /**
      * Constructor for the EconomyAccount class
-     * @param ownerEmail email of the owner
-     * @param currency currency of the account
-     * @param accountType the account type
+     *
+     * @param ownerEmail   email of the owner
+     * @param currency     currency of the account
+     * @param accountType  the account type
      * @param interestRate the interest rate of the account
      */
     public EconomyAccount(final String ownerEmail, final String currency,
@@ -49,8 +50,8 @@ public final class EconomyAccount extends Account {
      * {@inheritDoc}
      */
     @Override
-    public String changeInterest(double interestRate) {
-        this.interestRate = interestRate;
+    public String changeInterest(final double newInterestRate) {
+        interestRate = newInterestRate;
         return null;
     }
 
@@ -58,13 +59,16 @@ public final class EconomyAccount extends Account {
      * {@inheritDoc}
      */
     @Override
-    protected ArrayNode generateReportTransaction(int startTimestamp, int endTimestamp) {
+    protected ArrayNode
+    generateReportTransaction(final int startTimestamp, final int endTimestamp) {
         ArrayNode transactionArray = Utils.MAPPER.createArrayNode();
         for (Transaction transaction : interestTransactions) {
-            if (transaction.getTimestamp() >= startTimestamp && transaction.getTimestamp() <= endTimestamp) {
+            int transactionTimestamp = transaction.getTimestamp();
+            if (transactionTimestamp >= startTimestamp && transactionTimestamp <= endTimestamp) {
                 transactionArray.add(transaction.toJson());
-            } else if (transaction.getTimestamp() > endTimestamp)
+            } else if (transactionTimestamp > endTimestamp) {
                 break;
+            }
         }
 
         return transactionArray;
@@ -74,7 +78,7 @@ public final class EconomyAccount extends Account {
      * {@inheritDoc}
      */
     @Override
-    public ObjectNode spendingsReport(int startTimestamp, int endTimestamp) {
+    public ObjectNode spendingsReport(final int startTimestamp, final int endTimestamp) {
         ObjectNode errorNode = Utils.MAPPER.createObjectNode();
         errorNode.put("error", Account.NOT_FOR_SAVINGS_ACCOUNT);
         return errorNode;
@@ -84,7 +88,7 @@ public final class EconomyAccount extends Account {
      * {@inheritDoc}
      */
     @Override
-    public void addTransaction(ChangeIntRateTransaction transaction) {
+    public void addTransaction(final ChangeIntRateTransaction transaction) {
         getTransactions().add(transaction);
         interestTransactions.add(transaction);
     }

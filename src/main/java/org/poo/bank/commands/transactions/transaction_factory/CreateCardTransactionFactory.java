@@ -4,7 +4,7 @@ import org.poo.bank.commands.transactions.CreateCardTransaction;
 import org.poo.bank.commands.transactions.Transaction;
 import org.poo.bank.commands.transactions.TransactionInput;
 
-public class CreateCardTransactionFactory implements TransactionFactory {
+public final class CreateCardTransactionFactory implements TransactionFactory {
     private final Transaction.Type transactionType;
     private final int timestamp;
     private final String description;
@@ -13,7 +13,7 @@ public class CreateCardTransactionFactory implements TransactionFactory {
     private final String account;
     private final String error;
 
-    public CreateCardTransactionFactory(TransactionInput input) {
+    public CreateCardTransactionFactory(final TransactionInput input) {
         transactionType = input.getTransactionType();
         timestamp = input.getTimestamp();
         description = input.getDescription();
@@ -25,7 +25,8 @@ public class CreateCardTransactionFactory implements TransactionFactory {
 
     @Override
     public Transaction createTransaction() {
-        return new CreateCardTransaction(transactionType, timestamp, description, card, cardHolder, account, error);
+        return new CreateCardTransaction(transactionType, timestamp, description,
+                                         card, cardHolder, account, error);
     }
 
 }

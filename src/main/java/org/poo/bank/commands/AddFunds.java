@@ -15,10 +15,11 @@ public final class AddFunds implements Command {
 
     /**
      * Constructor for the AddFunds class
-     * @param bank the receiver bank of the command
-     * @param command the command name
-     * @param account the account to add funds to
-     * @param amount the ammount of money to add
+     *
+     * @param bank      the receiver bank of the command
+     * @param command   the command name
+     * @param account   the account to add funds to
+     * @param amount    the ammount of money to add
      * @param timestamp the timestamp of the command
      */
     public AddFunds(final Bank bank, final String command,
@@ -36,8 +37,9 @@ public final class AddFunds implements Command {
     @Override
     public void execute() {
         Account accountToAddFunds = bank.getAccount(account);
-        if (accountToAddFunds == null)
+        if (accountToAddFunds == null) {
             return;
+        }
 
         accountToAddFunds.setBalance(accountToAddFunds.getBalance() + amount);
     }

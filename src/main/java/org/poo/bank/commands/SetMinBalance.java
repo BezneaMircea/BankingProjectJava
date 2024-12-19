@@ -15,10 +15,11 @@ public final class SetMinBalance implements Command {
 
     /**
      * Constructor for the setMinBalance command
-     * @param bank the receiver bank of the command
-     * @param command the command name
-     * @param amount the min balance to set on the account
-     * @param account IBAN of the account to set min balance to
+     *
+     * @param bank      the receiver bank of the command
+     * @param command   the command name
+     * @param amount    the min balance to set on the account
+     * @param account   IBAN of the account to set min balance to
      * @param timestamp timestamp of the command
      */
     public SetMinBalance(final Bank bank, final String command,
@@ -36,9 +37,10 @@ public final class SetMinBalance implements Command {
     @Override
     public void execute() {
         Account targetedAccount = bank.getAccount(account);
-        if (targetedAccount == null)
+        if (targetedAccount == null) {
             return;
-        
+        }
+
         targetedAccount.setMinBalance(amount);
     }
 }

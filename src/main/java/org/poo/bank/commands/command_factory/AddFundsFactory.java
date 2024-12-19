@@ -5,7 +5,7 @@ import org.poo.bank.commands.AddFunds;
 import org.poo.bank.commands.Command;
 import org.poo.fileio.CommandInput;
 
-public class AddFundsFactory implements CommandFactory{
+public final class AddFundsFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final String account;

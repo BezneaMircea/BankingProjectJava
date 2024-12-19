@@ -4,12 +4,12 @@ import org.poo.bank.commands.transactions.DeleteAccountTransaction;
 import org.poo.bank.commands.transactions.Transaction;
 import org.poo.bank.commands.transactions.TransactionInput;
 
-public class DeleteAccountTransactionFactory implements TransactionFactory {
+public final class DeleteAccountTransactionFactory implements TransactionFactory {
     private final Transaction.Type transactionType;
     private final int timestamp;
     private final String description;
 
-    public DeleteAccountTransactionFactory(TransactionInput input) {
+    public DeleteAccountTransactionFactory(final TransactionInput input) {
         transactionType = input.getTransactionType();
         timestamp = input.getTimestamp();
         description = input.getDescription();

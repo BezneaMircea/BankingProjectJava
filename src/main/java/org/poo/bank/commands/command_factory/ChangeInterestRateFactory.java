@@ -5,7 +5,7 @@ import org.poo.bank.commands.ChangeInterestRate;
 import org.poo.bank.commands.Command;
 import org.poo.fileio.CommandInput;
 
-public class ChangeInterestRateFactory implements CommandFactory {
+public final class ChangeInterestRateFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final String account;

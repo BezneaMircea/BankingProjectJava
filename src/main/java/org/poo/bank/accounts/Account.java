@@ -43,6 +43,7 @@ public abstract class Account {
 
         /**
          * returns the associated Type of input string;
+         *
          * @param input the input string
          * @return the associated Type
          */
@@ -51,7 +52,8 @@ public abstract class Account {
                 if (type.value.equalsIgnoreCase(input)) {
                     return type;
                 }
-            } throw new IllegalArgumentException("Not a valid account type: " + input);
+            }
+            throw new IllegalArgumentException("Not a valid account type: " + input);
         }
 
     }
@@ -68,8 +70,9 @@ public abstract class Account {
 
     /**
      * Constructor for the account class
-     * @param ownerEmail email of the owner
-     * @param currency currency of the account
+     *
+     * @param ownerEmail  email of the owner
+     * @param currency    currency of the account
      * @param accountType the account type
      */
     public Account(final String ownerEmail, final String currency, final Type accountType) {
@@ -85,9 +88,10 @@ public abstract class Account {
 
     /**
      * Performs a money transfer to accountToTransfer
+     *
      * @param accountToTransfer the account that receives the money
-     * @param amountToTransfer the amount to transfer from the current account
-     * @param amountToReceive the amount that the receiver account gets (the converted amount)
+     * @param amountToTransfer  the amount to transfer from the current account
+     * @param amountToReceive   the amount that the receiver account gets (the converted amount)
      */
     public void transfer(final Account accountToTransfer,
                          final double amountToTransfer,
@@ -95,7 +99,6 @@ public abstract class Account {
         balance -= amountToTransfer;
         accountToTransfer.balance += amountToReceive;
     }
-
 
 
     /**
@@ -148,15 +151,17 @@ public abstract class Account {
 
     /**
      * Method used to add interest to an account
+     *
      * @return null if no error occurred or an appropriate error otherwise
      */
     public abstract String addInterest();
 
     /**
      * This method is used to change the interest of an account
+     *
      * @param newInterestRate the new interestRate
      * @return null if no error occurred or an appropriate error otherwise
-     *         (e.g. the account wasn't a saving account)
+     * (e.g. the account wasn't a saving account)
      */
     public abstract String changeInterest(double newInterestRate);
 
@@ -171,6 +176,7 @@ public abstract class Account {
      * This method is used to generate a spending report.
      * Since different accounts generate different spendingsReports
      * (e.g. savings accounts don t take all the transactions in consideration)
+     *
      * @return an objectNode representing the report
      */
     public abstract ObjectNode spendingsReport(int startTimestamp, int endTimestamp);
@@ -178,6 +184,7 @@ public abstract class Account {
 
     /**
      * Method used to check if this account owns a card
+     *
      * @param card card to check
      * @return true if it exists, false otherwise
      */
@@ -187,6 +194,7 @@ public abstract class Account {
 
     /**
      * Method used to add a card to this account
+     *
      * @param card card to be added
      */
     public void addCard(final Card card) {
@@ -195,6 +203,7 @@ public abstract class Account {
 
     /**
      * Method used to remove a card from this account
+     *
      * @param card card to be removed
      */
     public void removeCard(final Card card) {
@@ -203,6 +212,7 @@ public abstract class Account {
 
     /**
      * Method used to write an account to an ObjectNode
+     *
      * @return the ObjectNode corresponding to this account
      */
     public ObjectNode accountToObjectNode() {

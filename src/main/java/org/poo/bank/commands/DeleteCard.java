@@ -18,10 +18,11 @@ public final class DeleteCard implements Command, Transactionable {
 
     /**
      * Constructor for the deleteCard command
-     * @param bank the receiver bank of the command
-     * @param command the command name
+     *
+     * @param bank       the receiver bank of the command
+     * @param command    the command name
      * @param cardNumber the number of the card to be deleted
-     * @param timestamp timestamp of the command
+     * @param timestamp  timestamp of the command
      */
     public DeleteCard(final Bank bank, final String command,
                       final String cardNumber, final int timestamp) {
@@ -38,8 +39,9 @@ public final class DeleteCard implements Command, Transactionable {
     @Override
     public void execute() {
         Card cardToDelete = bank.getCard(cardNumber);
-        if (cardToDelete == null)
+        if (cardToDelete == null) {
             return;
+        }
 
         Account associatedAccount = cardToDelete.getAccount();
         User owner = bank.getUser(associatedAccount.getOwnerEmail());
@@ -53,7 +55,7 @@ public final class DeleteCard implements Command, Transactionable {
      * {@inheritDoc}
      */
     @Override
-    public void addTransaction(TransactionInput input, User user, Account account) {
+    public void addTransaction(TransactionInput input, final User user, final Account account) {
         input = new TransactionInput.Builder(Transaction.Type.DELETE_CARD, timestamp, Card.DESTROYED)
                 .card(cardNumber)
                 .cardHolder(user.getEmail())

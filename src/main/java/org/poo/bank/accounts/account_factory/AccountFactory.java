@@ -8,6 +8,7 @@ import org.poo.bank.accounts.Account;
 public interface AccountFactory {
     /**
      * Method used to create a banking account
+     *
      * @return the created account
      */
     Account createAccount();

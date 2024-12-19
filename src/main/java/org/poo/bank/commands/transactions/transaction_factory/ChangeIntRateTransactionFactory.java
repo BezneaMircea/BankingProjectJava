@@ -4,12 +4,12 @@ import org.poo.bank.commands.transactions.ChangeIntRateTransaction;
 import org.poo.bank.commands.transactions.Transaction;
 import org.poo.bank.commands.transactions.TransactionInput;
 
-public class ChangeIntRateTransactionFactory implements TransactionFactory {
+public final class ChangeIntRateTransactionFactory implements TransactionFactory {
     private final Transaction.Type transactionType;
     private final int timestamp;
     private final String description;
 
-    public ChangeIntRateTransactionFactory(TransactionInput input) {
+    public ChangeIntRateTransactionFactory(final TransactionInput input) {
         transactionType = input.getTransactionType();
         timestamp = input.getTimestamp();
         description = input.getDescription();

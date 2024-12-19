@@ -5,7 +5,7 @@ import org.poo.bank.commands.Command;
 import org.poo.bank.commands.SpendingReport;
 import org.poo.fileio.CommandInput;
 
-public class SpendingReportFactory implements CommandFactory {
+public final class SpendingReportFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final int startTimestamp;

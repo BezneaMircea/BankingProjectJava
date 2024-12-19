@@ -77,7 +77,7 @@ public final class Main {
         ArrayNode output = objectMapper.createArrayNode();
 
         BankSettup bankSettup = new BankSettup(inputData, output);
-        bankSettup.ExecuteCommands();
+        bankSettup.executeCommands();
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);

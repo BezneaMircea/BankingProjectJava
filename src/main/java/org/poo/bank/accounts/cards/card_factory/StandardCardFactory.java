@@ -15,6 +15,7 @@ public final class StandardCardFactory implements CardFactory {
 
     /**
      * Constructor for the OneTimeCardFactory
+     *
      * @param input the card input
      */
     public StandardCardFactory(final CardInput input) {

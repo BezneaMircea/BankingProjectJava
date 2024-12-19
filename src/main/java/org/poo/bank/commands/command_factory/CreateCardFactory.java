@@ -6,7 +6,7 @@ import org.poo.bank.commands.Command;
 import org.poo.bank.commands.CreateCard;
 import org.poo.fileio.CommandInput;
 
-public class CreateCardFactory implements CommandFactory {
+public final class CreateCardFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final String account;

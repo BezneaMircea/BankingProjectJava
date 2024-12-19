@@ -8,6 +8,7 @@ import org.poo.bank.accounts.cards.Card;
 public interface CardFactory {
     /**
      * Method used to create a banking card
+     *
      * @return the created card
      */
     Card createCard();

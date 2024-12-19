@@ -22,13 +22,14 @@ public final class SplitPayment implements Command, Transactionable {
 
     /**
      * Constructor for the spendingReport command
-     * @param bank the receiver bank of the command
-     * @param command the command name
+     *
+     * @param bank             the receiver bank of the command
+     * @param command          the command name
      * @param accountsForSplit list of IBANs corresponding to the accounts involved
      *                         in the split payment
-     * @param timestamp timestamp of the command
-     * @param currency currency in which the payment is performed
-     * @param amount the amount that is to be paid
+     * @param timestamp        timestamp of the command
+     * @param currency         currency in which the payment is performed
+     * @param amount           the amount that is to be paid
      */
     public SplitPayment(final Bank bank, final String command, final List<String> accountsForSplit,
                         final int timestamp, final String currency, final double amount) {
@@ -51,12 +52,14 @@ public final class SplitPayment implements Command, Transactionable {
         String error = null;
         for (String account : accountsForSplit.reversed()) {
             Account currentAccount = bank.getAccount(account);
-            if (currentAccount == null)
+            if (currentAccount == null) {
                 return;
+            }
 
             User owner = bank.getUser(currentAccount.getOwnerEmail());
-            if (owner == null)
+            if (owner == null) {
                 return;
+            }
 
             double exchangeRate = bank.getExchangeRates().getRate(currency, currentAccount.getCurrency());
             double totalSumToPay = exchangeRate * amountToPay;
@@ -90,7 +93,8 @@ public final class SplitPayment implements Command, Transactionable {
      * {@inheritDoc}
      */
     @Override
-    public void addTransaction(TransactionInput input, User user, Account account) {
+    public void
+    addTransaction(final TransactionInput input, final User user, final Account account) {
         bank.generateTransaction(input).addTransaction(user, account);
     }
 }

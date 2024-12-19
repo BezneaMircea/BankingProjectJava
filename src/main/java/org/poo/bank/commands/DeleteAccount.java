@@ -21,10 +21,11 @@ public final class DeleteAccount implements Command, Transactionable {
 
     /**
      * Constructor for the deleteAccount command
-     * @param bank the receiver bank of the command
-     * @param command the command name
-     * @param account the IBAN of the account to be deleted
-     * @param email the email of the owner
+     *
+     * @param bank      the receiver bank of the command
+     * @param command   the command name
+     * @param account   the IBAN of the account to be deleted
+     * @param email     the email of the owner
      * @param timestamp timestamp of the command
      */
     public DeleteAccount(final Bank bank, final String command,
@@ -44,8 +45,9 @@ public final class DeleteAccount implements Command, Transactionable {
         Account accountToDelete = bank.getAccount(account);
         User ownerOfAccount = bank.getUser(email);
 
-        if (accountToDelete == null || ownerOfAccount == null)
+        if (accountToDelete == null || ownerOfAccount == null) {
             return;
+        }
 
 
         String ret = bank.deleteAccount(accountToDelete);
@@ -54,7 +56,7 @@ public final class DeleteAccount implements Command, Transactionable {
         if (ret.equals(Account.DELETED)) {
             outputNode.put("success", ret);
             outputNode.put("timestamp", timestamp);
-        } else if (ret.equals(Account.CANT_DELETE)){
+        } else if (ret.equals(Account.CANT_DELETE)) {
             outputNode.put("error", ret);
             outputNode.put("timestamp", timestamp);
 
@@ -74,7 +76,7 @@ public final class DeleteAccount implements Command, Transactionable {
      * {@inheritDoc}
      */
     @Override
-    public void addTransaction(TransactionInput input, User user, Account account) {
+    public void addTransaction(TransactionInput input, final User user, final Account account) {
         input = new TransactionInput.Builder(Transaction.Type.DELETE_ACCOUNT, timestamp, Account.FUNDS_REMAINING)
                 .build();
 

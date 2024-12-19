@@ -21,12 +21,13 @@ public final class SendMoney implements Command, Transactionable {
 
     /**
      * Constructor for the sendMoney command
-     * @param bank the receiver bank of the command
-     * @param command the command name
-     * @param account IBAN of the sender account
-     * @param amount amount to transfer
-     * @param receiver IBAN of the receiver account
-     * @param timestamp timestamp of the command
+     *
+     * @param bank        the receiver bank of the command
+     * @param command     the command name
+     * @param account     IBAN of the sender account
+     * @param amount      amount to transfer
+     * @param receiver    IBAN of the receiver account
+     * @param timestamp   timestamp of the command
      * @param description description of the transfer
      */
     public SendMoney(final Bank bank, final String command,
@@ -48,19 +49,23 @@ public final class SendMoney implements Command, Transactionable {
     @Override
     public void execute() {
         Account senderAccount = bank.getAccount(account);
-        if (senderAccount == null)
+        if (senderAccount == null) {
             return;
+        }
 
         User senderUser = bank.getUser(senderAccount.getOwnerEmail());
-        if (senderUser == null)
+        if (senderUser == null) {
             return;
+        }
 
         Account receiverAccount = bank.getAccount(receiver);
-        if (senderUser.hasAlias(receiver))
+        if (senderUser.hasAlias(receiver)) {
             receiverAccount = senderUser.getAccountFromAlias(receiver);
+        }
 
-        if (receiverAccount == null)
+        if (receiverAccount == null) {
             return;
+        }
 
         User receiverUser = bank.getUser(receiverAccount.getOwnerEmail());
         if (receiverUser == null) {
@@ -92,7 +97,8 @@ public final class SendMoney implements Command, Transactionable {
      * {@inheritDoc}
      */
     @Override
-    public void addTransaction(TransactionInput input, User user, Account account) {
+    public void
+    addTransaction(final TransactionInput input, final User user, final Account account) {
         bank.generateTransaction(input).addTransaction(user, account);
     }
 
@@ -110,7 +116,7 @@ public final class SendMoney implements Command, Transactionable {
     }
 
     private TransactionInput
-    createReceiveInput(Account receiverAccount, final double receivedSum) {
+    createReceiveInput(final Account receiverAccount, final double receivedSum) {
         return new TransactionInput.Builder(Transaction.Type.SEND_MONEY, timestamp, description)
                 .senderIBAN(account)
                 .receiverIBAN(receiver)

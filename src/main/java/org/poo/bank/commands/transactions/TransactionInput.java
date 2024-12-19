@@ -21,7 +21,7 @@ public final class TransactionInput {
     private final String account;
     private final String commerciant;
 
-    private TransactionInput(Builder builder) {
+    private TransactionInput(final Builder builder) {
         transactionType = builder.transactionType;
         timestamp = builder.timestamp;
         description = builder.description;
@@ -38,7 +38,7 @@ public final class TransactionInput {
         commerciant = builder.commerciant;
     }
 
-    public static class Builder {
+    public static final class Builder {
         private final Transaction.Type transactionType;
         private final int timestamp;
         private final String description;
@@ -55,69 +55,105 @@ public final class TransactionInput {
         private String account = null;
         private String commerciant = null;
 
-        public Builder(final Transaction.Type transactionType, int timestamp, final String description) {
+        public Builder(final Transaction.Type transactionType, final int timestamp,
+                       final String description) {
             this.transactionType = transactionType;
             this.timestamp = timestamp;
             this.description = description;
         }
 
-        public Builder currency(String currency) {
-            this.currency = currency;
+        /**
+         * for coding style
+         */
+        public Builder currency(final String setCurrency) {
+            currency = setCurrency;
             return this;
         }
 
-        public Builder amount(double amount) {
-            this.amount = amount;
+        /**
+         * for coding style
+         */
+        public Builder amount(final double setAmount) {
+            amount = setAmount;
             return this;
         }
 
-        public Builder involvedAccounts(List<String> involvedAccounts) {
-            this.involvedAccounts = involvedAccounts;
+        /**
+         * for coding style
+         */
+        public Builder involvedAccounts(final List<String> setInvolvedAccounts) {
+            involvedAccounts = setInvolvedAccounts;
             return this;
         }
 
-        public Builder error(String error) {
-            this.error = error;
+        /**
+         * for coding style
+         */
+        public Builder error(final String setError) {
+            error = setError;
             return this;
         }
 
-        public Builder senderIBAN(String senderIBAN) {
-            this.senderIBAN = senderIBAN;
+        /**
+         * for coding style
+         */
+        public Builder senderIBAN(final String setSenderIBAN) {
+            senderIBAN = setSenderIBAN;
             return this;
         }
 
-        public Builder receiverIBAN(String receiverIBAN) {
-            this.receiverIBAN = receiverIBAN;
+        /**
+         * for coding style
+         */
+        public Builder receiverIBAN(final String setReceiverIBAN) {
+            receiverIBAN = setReceiverIBAN;
             return this;
         }
 
-        public Builder transferType(String transferType) {
-            this.transferType = transferType;
+        /**
+         * for coding style
+         */
+        public Builder transferType(final String setTransferType) {
+            transferType = setTransferType;
             return this;
         }
 
-        public Builder card(String card) {
-            this.card = card;
+        /**
+         * for coding style
+         */
+        public Builder card(final String setCard) {
+            card = setCard;
             return this;
         }
 
-        public Builder cardHolder(String cardHolder) {
-            this.cardHolder = cardHolder;
+        /**
+         * for coding style
+         */
+        public Builder cardHolder(final String setCardHolder) {
+            cardHolder = setCardHolder;
             return this;
         }
 
-        public Builder account(String account) {
-            this.account = account;
+        /**
+         * for coding style
+         */
+        public Builder account(final String setAccount) {
+            account = setAccount;
             return this;
         }
 
-        public Builder commerciant(String commerciant) {
-            this.commerciant = commerciant;
+        /**
+         * for coding style
+         */
+        public Builder commerciant(final String setCommerciant) {
+            commerciant = setCommerciant;
             return this;
         }
 
 
-
+        /**
+         * for coding style
+         */
         public TransactionInput build() {
             return new TransactionInput(this);
         }

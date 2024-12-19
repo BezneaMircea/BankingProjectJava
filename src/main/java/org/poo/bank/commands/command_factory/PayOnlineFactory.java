@@ -5,7 +5,7 @@ import org.poo.bank.commands.Command;
 import org.poo.bank.commands.PayOnline;
 import org.poo.fileio.CommandInput;
 
-public class PayOnlineFactory implements CommandFactory {
+public final class PayOnlineFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final String cardNumber;
@@ -31,6 +31,8 @@ public class PayOnlineFactory implements CommandFactory {
 
     @Override
     public Command createCommand() {
-        return new PayOnline(bank, command, cardNumber, amount, currency, timestamp, description, commerciant, email);
+        return new PayOnline(bank, command, cardNumber,
+                             amount, currency, timestamp,
+                             description, commerciant, email);
     }
 }

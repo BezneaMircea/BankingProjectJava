@@ -23,15 +23,16 @@ public final class PayOnline implements Command, Transactionable {
 
     /**
      * Constructor for the payOnline command
-     * @param bank the receiver bank of the command
-     * @param command the command name
-     * @param cardNumber the nr of the card used for payment
-     * @param amount the amount to pay
-     * @param currency the currency in which the payment will be proceeded
-     * @param timestamp timestamp of the command
+     *
+     * @param bank        the receiver bank of the command
+     * @param command     the command name
+     * @param cardNumber  the nr of the card used for payment
+     * @param amount      the amount to pay
+     * @param currency    the currency in which the payment will be proceeded
+     * @param timestamp   timestamp of the command
      * @param description description of the payment
      * @param commerciant the commerciant to which the payment is done
-     * @param email email of the owner that has the account where the card is linked
+     * @param email       email of the owner that has the account where the card is linked
      */
     public PayOnline(final Bank bank, final String command, final String cardNumber,
                      final double amount, final String currency, final int timestamp,
@@ -61,8 +62,9 @@ public final class PayOnline implements Command, Transactionable {
         Account associatedAccount = usedCard.getAccount();
         User cardOwner = bank.getUser(email);
         if (cardOwner == null || associatedAccount == null ||
-                !(cardOwner.hasAccount(associatedAccount) && associatedAccount.hasCard(usedCard)))
+                !(cardOwner.hasAccount(associatedAccount) && associatedAccount.hasCard(usedCard))) {
             return;
+        }
 
 
         double exchangeRate = bank.getExchangeRates().getRate(currency, associatedAccount.getCurrency());
@@ -77,6 +79,6 @@ public final class PayOnline implements Command, Transactionable {
      * {@inheritDoc}
      */
     @Override
-    public void addTransaction(TransactionInput input, User user, Account account) {
+    public void addTransaction(final TransactionInput input, final User user, final Account account) {
     }
 }

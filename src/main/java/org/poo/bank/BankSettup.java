@@ -4,13 +4,17 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.poo.bank.commands.Command;
+
 import org.poo.bank.commands.command_factory.*;
-import org.poo.fileio.*;
 import org.poo.bank.users.User;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.bank.users.usersfactory.BasicUserFactory;
 import org.poo.bank.users.usersfactory.UserFactory;
+import org.poo.fileio.CommandInput;
+import org.poo.fileio.ExchangeInput;
+import org.poo.fileio.ObjectInput;
+import org.poo.fileio.UserInput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +32,9 @@ public class BankSettup {
 
     /**
      * Constructor for the BankSettup (Invoker)
+     *
      * @param inputData the input data
-     * @param output the output ArrayNode where we will put the commands output
+     * @param output    the output ArrayNode where we will put the commands output
      */
     public BankSettup(final ObjectInput inputData, final ArrayNode output) {
         users = inputData.getUsers();
@@ -55,8 +60,9 @@ public class BankSettup {
     }
 
     private Graph<String, DefaultWeightedEdge> createExchange() {
-        if (exchangeRates == null || exchangeRates.length == 0)
+        if (exchangeRates == null || exchangeRates.length == 0) {
             return null;
+        }
 
         Graph<String, DefaultWeightedEdge> myExchange = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
         for (ExchangeInput exchange : exchangeRates) {
@@ -73,7 +79,7 @@ public class BankSettup {
         return myExchange;
     }
 
-    private Command CreateCommand(Bank bank, CommandInput command) {
+    private Command createCommand(final Bank bank, final CommandInput command) {
         CommandFactory factory;
 
         switch (command.getCommand()) {
@@ -109,11 +115,11 @@ public class BankSettup {
      * commands and thencalls command.execute(). If the given command is not in the
      * commands list nothing happens
      */
-    public void ExecuteCommands() {
+    public void executeCommands() {
         Bank bank = createBank();
 
         for (CommandInput command : commands) {
-            Command commandToExecute = CreateCommand(bank, command);
+            Command commandToExecute = createCommand(bank, command);
             if (commandToExecute != null) {
                 commandToExecute.execute();
             }

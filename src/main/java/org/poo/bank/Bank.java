@@ -30,7 +30,7 @@ import java.util.Map;
  * Class used to represent a Bank
  */
 @Getter
-public class Bank {
+public final class Bank {
     private final Map<String, User> emailToUser;
     private final Map<String, Account> ibanToAccount;
     private final Map<String, Card> cardNrToCard;
@@ -51,13 +51,31 @@ public class Bank {
         mapEmailToUser();
     }
 
-    public Card getCard(String cardNr) {return cardNrToCard.get(cardNr);}
-    public User getUser(String email) {return emailToUser.get(email);}
-    public Account getAccount(String iban) {return ibanToAccount.get(iban);}
+    /**
+     * for coding style
+     */
+    public Card getCard(final String cardNr) {
+        return cardNrToCard.get(cardNr);
+    }
+
+    /**
+     * for coding style
+     */
+    public User getUser(final String email) {
+        return emailToUser.get(email);
+    }
+
+    /**
+     * for coding style
+     */
+    public Account getAccount(final String iban) {
+        return ibanToAccount.get(iban);
+    }
 
     /**
      * Method used to write the Users in an arrayNode. Internaly it calls a user
      * method that writes a single user into an ObjectNode
+     *
      * @return ArrayNode of users
      */
     public ArrayNode usersToArrayNode() {
@@ -71,11 +89,12 @@ public class Bank {
 
     /**
      * Method used to create an account
+     *
      * @param input input for the new account to create
      * @return the created Account
      * @throws IllegalArgumentException if the account type doesn't correspond to the account types
      */
-    public Account createAccount(AccountInput input) {
+    public Account createAccount(final AccountInput input) {
         AccountFactory factory;
 
         switch (input.getAccountType()) {
@@ -89,10 +108,11 @@ public class Bank {
 
     /**
      * Method used to create a card
+     *
      * @param input the card input
      * @return the created Card
      */
-    public Card createCard(CardInput input) {
+    public Card createCard(final CardInput input) {
         CardFactory factory;
         switch (input.getCardType()) {
             case Card.Type.ONE_TIME -> factory = new OneTimeCardFactory(input);
@@ -106,13 +126,15 @@ public class Bank {
     /**
      * Method used to add an account to the bank. It adds the account both in the
      * bank account database (Map ibanToAccount) and in the users accounts list
+     *
      * @param account the account to be added
      * @return null if no error occurs, an appropriate error String otherwise
      */
-    public String addAccount(Account account) {
+    public String addAccount(final Account account) {
         User owner = emailToUser.get(account.getOwnerEmail());
-        if (owner == null)
+        if (owner == null) {
             return User.NOT_FOUND;
+        }
 
         ibanToAccount.put(account.getIban(), account);
         owner.addAccount(account);
@@ -120,14 +142,21 @@ public class Bank {
         return null;
     }
 
-    public String addCard(Card card) {
+    /**
+     * Method used to add a card to the bank
+     * @param card the card to be added
+     * @return null if no error occurs or an appropriate String otherwise
+     */
+    public String addCard(final Card card) {
         Account associatedAccount = card.getAccount();
-        if(!ibanToAccount.containsValue(associatedAccount))
+        if (!ibanToAccount.containsValue(associatedAccount)) {
             return Account.NOT_FOUND;
+        }
 
         User owner = emailToUser.get(card.getAccount().getOwnerEmail());
-        if (owner == null)
+        if (owner == null) {
             return User.NOT_FOUND;
+        }
 
         associatedAccount.getCards().add(card);
         cardNrToCard.put(card.getCardNumber(), card);
@@ -137,13 +166,15 @@ public class Bank {
 
     /**
      * Method used to create a specific transaction based on a transaction input
+     *
      * @param input the transaction input
      * @return the transaction.
      * @throws IllegalArgumentException if the input doesn't correspond to any transaction
      */
-    public Transaction generateTransaction(TransactionInput input) {
-        if (input == null)
+    public Transaction generateTransaction(final TransactionInput input) {
+        if (input == null) {
             return null;
+        }
 
         TransactionFactory factory;
         switch (input.getTransactionType()) {
@@ -163,11 +194,12 @@ public class Bank {
     }
 
     private CustomFloydWarshallPaths<String, DefaultWeightedEdge>
-    initializeExchangeRates(final Graph<String, DefaultWeightedEdge> exchangeRates) {
-        if (exchangeRates == null)
+    initializeExchangeRates(final Graph<String, DefaultWeightedEdge> rates) {
+        if (rates == null) {
             return null;
+        }
 
-        return new CustomFloydWarshallPaths<>(exchangeRates);
+        return new CustomFloydWarshallPaths<>(rates);
     }
 
     private void mapEmailToUser() {
@@ -180,13 +212,15 @@ public class Bank {
      * Method used to check and perform an action if an error occurs.
      * It adds an ObjectNode to the output array containing the command,
      * the timestamp of the command and the error that occured
+     *
      * @param timestamp the timestamp of the command
-     * @param command the command name
-     * @param error the error. Nothing happens if null
+     * @param command   the command name
+     * @param error     the error. Nothing happens if null
      */
-    public void errorOccured(final int timestamp, final String command,final String error) {
-        if (error == null)
+    public void errorOccured(final int timestamp, final String command, final String error) {
+        if (error == null) {
             return;
+        }
 
         ObjectNode outputNode = Utils.MAPPER.createObjectNode();
         outputNode.put("timestamp", timestamp);
@@ -202,16 +236,18 @@ public class Bank {
 
     /**
      * Method used to delete an account
+     *
      * @param accountToDelete account to be deleted
      * @return a String stating that if was successfully deleted
-     *         or a String saying why it couldn't be deleted (e.g. funds remaining)
+     * or a String saying why it couldn't be deleted (e.g. funds remaining)
      */
-    public String deleteAccount(Account accountToDelete) {
+    public String deleteAccount(final Account accountToDelete) {
         if (accountToDelete.getBalance() == 0) {
             ibanToAccount.remove(accountToDelete.getIban());
 
-            for (Card card : accountToDelete.getCards())
+            for (Card card : accountToDelete.getCards()) {
                 cardNrToCard.remove(card.getCardNumber());
+            }
             accountToDelete.getCards().clear();
 
             User owner = emailToUser.get(accountToDelete.getOwnerEmail());
@@ -226,17 +262,20 @@ public class Bank {
 
     /**
      * Method used to delete a card from a bank and of course an account.
+     *
      * @param cardToDelete the card that needs to be deleted
      */
-    public void deleteCard(Card cardToDelete) {
-        if (cardToDelete == null)
+    public void deleteCard(final Card cardToDelete) {
+        if (cardToDelete == null) {
             return;
+        }
 
         cardNrToCard.remove(cardToDelete.getCardNumber());
 
         Account associatedAccount = cardToDelete.getAccount();
-        if (associatedAccount == null)
+        if (associatedAccount == null) {
             return;
+        }
 
         associatedAccount.removeCard(cardToDelete);
     }

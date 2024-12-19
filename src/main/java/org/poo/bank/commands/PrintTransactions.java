@@ -16,9 +16,10 @@ public final class PrintTransactions implements Command {
 
     /**
      * Constructor for the printTransactions command
-     * @param bank the receiver bank of the command
-     * @param command the command name
-     * @param email the email of the user to print transactions for
+     *
+     * @param bank      the receiver bank of the command
+     * @param command   the command name
+     * @param email     the email of the user to print transactions for
      * @param timestamp timestamp of the command
      */
     public PrintTransactions(final Bank bank, final String command,
@@ -35,8 +36,9 @@ public final class PrintTransactions implements Command {
     @Override
     public void execute() {
         User user = bank.getUser(email);
-        if (user == null)
+        if (user == null) {
             return;
+        }
 
         ObjectNode transactionsNode = Utils.MAPPER.createObjectNode();
         transactionsNode.put("command", command);

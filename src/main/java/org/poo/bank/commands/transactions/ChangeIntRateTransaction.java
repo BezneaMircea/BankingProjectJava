@@ -5,7 +5,7 @@ import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
 public final class ChangeIntRateTransaction extends Transaction {
-    public static String IRATE_CHANGED= "Interest rate of the account changed to %.2f";
+    public static String IRATE_CHANGED = "Interest rate of the account changed to %.2f";
 
 
     public ChangeIntRateTransaction(final Type transactionType, final int timestamp, final String description) {

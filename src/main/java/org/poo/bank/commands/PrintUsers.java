@@ -14,8 +14,9 @@ public final class PrintUsers implements Command {
 
     /**
      * Constructor for the printUsers command
-     * @param bank the receiver bank of the command
-     * @param command the command name
+     *
+     * @param bank      the receiver bank of the command
+     * @param command   the command name
      * @param timestamp timestamp of the command
      */
     public PrintUsers(final Bank bank, final String command, final int timestamp) {

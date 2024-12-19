@@ -17,11 +17,12 @@ public final class SetAlias implements Command {
 
     /**
      * Constructor for the setAlias command
-     * @param bank the receiver bank of the command
-     * @param command the command name
-     * @param email email of the user that creates an alias
-     * @param alias the alias
-     * @param account IBAN of the account that alias is associated with
+     *
+     * @param bank      the receiver bank of the command
+     * @param command   the command name
+     * @param email     email of the user that creates an alias
+     * @param alias     the alias
+     * @param account   IBAN of the account that alias is associated with
      * @param timestamp timestamp of the command
      */
     public SetAlias(final Bank bank, final String command,
@@ -43,8 +44,9 @@ public final class SetAlias implements Command {
         Account associatedAccount = bank.getAccount(account);
         User userToSetAlias = bank.getUser(email);
 
-        if (associatedAccount == null || userToSetAlias == null)
+        if (associatedAccount == null || userToSetAlias == null) {
             return;
+        }
 
         userToSetAlias.addAlias(associatedAccount, alias);
     }

@@ -19,10 +19,11 @@ public final class CheckCardStatus implements Command, Transactionable {
 
     /**
      * Constructor for the checkCardStatusCommand
-     * @param bank the receiver bank of the command
-     * @param command the command name
+     *
+     * @param bank       the receiver bank of the command
+     * @param command    the command name
      * @param cardNumber the number of the card to be checked
-     * @param timestamp the timestamp of the command
+     * @param timestamp  the timestamp of the command
      */
     public CheckCardStatus(final Bank bank, final String command,
                            final String cardNumber, final int timestamp) {
@@ -43,8 +44,9 @@ public final class CheckCardStatus implements Command, Transactionable {
             return;
         }
 
-        if (cardToCheck.getStatus().equals(Card.FROZEN))
+        if (cardToCheck.getStatus().equals(Card.FROZEN)) {
             return;
+        }
 
         Account associatedAccount = cardToCheck.getAccount();
         if (associatedAccount.getBalance() < associatedAccount.getMinBalance()) {
@@ -63,7 +65,7 @@ public final class CheckCardStatus implements Command, Transactionable {
      * {@inheritDoc}
      */
     @Override
-    public void addTransaction(TransactionInput input, User user, Account account) {
+    public void addTransaction(TransactionInput input, final User user, final Account account) {
         input = new TransactionInput.Builder(Transaction.Type.CHECK_CARD_STAT, timestamp, Card.LIMIT_REACHED).build();
         bank.generateTransaction(input).addTransaction(user, account);
     }

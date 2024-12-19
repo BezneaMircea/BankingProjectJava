@@ -5,7 +5,7 @@ import org.poo.bank.commands.Command;
 import org.poo.bank.commands.SetMinBalance;
 import org.poo.fileio.CommandInput;
 
-public class SetMinBalanceFactory implements CommandFactory{
+public final class SetMinBalanceFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final double amount;

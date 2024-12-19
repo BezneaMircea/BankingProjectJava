@@ -5,14 +5,14 @@ import org.poo.bank.commands.Command;
 import org.poo.bank.commands.DeleteAccount;
 import org.poo.fileio.CommandInput;
 
-public class DeleteAccountFactory implements CommandFactory{
+public final class DeleteAccountFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final String account;
     private final String email;
     private final int timestamp;
 
-    public DeleteAccountFactory(Bank bank, CommandInput input) {
+    public DeleteAccountFactory(final Bank bank, final CommandInput input) {
         this.bank = bank;
         command = input.getCommand();
         account = input.getAccount();

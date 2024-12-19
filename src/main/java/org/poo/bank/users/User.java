@@ -32,9 +32,10 @@ public abstract class User {
 
     /**
      * Constructor of the User class
+     *
      * @param firstName first name of the user
-     * @param lastName last name of the user
-     * @param email email of the user
+     * @param lastName  last name of the user
+     * @param email     email of the user
      */
     public User(final String firstName, final String lastName, final String email) {
         this.firstName = firstName;

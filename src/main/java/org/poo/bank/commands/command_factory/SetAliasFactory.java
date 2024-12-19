@@ -5,7 +5,7 @@ import org.poo.bank.commands.Command;
 import org.poo.bank.commands.SetAlias;
 import org.poo.fileio.CommandInput;
 
-public class SetAliasFactory implements CommandFactory {
+public final class SetAliasFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final String email;
@@ -13,7 +13,7 @@ public class SetAliasFactory implements CommandFactory {
     private final String account;
     private final int timestamp;
 
-    public SetAliasFactory(Bank bank, CommandInput input) {
+    public SetAliasFactory(final Bank bank, final CommandInput input) {
         this.bank = bank;
         command = input.getCommand();
         email = input.getEmail();

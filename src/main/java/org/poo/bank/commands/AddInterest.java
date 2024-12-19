@@ -14,9 +14,10 @@ public final class AddInterest implements Command {
 
     /**
      * Constructor for the addInterest command
-     * @param bank the receiver bank of the command
-     * @param command the command name
-     * @param account the account that receives the interest
+     *
+     * @param bank      the receiver bank of the command
+     * @param command   the command name
+     * @param account   the account that receives the interest
      * @param timestamp the timestamp of the command
      */
     public AddInterest(final Bank bank, final String command,
@@ -33,8 +34,9 @@ public final class AddInterest implements Command {
     @Override
     public void execute() {
         Account accountToAddInterest = bank.getAccount(account);
-        if (accountToAddInterest == null)
+        if (accountToAddInterest == null) {
             return;
+        }
 
         bank.errorOccured(timestamp, command, accountToAddInterest.addInterest());
     }

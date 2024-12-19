@@ -33,6 +33,7 @@ public abstract class Card {
 
         /**
          * returns the associated Type of input string;
+         *
          * @param input the input string
          * @return the associated Type
          */
@@ -41,7 +42,8 @@ public abstract class Card {
                 if (type.value.equalsIgnoreCase(input)) {
                     return type;
                 }
-            } throw new IllegalArgumentException("Not a valid card type: " + input);
+            }
+            throw new IllegalArgumentException("Not a valid card type: " + input);
         }
     }
 
@@ -52,7 +54,8 @@ public abstract class Card {
 
     /**
      * Constructor for the Card class
-     * @param status the status of the card (should be active)
+     *
+     * @param status  the status of the card (should be active)
      * @param account the account to which the card is linked
      */
     public Card(final String status, final Account account, final Type cardType) {
@@ -64,6 +67,7 @@ public abstract class Card {
 
     /**
      * Method used to write a card as an objectNode
+     *
      * @return the objectNode corresponding to the card
      */
     public ObjectNode cardToObjectNode() {
@@ -77,9 +81,10 @@ public abstract class Card {
     /**
      * Method used to pay with a card. This should generate transactions towards the account
      * and the owner of the account.
-     * @param bank the bank where the card is linked
-     * @param amount amount to pay
-     * @param timestamp timestamp of the payment
+     *
+     * @param bank        the bank where the card is linked
+     * @param amount      amount to pay
+     * @param timestamp   timestamp of the payment
      * @param commerciant commerciant to pay
      */
     public abstract void pay(Bank bank, double amount, int timestamp, String commerciant);

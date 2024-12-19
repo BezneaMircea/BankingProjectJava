@@ -4,7 +4,7 @@ import org.poo.bank.commands.transactions.DeleteCardTransaction;
 import org.poo.bank.commands.transactions.Transaction;
 import org.poo.bank.commands.transactions.TransactionInput;
 
-public class DeleteCardTransactionFactory implements TransactionFactory {
+public final class DeleteCardTransactionFactory implements TransactionFactory {
     private final Transaction.Type transactionType;
     private final int timestamp;
     private final String description;
@@ -23,6 +23,7 @@ public class DeleteCardTransactionFactory implements TransactionFactory {
 
     @Override
     public Transaction createTransaction() {
-        return new DeleteCardTransaction(transactionType, timestamp, description, card, cardHolder, account);
+        return new DeleteCardTransaction(transactionType, timestamp, description,
+                                         card, cardHolder, account);
     }
 }

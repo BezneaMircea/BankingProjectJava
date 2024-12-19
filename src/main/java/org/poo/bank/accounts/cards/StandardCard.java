@@ -13,28 +13,31 @@ public final class StandardCard extends Card {
     /**
      * Constructor for the StandardCard, just calls the superclass constructor with
      * the given params
-     * @param status status of the card
+     *
+     * @param status  status of the card
      * @param account account to which the card is linked
      */
-    public StandardCard(String status, Account account, Type cardType) {
+    public StandardCard(final String status, final Account account, final Type cardType) {
         super(status, account, cardType);
     }
 
     /**
      * {@inheritDoc}
      */
-     @Override
+    @Override
     public void pay(final Bank bank, final double amount,
-                      final int timestamp, final String commerciant) {
+                    final int timestamp, final String commerciant) {
         String error = null;
-        if (getStatus().equals(FROZEN))
+        if (getStatus().equals(FROZEN)) {
             error = Card.IS_FROZEN;
+        }
 
         Account associatedAccount = getAccount();
         User owner = bank.getEmailToUser().get(associatedAccount.getOwnerEmail());
 
-        if (associatedAccount.getBalance() < amount && error == null)
+        if (associatedAccount.getBalance() < amount && error == null) {
             error = Account.INSUFFICIENT_FUNDS;
+        }
 
         TransactionInput payOnline = new TransactionInput.Builder(Transaction.Type.PAY_ONLINE, timestamp, "Card payment")
                 .amount(amount)
@@ -44,8 +47,9 @@ public final class StandardCard extends Card {
 
         bank.generateTransaction(payOnline).addTransaction(owner, associatedAccount);
 
-        if (error == null)
+        if (error == null) {
             associatedAccount.setBalance(associatedAccount.getBalance() - amount);
+        }
 
     }
 }

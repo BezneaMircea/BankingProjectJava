@@ -12,7 +12,8 @@ public final class OneTimeCard extends Card {
     /**
      * Constructor for the OneTimeCard, just calls the superclass constructor with
      * the given params
-     * @param status status of the card
+     *
+     * @param status  status of the card
      * @param account account to which the card is linked
      */
     public OneTimeCard(final String status, final Account account, final Type cardType) {
@@ -20,13 +21,12 @@ public final class OneTimeCard extends Card {
     }
 
 
-
     /**
      * {@inheritDoc}
      */
     @Override
     public void pay(final Bank bank, final double amount,
-                      final int timestamp, final String commerciant) {
+                    final int timestamp, final String commerciant) {
         String error = null;
 
         if (getStatus().equals(FROZEN)) {
@@ -52,7 +52,6 @@ public final class OneTimeCard extends Card {
         }
 
 
-
         associatedAccount.setBalance(associatedAccount.getBalance() - amount);
         associatedAccount.removeCard(this);
         bank.getCardNrToCard().remove(getCardNumber());
@@ -61,7 +60,6 @@ public final class OneTimeCard extends Card {
         Card cardToAdd = bank.createCard(newCardInput);
         associatedAccount.addCard(cardToAdd);
         bank.getCardNrToCard().put(cardToAdd.getCardNumber(), cardToAdd);
-
 
 
         TransactionInput deleteCard = new TransactionInput.Builder(Transaction.Type.DELETE_CARD, timestamp, Card.DESTROYED)

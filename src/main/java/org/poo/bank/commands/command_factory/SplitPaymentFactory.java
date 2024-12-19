@@ -7,7 +7,7 @@ import org.poo.fileio.CommandInput;
 
 import java.util.List;
 
-public class SplitPaymentFactory implements CommandFactory {
+public final class SplitPaymentFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final List<String> accountsForSplit;

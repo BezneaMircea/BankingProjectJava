@@ -6,7 +6,7 @@ import org.poo.bank.commands.AddAccount;
 import org.poo.bank.commands.Command;
 import org.poo.fileio.CommandInput;
 
-public class AddAccountFactory implements CommandFactory {
+public final class AddAccountFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final String email;
@@ -24,6 +24,7 @@ public class AddAccountFactory implements CommandFactory {
         timestamp = input.getTimestamp();
         interestRate = input.getInterestRate();
     }
+
 
     @Override
     public Command createCommand() {

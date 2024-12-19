@@ -5,7 +5,7 @@ import org.poo.bank.commands.Command;
 import org.poo.bank.commands.PrintUsers;
 import org.poo.fileio.CommandInput;
 
-public class PrintUsersFactory implements CommandFactory {
+public final class PrintUsersFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final int timestamp;
