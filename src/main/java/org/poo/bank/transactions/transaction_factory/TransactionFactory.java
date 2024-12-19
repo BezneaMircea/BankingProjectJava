@@ -1,6 +1,6 @@
-package org.poo.bank.commands.transactions.transaction_factory;
+package org.poo.bank.transactions.transaction_factory;
 
-import org.poo.bank.commands.transactions.Transaction;
+import org.poo.bank.transactions.Transaction;
 
 /**
  * Interface implemented by specific Transaction Factories

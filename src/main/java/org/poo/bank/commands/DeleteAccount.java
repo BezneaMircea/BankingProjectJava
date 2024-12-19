@@ -3,8 +3,8 @@ package org.poo.bank.commands;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
-import org.poo.bank.commands.transactions.Transaction;
-import org.poo.bank.commands.transactions.TransactionInput;
+import org.poo.bank.transactions.Transaction;
+import org.poo.bank.transactions.TransactionInput;
 import org.poo.bank.users.User;
 import org.poo.utils.Utils;
 

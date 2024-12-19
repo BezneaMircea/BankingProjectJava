@@ -10,21 +10,56 @@ with various operations (e.g. addAccount, payOnline, sendMoney)
 # Packaging:
 ## 1. The _**bank**_ package
 >This is the most importante package for the application logic.  
-> It includes **four** other _**packages**_:  
->>#### 1.a accounts
->>#### 1.b commands
->>#### 1.c commerciants
->>#### 1.d users
-> and the following **two** classes:
->> #### 1.a Bank --- represent the bank with operations like:
->>> createCard(cardInput card) -- creates a card  
->>> createAccount(accountInput account) -- creates an account  
->>> etc.
->> #### 1.b BankSettup -- represents the invoker that calls/creates commands
->> ####                   that are received by input
->> ####   
+> It includes **SIX** other _**packages**_:  
+>>#### 1. _*accounts*_ containing:
+>>> - Account (abstract class) extended by:
+>>>  - Specific accounts (e.g. EconomyAccount)
+>>> - account_factory containing:  
+>>>  - AccountFactory (Interface) implemented by:
+>>>    - SpecificFactories (e.g EconomyAccountFactory)
+>>>
+>>#### 2. _*cards*_ containing:
+>>> - Card (abstract class) extended by:
+  >>>  - OneTimeCard
+  >>>  - StandardCard
+>>> - card_factory containing:
+>>>  - CardFactory (Interface) implemented by:
+>>>    - SpecificFactories (e.g. OneTimeCardFactory)
+>>> - CardInput 
+>>#### 3. _*commands*_ containing:
+>>> - Command (Interface) implemented by:
+>>>   - All specific commands (e.g. AddInterest)
+>>> - Transactionable (Interface) implemented by:
+>>>  - Some commands, those who generate transactions (e.g. AddAccount)
+>>> - command_factory containing:
+>>>  - CommandFactory (Interface) implemented by:
+>>>    - SpecificFactories (e.g. AddAccountFactory)
+>>#### 4. _*commerciants*_ containing:
+>>> - Commerciant
+>>#### 5. _*transactions*_ containing:
+>>> - Transaction (abstract class) extended by: 
+>>>  - Specific transactions (e.g. AddAccountTransaction, CheckCardStatusTransaction etc.)
+>>> - transaction_factory containing:
+>>>  - TransactionFactory (Interface) implemented by:
+>>>    - SpecificFactories (e.g. AddAccountTransactionFactory)
+>>#### 6. _*users*_ containing:
+>>> - User (abstract class) extended by:
+>>>  - BasicUser
+>>> - users_factory containing:
+>>>  - UserFactory (Interface) implemented by:
+>>>    - SpecificFactories (e.g. BasicUserFactory)  
+> - #### And the following **two** classes:
+>> 1. Bank - represents the bank with operations like:
+>> -  createCard(cardInput card) -- creates a card  
+>> - createAccount(accountInput account) -- creates an account  
+>> - etc.  
+>> 2. BankSettup -- represents the invoker that calls/creates commands
+>>                   that are received by input. It has methods like:
+>> - executeCommands() - executes the commands
+>> - createBank() - creates a bank
 
-### 1.a  _**accounts**_ package 
+
+## 2. The _**utils**_ package
 > This package includes 
 #### account_factory
       >  AccontFactory (Interface) implemented by:  

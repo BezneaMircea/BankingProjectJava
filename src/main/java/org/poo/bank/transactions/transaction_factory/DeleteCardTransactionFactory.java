@@ -1,8 +1,8 @@
-package org.poo.bank.commands.transactions.transaction_factory;
+package org.poo.bank.transactions.transaction_factory;
 
-import org.poo.bank.commands.transactions.DeleteCardTransaction;
-import org.poo.bank.commands.transactions.Transaction;
-import org.poo.bank.commands.transactions.TransactionInput;
+import org.poo.bank.transactions.DeleteCardTransaction;
+import org.poo.bank.transactions.Transaction;
+import org.poo.bank.transactions.TransactionInput;
 
 public final class DeleteCardTransactionFactory implements TransactionFactory {
     private final Transaction.Type transactionType;

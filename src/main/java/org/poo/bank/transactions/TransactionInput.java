@@ -1,4 +1,4 @@
-package org.poo.bank.commands.transactions;
+package org.poo.bank.transactions;
 
 import lombok.Getter;
 

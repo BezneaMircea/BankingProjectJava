@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import org.poo.bank.commerciants.Commerciant;
-import org.poo.bank.commands.transactions.PayOnlineTransaction;
-import org.poo.bank.commands.transactions.Transaction;
+import org.poo.bank.transactions.PayOnlineTransaction;
+import org.poo.bank.transactions.Transaction;
 import org.poo.utils.Utils;
 
 import java.util.ArrayList;

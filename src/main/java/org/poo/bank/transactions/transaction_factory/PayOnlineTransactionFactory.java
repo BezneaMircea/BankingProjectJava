@@ -1,8 +1,8 @@
-package org.poo.bank.commands.transactions.transaction_factory;
+package org.poo.bank.transactions.transaction_factory;
 
-import org.poo.bank.commands.transactions.PayOnlineTransaction;
-import org.poo.bank.commands.transactions.Transaction;
-import org.poo.bank.commands.transactions.TransactionInput;
+import org.poo.bank.transactions.PayOnlineTransaction;
+import org.poo.bank.transactions.Transaction;
+import org.poo.bank.transactions.TransactionInput;
 
 public final class PayOnlineTransactionFactory implements TransactionFactory {
     private final Transaction.Type transactionType;

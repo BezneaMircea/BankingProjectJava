@@ -2,8 +2,8 @@ package org.poo.bank.cards;
 
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
-import org.poo.bank.commands.transactions.Transaction;
-import org.poo.bank.commands.transactions.TransactionInput;
+import org.poo.bank.transactions.Transaction;
+import org.poo.bank.transactions.TransactionInput;
 import org.poo.bank.users.User;
 
 /**

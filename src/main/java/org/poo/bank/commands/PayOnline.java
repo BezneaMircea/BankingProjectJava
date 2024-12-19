@@ -3,7 +3,7 @@ package org.poo.bank.commands;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.cards.Card;
-import org.poo.bank.commands.transactions.TransactionInput;
+import org.poo.bank.transactions.TransactionInput;
 import org.poo.bank.users.User;
 
 

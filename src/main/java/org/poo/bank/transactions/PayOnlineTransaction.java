@@ -1,4 +1,4 @@
-package org.poo.bank.commands.transactions;
+package org.poo.bank.transactions;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;

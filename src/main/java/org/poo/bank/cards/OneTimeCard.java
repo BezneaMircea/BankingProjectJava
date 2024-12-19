@@ -2,7 +2,7 @@ package org.poo.bank.cards;
 
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
-import org.poo.bank.commands.transactions.*;
+import org.poo.bank.transactions.*;
 import org.poo.bank.users.User;
 
 /**
