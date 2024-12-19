@@ -55,7 +55,7 @@ public final class DeleteAccount implements Command, Transactionable {
         if (ret.equals(Account.DELETED)) {
             outputNode.put("success", ret);
             outputNode.put("timestamp", timestamp);
-        } else if (ret.equals(Account.FUNDS_REMAINING)){
+        } else if (ret.equals(Account.CANT_DELETE)){
             outputNode.put("error", ret);
             outputNode.put("timestamp", timestamp);
 
@@ -76,7 +76,7 @@ public final class DeleteAccount implements Command, Transactionable {
      */
     @Override
     public void addTransaction(TransactionInput input, User user, Account account) {
-        input = new TransactionInput.Builder(Transaction.Type.DELETE_ACCOUNT, timestamp, DeleteAccountTransaction.FUNDS_REMAINING)
+        input = new TransactionInput.Builder(Transaction.Type.DELETE_ACCOUNT, timestamp, Account.FUNDS_REMAINING)
                 .build();
 
         bank.generateTransaction(input).addTransaction(user, account);

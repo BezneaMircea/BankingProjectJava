@@ -12,12 +12,22 @@ import org.poo.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class used to represent an EconomyAccount
+ */
 @Getter
 @Setter
 public final class EconomyAccount extends Account {
     private double interestRate;
     private final List<Transaction> interestTransactions;
 
+    /**
+     * Constructor for the EconomyAccount class
+     * @param ownerEmail email of the owner
+     * @param currency currency of the account
+     * @param accountType the account type
+     * @param interestRate the interest rate of the account
+     */
     public EconomyAccount(final String ownerEmail, final String currency,
                           final String accountType, final double interestRate) {
         super(ownerEmail, currency, accountType);
@@ -26,18 +36,27 @@ public final class EconomyAccount extends Account {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String addInterest() {
         setInterestRate(getInterestRate() + interestRate);
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String changeInterest(double interestRate) {
         this.interestRate = interestRate;
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected ArrayNode generateReportTransaction(int startTimestamp, int endTimestamp) {
         ArrayNode transactionArray = Utils.mapper.createArrayNode();
@@ -51,6 +70,9 @@ public final class EconomyAccount extends Account {
         return transactionArray;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ObjectNode spendingsReport(int startTimestamp, int endTimestamp) {
         ObjectNode errorNode = Utils.mapper.createObjectNode();
@@ -58,6 +80,9 @@ public final class EconomyAccount extends Account {
         return errorNode;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addTransaction(ChangeIntRateTransaction transaction) {
         getTransactions().add(transaction);

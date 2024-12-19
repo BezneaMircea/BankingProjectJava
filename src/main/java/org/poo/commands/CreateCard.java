@@ -53,7 +53,7 @@ public final class CreateCard implements Command, Transactionable {
         Card cardToAdd = bank.createCard(Card.ACTIVE, associatedAccount, command);
         bank.addCard(cardToAdd);
 
-        TransactionInput input = new TransactionInput.Builder(Transaction.Type.CREATE_CARD, timestamp, CreateCardTransaction.CARD_CREATED)
+        TransactionInput input = new TransactionInput.Builder(Transaction.Type.CREATE_CARD, timestamp, Card.CARD_CREATED)
                 .card(cardToAdd.getCardNumber())
                 .cardHolder(owner.getEmail())
                 .account(account)

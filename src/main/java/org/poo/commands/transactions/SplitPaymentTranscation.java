@@ -9,7 +9,6 @@ import java.util.List;
 
 
 public final class SplitPaymentTranscation extends Transaction {
-    public static String SPLIT_PAYMENT_ERROR = "Account %s has insufficient funds for a split payment.";
     public static String SPLIT_PAYMENT_DESCRIPTION = "Split payment of %.2f %s";
 
     private final String currency;

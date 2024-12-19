@@ -32,7 +32,7 @@ public class Bank {
     private final Map<String, User> emailToUser;
     private final Map<String, Account> ibanToAccount;
     private final Map<String, Card> cardNrToCard;
-    private final CustomFloydWarshallShortestPaths<String, DefaultWeightedEdge> exchangeRates;
+    private final CustomFloydWarshallPaths<String, DefaultWeightedEdge> exchangeRates;
     private final List<User> users;
     private final ArrayNode output;
 
@@ -165,12 +165,12 @@ public class Bank {
         return factory.createTransaction();
     }
 
-    private CustomFloydWarshallShortestPaths<String, DefaultWeightedEdge>
+    private CustomFloydWarshallPaths<String, DefaultWeightedEdge>
     initializeExchangeRates(final Graph<String, DefaultWeightedEdge> exchangeRates) {
         if (exchangeRates == null)
             return null;
 
-        return new CustomFloydWarshallShortestPaths<>(exchangeRates);
+        return new CustomFloydWarshallPaths<>(exchangeRates);
     }
 
     private void mapEmailToUser() {
@@ -222,7 +222,7 @@ public class Bank {
 
             return Account.DELETED;
         } else {
-            return Account.FUNDS_REMAINING;
+            return Account.CANT_DELETE;
         }
 
     }

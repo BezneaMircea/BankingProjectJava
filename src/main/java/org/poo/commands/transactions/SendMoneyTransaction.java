@@ -8,7 +8,6 @@ import org.poo.utils.Utils;
 public final class SendMoneyTransaction extends Transaction {
     public static String SENT = "sent";
     public static String RECEIVED = "received";
-    public static String INSUFFICIENT_FUNDS = "Insufficient funds";
 
     private final String senderIBAN;
     private final String receiverIBAN;

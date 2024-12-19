@@ -7,9 +7,11 @@ import org.poo.commands.Command;
 import org.poo.commands.factory.*;
 import org.poo.fileio.*;
 import org.poo.users.User;
-import org.poo.users.UserFactory;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.poo.users.usersfactory.BasicUserFactory;
+import org.poo.users.usersfactory.UserFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +44,11 @@ public class BankSettup {
 
     private List<User> createUsers() {
         List<User> bankUsers = new ArrayList<>();
+
+        /// Switch statement can be added in case of new type of users apear in the project
         for (UserInput user : users) {
-            bankUsers.add(UserFactory.createUser(user));
+            UserFactory factory = new BasicUserFactory(user);
+            bankUsers.add(factory.createUser());
         }
 
         return bankUsers;

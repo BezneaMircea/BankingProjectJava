@@ -69,7 +69,7 @@ public final class SendMoney implements Command, Transactionable {
 
         if (senderAccount.getBalance() < amount) {
             TransactionInput input = new TransactionInput.Builder(Transaction.Type.SEND_MONEY, timestamp, description)
-                    .error(SendMoneyTransaction.INSUFFICIENT_FUNDS)
+                    .error(Account.INSUFFICIENT_FUNDS)
                     .build();
 
             addTransaction(input, senderUser, senderAccount);

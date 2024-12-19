@@ -8,13 +8,25 @@ import java.util.List;
 import java.util.Map;
 
 
-public class CustomFloydWarshallShortestPaths <V, E> {
+/**
+ * Class used for applying FloydWarshall algorithm on a graph
+ * and storing the computed data. The shortest path will not be a sum
+ * of the edges cost but a product in this case.
+ * @param <V> The Vertex of graph
+ * @param <E>
+ * @see org.jgrapht.alg.shortestpath.FloydWarshallShortestPaths
+ */
+public final class CustomFloydWarshallPaths <V, E> {
     private final Graph<V, E> graph;
     private final double[][] distanceMatrix;
     private final Map<V, Integer> vertexMap;
 
 
-    public CustomFloydWarshallShortestPaths(Graph<V, E> graph) {
+    /**
+     * Constructor used to run initialize the data needed for applying the algorithm
+     * @param graph the graph on which we want to compute FloydWarshall
+     */
+    public CustomFloydWarshallPaths(Graph<V, E> graph) {
         this.graph = graph;
         distanceMatrix = new double[graph.vertexSet().size()][graph.vertexSet().size()];
         vertexMap = new HashMap<>();
@@ -56,6 +68,13 @@ public class CustomFloydWarshallShortestPaths <V, E> {
         }
     }
 
+    /**
+     * This method is used to get the shortest path from source to dest
+     * after computing it in the class constructor
+     * @param source source node
+     * @param dest destination node
+     * @return the shortest path from source to dest
+     */
     public double getRate(V source, V dest) {
         int sourceIndex = vertexMap.get(source);
         int destIndex = vertexMap.get(dest);
@@ -63,15 +82,4 @@ public class CustomFloydWarshallShortestPaths <V, E> {
         return distanceMatrix[sourceIndex][destIndex];
     }
 
-    public void printIt() {
-        for (V v : graph.vertexSet()) {
-            int sourceIndex = vertexMap.get(v);
-
-            List<V> vertexList = new ArrayList<>(graph.vertexSet());
-            for (V vertex : vertexList) {
-                int destIndex = vertexMap.get(vertex);
-                System.out.printf("%s to %s has rate: %f\n", v, vertex, distanceMatrix[sourceIndex][destIndex]);
-            }
-        }
-    }
 }

@@ -1,42 +1,36 @@
 package org.poo.bank.accounts.cards;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
-import org.poo.commands.factory.CommandFactory;
-import org.poo.commands.factory.DeleteCardFactory;
 import org.poo.commands.transactions.*;
-import org.poo.commands.transactions.transactionsfactory.CreateCardTransactionFactory;
-import org.poo.commands.transactions.transactionsfactory.DeleteCardTransactionFactory;
-import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
 import org.poo.users.User;
 
-public class OneTimeCard extends Card {
+/**
+ * Class used to represent a one time card
+ */
+public final class OneTimeCard extends Card {
+    /**
+     * Constructor for the OneTimeCard, just calls the superclass constructor with
+     * the given params
+     * @param status status of the card
+     * @param account account to which the card is linked
+     */
     public OneTimeCard(String status, Account account) {
         super(status, account);
     }
 
 
-//    "timestamp" : 27,
-//            "description" : "The card has been destroyed",
-//            "card" : "7901879264253296",
-//            "cardHolder" : "Leanne_Scott-Davies@yandex.nz",
-//            "account" : "RO90POOB5450777208072365"
-//}, {
-//        "timestamp" : 27,
-//        "description" : "New card created",
-//        "card" : "7317745095154687",
-//        "cardHolder" : "Leanne_Scott-Davies@yandex.nz",
-//        "account" : "RO90POOB5450777208072365"
-//        }, {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void pay(final Bank bank, final double amount,
                       final int timestamp, final String commerciant) {
         String error = null;
 
         if (getStatus().equals(FROZEN))
-            error = PayOnlineTransaction.IS_FROZEN;
+            error = Card.IS_FROZEN;
 
         Account associatedAccount = getAccount();
         User owner = bank.getEmailToUser().get(getAccount().getOwnerEmail());
@@ -74,7 +68,7 @@ public class OneTimeCard extends Card {
                 .account(getAccount().getIban())
                 .build();
 
-        TransactionInput createCard = new TransactionInput.Builder(Transaction.Type.CREATE_CARD, timestamp, CreateCardTransaction.CARD_CREATED)
+        TransactionInput createCard = new TransactionInput.Builder(Transaction.Type.CREATE_CARD, timestamp, Card.CARD_CREATED)
                 .card(cardToAdd.getCardNumber())
                 .cardHolder(getAccount().getOwnerEmail())
                 .account(getAccount().getIban())

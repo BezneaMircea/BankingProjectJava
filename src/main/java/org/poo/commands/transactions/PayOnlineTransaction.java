@@ -8,8 +8,6 @@ import org.poo.utils.Utils;
 
 @Getter
 public final class PayOnlineTransaction extends Transaction {
-    public static String IS_FROZEN = "The card is frozen";
-
     private final double amount;
     private final String commerciant;
     private final String error;

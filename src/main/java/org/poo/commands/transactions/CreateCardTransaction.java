@@ -5,8 +5,6 @@ import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
 public final class CreateCardTransaction extends Transaction {
-    public static String CARD_CREATED = "New card created";
-
     private final String card;
     private final String cardHolder;
     private final String account;

@@ -5,14 +5,16 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.poo.bank.accounts.Account;
-import org.poo.commands.transactions.Transaction;
 import org.poo.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.round;
 
+
+/**
+ * Class used to represent a Commerciant
+ */
 @Getter
 @Setter
 public final class Commerciant implements Comparable<Commerciant> {
@@ -20,10 +22,18 @@ public final class Commerciant implements Comparable<Commerciant> {
     private final String name;
     private final List<Payment> receivedPayments;
 
+    /**
+     * Class used to represent a payment
+     */
     public static class Payment {
         private final double amount;
         private final int timestamp;
 
+        /**
+         * Constructor for the payment class
+         * @param amount the paid sum
+         * @param timestamp the timestamp when the payment occurred
+         */
         public Payment(final double amount, final int timestamp) {
             this.amount = amount;
             this.timestamp = timestamp;
@@ -31,6 +41,11 @@ public final class Commerciant implements Comparable<Commerciant> {
     }
 
 
+    /**
+     * Constructor for a commerciant
+     * @param belongsToAccount the account that this commerciant belongs to
+     * @param name the name of the commerciant
+     */
     public Commerciant(final Account belongsToAccount, final String name) {
         this.belongsToAccount = belongsToAccount;
         this.name = name;
@@ -43,6 +58,13 @@ public final class Commerciant implements Comparable<Commerciant> {
         return name.compareTo(o.getName());
     }
 
+    /**
+     * Method used to write the payments towards this commerciant in a
+     * time interval
+     * @param startingTimestamp start of the time interval
+     * @param endingTimestamp end o the time interval
+     * @return null if no sum was paid to this commerciant, an appropriate ObjectNode otherwise
+     */
     public ObjectNode commerciantToJson(int startingTimestamp, int endingTimestamp) {
         double totalSumPayed = sumTransactions(startingTimestamp, endingTimestamp);
 
@@ -51,7 +73,7 @@ public final class Commerciant implements Comparable<Commerciant> {
 
         ObjectNode nodeToReturn = Utils.mapper.createObjectNode();
         nodeToReturn.put("commerciant", name);
-        nodeToReturn.put("total", round(totalSumPayed * 1000) / 1000.0);
+        nodeToReturn.put("total", totalSumPayed);
 
         return nodeToReturn;
     }

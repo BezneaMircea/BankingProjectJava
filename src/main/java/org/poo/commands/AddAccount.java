@@ -64,7 +64,7 @@ public final class AddAccount implements Command, Transactionable {
      */
     @Override
     public void addTransaction(TransactionInput input, User user, Account account) {
-        input = new TransactionInput.Builder(Transaction.Type.ADD_ACCOUNT, timestamp, AddAccountTransaction.ACCOUNT_CREATED)
+        input = new TransactionInput.Builder(Transaction.Type.ADD_ACCOUNT, timestamp, Account.ACCOUNT_CREATED)
                 .build();
 
         bank.generateTransaction(input).addTransaction(user, account);

@@ -13,22 +13,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class used to represent a user of our banking application
+ */
 @Data
-abstract public class User {
+public abstract class User {
     public static String NOT_FOUND = "User not found";
 
-    private String firstName;
-    private String lastName;
-    private String email;
-    private List<Account> accounts;
-    private List<Transaction> transactions;
-    private Map<String, Account> aliases;
-    /* Add the transactions list */
+    enum Type {
+        BASIC
+    }
 
-    public User(UserInput userInput) {
-        this.firstName = userInput.getFirstName();
-        this.lastName = userInput.getLastName();
-        this.email = userInput.getEmail();
+    private final String firstName;
+    private final String lastName;
+    private final String email;
+    private final List<Account> accounts;
+    private final List<Transaction> transactions;
+    private final Map<String, Account> aliases;
+
+    /**
+     * Constructor of the User class
+     * @param firstName first name of the user
+     * @param lastName last name of the user
+     * @param email email of the user
+     */
+    public User(final String firstName, final String lastName, final String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
 
         accounts = new ArrayList<>();
         transactions = new ArrayList<>();

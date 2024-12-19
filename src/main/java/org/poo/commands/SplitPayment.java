@@ -61,7 +61,7 @@ public final class SplitPayment implements Command, Transactionable {
             double exchangeRate = bank.getExchangeRates().getRate(currency, currentAccount.getCurrency());
             double totalSumToPay = exchangeRate * amountToPay;
             if (currentAccount.getBalance() < totalSumToPay) {
-                error = String.format(SplitPaymentTranscation.SPLIT_PAYMENT_ERROR, currentAccount.getIban());
+                error = String.format(Account.SPLIT_PAYMENT_ERROR, currentAccount.getIban());
                 break;
             }
         }

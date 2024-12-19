@@ -3,7 +3,6 @@ package org.poo.bank.accounts;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import jdk.jshell.execution.Util;
 import lombok.Getter;
 import org.poo.bank.Commerciant;
 import org.poo.commands.transactions.PayOnlineTransaction;
@@ -12,29 +11,45 @@ import org.poo.utils.Utils;
 
 import java.util.*;
 
-import static java.lang.Math.round;
-
+/**
+ * Class used to represent a StandardAccount
+ */
 @Getter
 public final class StandardAccount extends Account {
     private final List<Transaction> onlineTransactions;
     private final List<Commerciant> commerciants;
 
+    /**
+     * Constructor used to the StandardAccount class
+     * @param ownerEmail email of the owner
+     * @param currency currency of the account
+     * @param accountType the accountType
+     */
     public StandardAccount(String ownerEmail, String currency, String accountType) {
         super(ownerEmail, currency, accountType);
         onlineTransactions = new ArrayList<>();
         commerciants = new ArrayList<>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String addInterest() {
         return NOT_SAVINGS_ACCOUNT;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String changeInterest(double interestRate) {
         return NOT_SAVINGS_ACCOUNT;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected ArrayNode generateReportTransaction(int startTimestamp, int endTimestamp) {
         ArrayNode transactionArray = Utils.mapper.createArrayNode();
@@ -48,6 +63,9 @@ public final class StandardAccount extends Account {
         return transactionArray;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ObjectNode spendingsReport(int startTimestamp, int endTimestamp) {
         ObjectNode spendingsReportNode = Utils.mapper.createObjectNode();
@@ -76,6 +94,9 @@ public final class StandardAccount extends Account {
         return spendingsReportNode;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addTransaction(PayOnlineTransaction transaction) {
         if (transaction == null)
@@ -87,6 +108,7 @@ public final class StandardAccount extends Account {
         getTransactions().add(transaction);
         onlineTransactions.add(transaction);
 
+        /// If the commerciant exists in the list just add the new payment to it
         for (Commerciant commerciant : commerciants) {
             if (commerciant.getName().equals(transaction.getCommerciant())) {
                 Commerciant.Payment payment = new Commerciant.Payment(transaction.getAmount(), transaction.getTimestamp());
@@ -95,6 +117,7 @@ public final class StandardAccount extends Account {
             }
         }
 
+        /// If it does not exist create it and add the payment to the list
         Commerciant commerciantToAdd = new Commerciant(this, transaction.getCommerciant());
         Commerciant.Payment payment = new Commerciant.Payment(transaction.getAmount(), transaction.getTimestamp());;
         commerciantToAdd.getReceivedPayments().add(payment);
