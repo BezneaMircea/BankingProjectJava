@@ -1,131 +1,126 @@
-# BankingProject
-### by Benzea Mircea-Andrei
+## <span style="color: darkcyan;">Author</span>
+
+- **Name:** [Mircea-Andrei Beznea](https://www.instagram.com/mircea.wpp/)
+- **GitHub Profile:** [@BezneaMircea](https://github.com/BezneaMircea)
+- **Email:** [bezneamirceaandrei21@gmail.com]()
+- **Date:** [December, 19, 2024]()
+
+# <span style="color: darkcyan;">BankingProject</span>
 
 
-## Introduction:
+
+## <span style="color: darkgreen;">Introduction:</span>
 
 This project is implements the backend logic for a banking application  
-with various operations (e.g. addAccount, payOnline, sendMoney)
+with various operations (e.g. addAccount, payOnline, sendMoney) using the  
+Command, Factory and Builder design patterns.
 
-# Packaging:
+# <span style="color: darkgreen;">Packaging:</span>
 ## 1. The _**bank**_ package
 >This is the most importante package for the application logic.  
 > It includes **SIX** other _**packages**_:  
 >>#### 1. _*accounts*_ containing:
->>> - Account (abstract class) extended by:
->>>  - Specific accounts (e.g. EconomyAccount)
->>> - account_factory containing:  
->>>  - AccountFactory (Interface) implemented by:
->>>    - SpecificFactories (e.g EconomyAccountFactory)
+>>> - _**Account**_ (abstract class) extended by:
+>>>  - _**Specific accounts**_ (e.g. EconomyAccount)
+>>> - _**account_factory**_ containing:  
+>>>  - _**AccountFactory**_ (Interface) implemented by:
+>>>    - _**SpecificFactories**_ (e.g EconomyAccountFactory)
 >>>
 >>#### 2. _*cards*_ containing:
->>> - Card (abstract class) extended by:
-  >>>  - OneTimeCard
-  >>>  - StandardCard
->>> - card_factory containing:
->>>  - CardFactory (Interface) implemented by:
->>>    - SpecificFactories (e.g. OneTimeCardFactory)
->>> - CardInput 
+>>> - _**Card**_ (abstract class) extended by:
+  >>>  - _**OneTimeCard**_
+  >>>  - _**StandardCard**_
+>>> - _**card_factory**_ containing:
+>>>  - _**CardFactory**_ (Interface) implemented by:
+>>>    - _**SpecificFactories**_ (e.g. OneTimeCardFactory)
+>>> - _**CardInput**_ 
 >>#### 3. _*commands*_ containing:
->>> - Command (Interface) implemented by:
+>>> - _**Command**_ (Interface) implemented by:
 >>>   - All specific commands (e.g. AddInterest)
->>> - Transactionable (Interface) implemented by:
+>>> - _**Transactionable**_ (Interface) implemented by:
 >>>  - Some commands, those who generate transactions (e.g. AddAccount)
->>> - command_factory containing:
->>>  - CommandFactory (Interface) implemented by:
->>>    - SpecificFactories (e.g. AddAccountFactory)
+>>> - _**command_factory**_ containing:
+>>>  - _**CommandFactory**_ (Interface) implemented by:
+>>>    - _**SpecificFactories**_ (e.g. AddAccountFactory)
 >>#### 4. _*commerciants*_ containing:
->>> - Commerciant
+>>> - _**Commerciant**_
 >>#### 5. _*transactions*_ containing:
->>> - Transaction (abstract class) extended by: 
->>>  - Specific transactions (e.g. AddAccountTransaction, CheckCardStatusTransaction etc.)
->>> - transaction_factory containing:
->>>  - TransactionFactory (Interface) implemented by:
->>>    - SpecificFactories (e.g. AddAccountTransactionFactory)
+>>> - _**Transaction**_ (abstract class) extended by: 
+>>>  - _**Specific transactions**_ (e.g. AddAccountTransaction, CheckCardStatusTransaction etc.)
+>>> - _**transaction_factory containing**_:
+>>>  - _**TransactionFactory**_ (Interface) implemented by:
+>>>    - _**SpecificFactories**_ (e.g. AddAccountTransactionFactory)
 >>#### 6. _*users*_ containing:
->>> - User (abstract class) extended by:
->>>  - BasicUser
->>> - users_factory containing:
->>>  - UserFactory (Interface) implemented by:
->>>    - SpecificFactories (e.g. BasicUserFactory)  
+>>> - _**User**_ (abstract class) extended by:
+>>>  - _**BasicUser**_
+>>> - _**users_factory**_ containing:
+>>>  - _**UserFactory**_ (Interface) implemented by:
+>>>    - _**SpecificFactories**_ (e.g. BasicUserFactory)  
 > - #### And the following **two** classes:
->> 1. Bank - represents the bank with operations like:
+>> 1. _**Bank**_ - represents the bank with operations like:
 >> -  createCard(cardInput card) -- creates a card  
 >> - createAccount(accountInput account) -- creates an account  
 >> - etc.  
->> 2. BankSettup -- represents the invoker that calls/creates commands
+>> 2. _**BankSettup**_ -- represents the invoker that calls/creates commands
 >>                   that are received by input. It has methods like:
 >> - executeCommands() - executes the commands
 >> - createBank() - creates a bank
 
 
-## 2. The _**utils**_ package
-> This package includes 
-#### account_factory
-      >  AccontFactory (Interface) implemented by:  
-      >  * EconomyAccountFactory
-      >  * StandardAccountFactory
-#### cards
-      > * BackRowCard
-          >     * The Cursed One
-      >     * Disciple
-      > * FrontRowCard
-          >     * Tank
-      >     * The Ripper
-      >     * Miraj
+## 2. The _*utils*_ package
+> This package includes two classes:
+> - _**Utils**_ that has some utils static methods and constants.  
+>  - generateIban()
+>  - generateCardNr()
+>  - MAPPER (an object mapper)
+> - _**CustomFloydWarshallPaths**_ that implements the Floyd Warshall algorithm.  
+> The length of the shortest path will be the product of the edges, not the sum
+>  - getRate(final V source, final V dest) used to find the distance  
+>  (rate from source to dest)
 
-2. ### There is also the _**game**_ package that has the following classes:
+## 3. The _*main*_ package
+> This package includes two classes:
+> - Main - starting point for the application
+> - Test - class used for testing
 
-* ###  Player
-  > Represents a player in the game and the methods it can perform such as  
-  drawCard(), placeCard() etc.
-* ### GamesSetup
-  > This class is used to set up and start the games given at input.  
-  In this class we create an instance of the Game class for each of the  
-  played games. We start the game and retrieve a game output for each  
-  of the games that is then written in the output ArrayNode.
-* ### Game
-  > This class is used to perform possible actions within a game and  
-  also some statistic related actions regarding the current series of games  
-  such as getTotalGamesPlayed(), getPlayerOneWins(), getPlayerTwoWins().
 
-* ### Game Table
-  > This class is used to represent a game table, it s constants  
-  > (e.g. nr of columns, nr of lines), and some table specific methods  
-  > (e.g. addCard, doesPlayerHaveTanks).
+## <span style="color: darkgreen;">Code Flow:</span>
+Starting from the main package, in the main class, we create an instance of the  
+BankSetup class and call the BankSetup.executeCommands() method  
+that creates a Bank, and for each commandInput creates the specific command using   
+FactoryPattern that is then to be called execute() onto. (CommandPattern, where   
+Bank is the receiver and BankSetup is the invoker). Some command also need to  
+generate some transactions. Those commands will also implement the Transactionable  
+interface that contains the "addTransaction" method.
 
-3. ### The _utils_ package containing the following class:
+We will have commands for every command that we want to perform:  
+- AddAccount
+- DeleteAccount
+- CreateCard
+- DeleteCard
+- Report etc.
 
-* ### JsonNode
-  >   This class is a helper class used to write input + output of  
-  a command in JSON format.
 
-4. ### The _main_ package contains the following classes:
 
-* ### Main
-  > This class is used to write the output of each test in JSON  
-  > format
-* ### Test
-  > Class used for testing
 
-## Code Flow:
-Starting from the main package, in the main class we create an instace of the  
-GamesSetup class in which we create instances of the Game class for each of  
-the games received in the input.
+## <span style="color: darkgreen;">How to add new functionality:</span>
+Users, Accounts, Cards, Commands, Transactions are created using the  
+FactoryPattern. If extra functionalities (e.g. other accounts, cards, commands etc.)  
+need to be added simply create a specificFactory of the wanted object and the  
+object class. This approach makes the code more readable and most importantly  
+it separates the creation of an object to the object itself  
+(factories are created using (CommandInput, TransactionInput etc.)).
 
-In the Game class all actions are taken care of with the use of a public method  
-that handles the command name of all the actions within a game/series of games.  
-After that, depending on the command we will go through a private method  
-located in the Game class that later on calls methods located in other classes  
-such as: Cards (and by polymorphism the inheriting classes), Player, GameTable.
+_**Cards, Accounts, Transactions**_ are created in _**Bank**_   
+_**Commands and Users**_ are created in _**BankSetup**_
 
-The output is generated with the help of the utility class JsonNode in the  
-Game class and merged in the GamesSetup class.
 
-## Project Feedback
+## <span style="color: darkgreen;">Project Feedback:</span>
 
-This was an interesting project that helped me learn a lot about the basics  
-of **OOP**. I really would recommend to anyone that wants to have a solid  
-knowledge about primary OOP concepts such as Polymorphism and Inheritance  
-take on the assignment.
+This was an interesting project that helped me learn a lot about design patterns.  
+I really would recommend to anyone that wants to have a solid knowledge about  
+design pattern concepts take on the assignment.
+
 #### Thank you for your attention!
+
+![Homework done](https://media.tenor.com/9qooEZ2uscQAAAAM/sleepy-tom-and-jerry.gif)
