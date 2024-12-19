@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
-import org.poo.commands.transactions.ChangeIntRateTransaction;
-import org.poo.commands.transactions.Transaction;
+import org.poo.bank.commands.transactions.ChangeIntRateTransaction;
+import org.poo.bank.commands.transactions.Transaction;
 import org.poo.utils.Utils;
 
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public final class EconomyAccount extends Account {
      */
     @Override
     protected ArrayNode generateReportTransaction(int startTimestamp, int endTimestamp) {
-        ArrayNode transactionArray = Utils.mapper.createArrayNode();
+        ArrayNode transactionArray = Utils.MAPPER.createArrayNode();
         for (Transaction transaction : interestTransactions) {
             if (transaction.getTimestamp() >= startTimestamp && transaction.getTimestamp() <= endTimestamp) {
                 transactionArray.add(transaction.toJson());
@@ -75,7 +75,7 @@ public final class EconomyAccount extends Account {
      */
     @Override
     public ObjectNode spendingsReport(int startTimestamp, int endTimestamp) {
-        ObjectNode errorNode = Utils.mapper.createObjectNode();
+        ObjectNode errorNode = Utils.MAPPER.createObjectNode();
         errorNode.put("error", Account.NOT_FOR_SAVINGS_ACCOUNT);
         return errorNode;
     }

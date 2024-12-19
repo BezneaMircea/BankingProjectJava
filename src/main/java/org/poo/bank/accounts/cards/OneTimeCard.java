@@ -2,8 +2,8 @@ package org.poo.bank.accounts.cards;
 
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
-import org.poo.commands.transactions.*;
-import org.poo.users.User;
+import org.poo.bank.commands.transactions.*;
+import org.poo.bank.users.User;
 
 /**
  * Class used to represent a one time card

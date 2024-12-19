@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.poo.bank.accounts.cards.Card;
-import org.poo.commands.transactions.*;
+import org.poo.bank.commands.transactions.*;
 import org.poo.utils.Utils;
 
 
@@ -19,25 +19,16 @@ import java.util.List;
 @Getter
 @Setter
 public abstract class Account {
-    public static String NOT_SAVINGS_ACCOUNT = "This is not a savings account";
-    public static String NOT_FOR_SAVINGS_ACCOUNT = "This kind of report is not supported for a saving account";
-    public static String NOT_FOUND = "Account not found";
-    public static String DELETED = "Account deleted";
-    public static String CANT_DELETE = "Account couldn't be deleted - see org.poo.transactions for details";
-    public static String INSUFFICIENT_FUNDS = "Insufficient funds";
-    public static String ACCOUNT_CREATED = "New account created";
-    public static String FUNDS_REMAINING = "Account couldn't be deleted - there are funds remaining";
-    public static String SPLIT_PAYMENT_ERROR = "Account %s has insufficient funds for a split payment.";
-    public static int WARNING_THRESHOLD = 30;
-
-    private final String ownerEmail;
-    private final String currency;
-    private final Type accountType;
-    private final String iban;
-    private double balance;
-    private double minBalance;
-    private final List<Card> cards;
-    private final List<Transaction> transactions;
+    public final static String NOT_SAVINGS_ACCOUNT = "This is not a savings account";
+    public final static String NOT_FOR_SAVINGS_ACCOUNT = "This kind of report is not supported for a saving account";
+    public final static String NOT_FOUND = "Account not found";
+    public final static String DELETED = "Account deleted";
+    public final static String CANT_DELETE = "Account couldn't be deleted - see org.poo.transactions for details";
+    public final static String INSUFFICIENT_FUNDS = "Insufficient funds";
+    public final static String ACCOUNT_CREATED = "New account created";
+    public final static String FUNDS_REMAINING = "Account couldn't be deleted - there are funds remaining";
+    public final static String SPLIT_PAYMENT_ERROR = "Account %s has insufficient funds for a split payment.";
+    public final static int WARNING_THRESHOLD = 30;
 
     @Getter
     public enum Type {
@@ -59,6 +50,15 @@ public abstract class Account {
         }
 
     }
+
+    private final String ownerEmail;
+    private final String currency;
+    private final Type accountType;
+    private final String iban;
+    private double balance;
+    private double minBalance;
+    private final List<Card> cards;
+    private final List<Transaction> transactions;
 
 
     /**
@@ -132,7 +132,7 @@ public abstract class Account {
      * abstract identifier and implement a general method in this class
      */
     public ObjectNode generateReport(int startTimestamp, int endTimestamp) {
-        ObjectNode reportNode = Utils.mapper.createObjectNode();
+        ObjectNode reportNode = Utils.MAPPER.createObjectNode();
         reportNode.put("balance", getBalance());
         reportNode.put("currency", getCurrency());
         reportNode.put("IBAN", getIban());
@@ -200,7 +200,7 @@ public abstract class Account {
      * @return the ObjectNode corresponding to this account
      */
     public ObjectNode accountToObjectNode() {
-        ObjectNode accountNode = Utils.mapper.createObjectNode();
+        ObjectNode accountNode = Utils.MAPPER.createObjectNode();
         accountNode.put("IBAN", iban);
         accountNode.put("balance", balance);
         accountNode.put("currency", currency);
@@ -212,7 +212,7 @@ public abstract class Account {
 
 
     private ArrayNode writeCards() {
-        ArrayNode cardsNode = Utils.mapper.createArrayNode();
+        ArrayNode cardsNode = Utils.MAPPER.createArrayNode();
         for (Card card : cards) {
             cardsNode.add(card.cardToObjectNode());
         }

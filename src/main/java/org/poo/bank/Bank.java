@@ -15,10 +15,11 @@ import org.poo.bank.accounts.cards.card_factory.StandardCardFactory;
 import org.poo.bank.accounts.account_factory.AccountFactory;
 import org.poo.bank.accounts.account_factory.EconomyAccountFactory;
 import org.poo.bank.accounts.account_factory.StandardAccountFactory;
-import org.poo.commands.transactions.Transaction;
-import org.poo.commands.transactions.TransactionInput;
-import org.poo.commands.transactions.transaction_factory.*;
-import org.poo.users.User;
+import org.poo.bank.commands.transactions.Transaction;
+import org.poo.bank.commands.transactions.TransactionInput;
+import org.poo.bank.commands.transactions.transaction_factory.*;
+import org.poo.bank.users.User;
+import org.poo.utils.CustomFloydWarshallPaths;
 import org.poo.utils.Utils;
 
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class Bank {
      * @return ArrayNode of users
      */
     public ArrayNode usersToArrayNode() {
-        ArrayNode usersArray = Utils.mapper.createArrayNode();
+        ArrayNode usersArray = Utils.MAPPER.createArrayNode();
         for (User user : users) {
             usersArray.add(user.userToObjectNode());
         }
@@ -187,11 +188,11 @@ public class Bank {
         if (error == null)
             return;
 
-        ObjectNode outputNode = Utils.mapper.createObjectNode();
+        ObjectNode outputNode = Utils.MAPPER.createObjectNode();
         outputNode.put("timestamp", timestamp);
         outputNode.put("description", error);
 
-        ObjectNode errorNode = Utils.mapper.createObjectNode();
+        ObjectNode errorNode = Utils.MAPPER.createObjectNode();
         errorNode.put("command", command);
         errorNode.set("output", outputNode);
         errorNode.put("timestamp", timestamp);

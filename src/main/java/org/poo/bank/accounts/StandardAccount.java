@@ -4,9 +4,9 @@ package org.poo.bank.accounts;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
-import org.poo.bank.Commerciant;
-import org.poo.commands.transactions.PayOnlineTransaction;
-import org.poo.commands.transactions.Transaction;
+import org.poo.bank.commerciants.Commerciant;
+import org.poo.bank.commands.transactions.PayOnlineTransaction;
+import org.poo.bank.commands.transactions.Transaction;
 import org.poo.utils.Utils;
 
 import java.util.*;
@@ -52,7 +52,7 @@ public final class StandardAccount extends Account {
      */
     @Override
     protected ArrayNode generateReportTransaction(int startTimestamp, int endTimestamp) {
-        ArrayNode transactionArray = Utils.mapper.createArrayNode();
+        ArrayNode transactionArray = Utils.MAPPER.createArrayNode();
         for (Transaction transaction : getTransactions()) {
             if (transaction.getTimestamp() >= startTimestamp && transaction.getTimestamp() <= endTimestamp) {
                 transactionArray.add(transaction.toJson());
@@ -68,12 +68,12 @@ public final class StandardAccount extends Account {
      */
     @Override
     public ObjectNode spendingsReport(int startTimestamp, int endTimestamp) {
-        ObjectNode spendingsReportNode = Utils.mapper.createObjectNode();
+        ObjectNode spendingsReportNode = Utils.MAPPER.createObjectNode();
         spendingsReportNode.put("IBAN", getIban());
         spendingsReportNode.put("balance", getBalance());
         spendingsReportNode.put("currency", getCurrency());
 
-        ArrayNode transactionsArray = Utils.mapper.createArrayNode();
+        ArrayNode transactionsArray = Utils.MAPPER.createArrayNode();
         for (Transaction transaction : onlineTransactions) {
             if (transaction.getTimestamp() >= startTimestamp && transaction.getTimestamp() <= endTimestamp) {
                 transactionsArray.add(transaction.toJson());
@@ -83,7 +83,7 @@ public final class StandardAccount extends Account {
         spendingsReportNode.set("transactions", transactionsArray);
 
         Collections.sort(commerciants);
-        ArrayNode commerciantsArray = Utils.mapper.createArrayNode();
+        ArrayNode commerciantsArray = Utils.MAPPER.createArrayNode();
         for (Commerciant commerciant : commerciants) {
             ObjectNode toAdd = commerciant.commerciantToJson(startTimestamp, endTimestamp);
             if (toAdd != null)

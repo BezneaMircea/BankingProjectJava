@@ -2,9 +2,9 @@ package org.poo.bank.accounts.cards;
 
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
-import org.poo.commands.transactions.Transaction;
-import org.poo.commands.transactions.TransactionInput;
-import org.poo.users.User;
+import org.poo.bank.commands.transactions.Transaction;
+import org.poo.bank.commands.transactions.TransactionInput;
+import org.poo.bank.users.User;
 
 /**
  * Class used to represent a StandardCard

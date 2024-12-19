@@ -17,15 +17,9 @@ public abstract class Card {
     public final static String FROZEN = "frozen";
     public final static String NOT_FOUND = "Card not found";
     public final static String DESTROYED = "The card has been destroyed";
-    public static String LIMIT_REACHED = "You have reached the minimum amount of funds, the card will be frozen";
-    public static String CARD_CREATED = "New card created";
-    public static String IS_FROZEN = "The card is frozen";
-
-    private final String cardNumber;
-    private String status;
-    private final Account account;
-    private final Type accountType;
-
+    public final static String LIMIT_REACHED = "You have reached the minimum amount of funds, the card will be frozen";
+    public final static String CARD_CREATED = "New card created";
+    public final static String IS_FROZEN = "The card is frozen";
 
     public enum Type {
         ONE_TIME("oneTimeCard"),
@@ -46,6 +40,11 @@ public abstract class Card {
         }
     }
 
+    private final String cardNumber;
+    private String status;
+    private final Account account;
+    private final Type accountType;
+
     /**
      * Constructor for the Card class
      * @param status the status of the card (should be active)
@@ -63,7 +62,7 @@ public abstract class Card {
      * @return the objectNode corresponding to the card
      */
     public ObjectNode cardToObjectNode() {
-        ObjectNode cardNode = Utils.mapper.createObjectNode();
+        ObjectNode cardNode = Utils.MAPPER.createObjectNode();
         cardNode.put("cardNumber", cardNumber);
         cardNode.put("status", status);
 

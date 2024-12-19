@@ -3,14 +3,14 @@ package org.poo.bank;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.poo.commands.Command;
-import org.poo.commands.command_factory.*;
+import org.poo.bank.commands.Command;
+import org.poo.bank.commands.command_factory.*;
 import org.poo.fileio.*;
-import org.poo.users.User;
+import org.poo.bank.users.User;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.users.usersfactory.BasicUserFactory;
-import org.poo.users.usersfactory.UserFactory;
+import org.poo.bank.users.usersfactory.BasicUserFactory;
+import org.poo.bank.users.usersfactory.UserFactory;
 
 import java.util.ArrayList;
 import java.util.List;
