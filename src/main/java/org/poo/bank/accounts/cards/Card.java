@@ -13,13 +13,13 @@ import org.poo.utils.Utils;
 @Getter
 @Setter
 public abstract class Card {
-    public final static String ACTIVE = "active";
-    public final static String FROZEN = "frozen";
-    public final static String NOT_FOUND = "Card not found";
-    public final static String DESTROYED = "The card has been destroyed";
-    public final static String LIMIT_REACHED = "You have reached the minimum amount of funds, the card will be frozen";
-    public final static String CARD_CREATED = "New card created";
-    public final static String IS_FROZEN = "The card is frozen";
+    public static final String ACTIVE = "active";
+    public static final String FROZEN = "frozen";
+    public static final String NOT_FOUND = "Card not found";
+    public static final String DESTROYED = "The card has been destroyed";
+    public static final String LIMIT_REACHED = "You have reached the minimum amount of funds, the card will be frozen";
+    public static final String CARD_CREATED = "New card created";
+    public static final String IS_FROZEN = "The card is frozen";
 
     public enum Type {
         ONE_TIME("oneTimeCard"),
@@ -27,11 +27,16 @@ public abstract class Card {
 
         private final String value;
 
-        Type(String value) {
+        Type(final String value) {
             this.value = value;
         }
 
-        public static Type fromString(String input) {
+        /**
+         * returns the associated Type of input string;
+         * @param input the input string
+         * @return the associated Type
+         */
+        public static Type fromString(final String input) {
             for (Type type : Type.values()) {
                 if (type.value.equalsIgnoreCase(input)) {
                     return type;
@@ -43,18 +48,18 @@ public abstract class Card {
     private final String cardNumber;
     private String status;
     private final Account account;
-    private final Type accountType;
+    private final Type cardType;
 
     /**
      * Constructor for the Card class
      * @param status the status of the card (should be active)
      * @param account the account to which the card is linked
      */
-    public Card(String status, Account account, Type accountType) {
+    public Card(final String status, final Account account, final Type cardType) {
         cardNumber = Utils.generateCardNumber();
         this.account = account;
         this.status = status;
-        this.accountType = accountType;
+        this.cardType = cardType;
     }
 
     /**
@@ -77,5 +82,5 @@ public abstract class Card {
      * @param timestamp timestamp of the payment
      * @param commerciant commerciant to pay
      */
-    public abstract void pay(final Bank bank, final double amount, final int timestamp, final String commerciant);
+    public abstract void pay(Bank bank, double amount, int timestamp, String commerciant);
 }

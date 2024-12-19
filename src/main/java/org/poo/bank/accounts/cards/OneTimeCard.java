@@ -15,7 +15,7 @@ public final class OneTimeCard extends Card {
      * @param status status of the card
      * @param account account to which the card is linked
      */
-    public OneTimeCard(String status, Account account, Type cardType) {
+    public OneTimeCard(final String status, final Account account, final Type cardType) {
         super(status, account, cardType);
     }
 
@@ -29,8 +29,9 @@ public final class OneTimeCard extends Card {
                       final int timestamp, final String commerciant) {
         String error = null;
 
-        if (getStatus().equals(FROZEN))
+        if (getStatus().equals(FROZEN)) {
             error = Card.IS_FROZEN;
+        }
 
         Account associatedAccount = getAccount();
         User owner = bank.getEmailToUser().get(getAccount().getOwnerEmail());

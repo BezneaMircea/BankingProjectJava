@@ -16,7 +16,7 @@ public class EconomyAccountFactory implements AccountFactory {
     /**
      * Constructor for the EconomyAccountFactory
      */
-    public EconomyAccountFactory(AccountInput input) {
+    public EconomyAccountFactory(final AccountInput input) {
         ownerEmail = input.getOwnerEmail();
         currency = input.getCurrency();
         accountType = input.getAccountType();

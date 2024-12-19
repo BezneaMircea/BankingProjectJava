@@ -19,16 +19,16 @@ import java.util.List;
 @Getter
 @Setter
 public abstract class Account {
-    public final static String NOT_SAVINGS_ACCOUNT = "This is not a savings account";
-    public final static String NOT_FOR_SAVINGS_ACCOUNT = "This kind of report is not supported for a saving account";
-    public final static String NOT_FOUND = "Account not found";
-    public final static String DELETED = "Account deleted";
-    public final static String CANT_DELETE = "Account couldn't be deleted - see org.poo.transactions for details";
-    public final static String INSUFFICIENT_FUNDS = "Insufficient funds";
-    public final static String ACCOUNT_CREATED = "New account created";
-    public final static String FUNDS_REMAINING = "Account couldn't be deleted - there are funds remaining";
-    public final static String SPLIT_PAYMENT_ERROR = "Account %s has insufficient funds for a split payment.";
-    public final static int WARNING_THRESHOLD = 30;
+    public static final String NOT_SAVINGS_ACCOUNT = "This is not a savings account";
+    public static final String NOT_FOR_SAVINGS_ACCOUNT = "This kind of report is not supported for a saving account";
+    public static final String NOT_FOUND = "Account not found";
+    public static final String DELETED = "Account deleted";
+    public static final String CANT_DELETE = "Account couldn't be deleted - see org.poo.transactions for details";
+    public static final String INSUFFICIENT_FUNDS = "Insufficient funds";
+    public static final String ACCOUNT_CREATED = "New account created";
+    public static final String FUNDS_REMAINING = "Account couldn't be deleted - there are funds remaining";
+    public static final String SPLIT_PAYMENT_ERROR = "Account %s has insufficient funds for a split payment.";
+    public static final int WARNING_THRESHOLD = 30;
 
     @Getter
     public enum Type {
@@ -37,11 +37,16 @@ public abstract class Account {
 
         private final String value;
 
-        Type(String value) {
+        Type(final String value) {
             this.value = value;
         }
 
-        public static Type fromString(String input) {
+        /**
+         * returns the associated Type of input string;
+         * @param input the input string
+         * @return the associated Type
+         */
+        public static Type fromString(final String input) {
             for (Type type : Type.values()) {
                 if (type.value.equalsIgnoreCase(input)) {
                     return type;
@@ -67,7 +72,7 @@ public abstract class Account {
      * @param currency currency of the account
      * @param accountType the account type
      */
-    public Account(String ownerEmail, String currency, Type accountType) {
+    public Account(final String ownerEmail, final String currency, final Type accountType) {
         this.ownerEmail = ownerEmail;
         this.currency = currency;
         this.accountType = accountType;
@@ -105,21 +110,21 @@ public abstract class Account {
      * that the addInterest command may generate a transaction. This is left to be implemented
      * in case the functionality will be set clear.} if implemented == true
      */
-    public void addTransaction(Transaction transaction) {
+    public void addTransaction(final Transaction transaction) {
         transactions.add(transaction);
     }
 
     /**
      * for coding style
      */
-    public void addTransaction(ChangeIntRateTransaction transaction) {
+    public void addTransaction(final ChangeIntRateTransaction transaction) {
         transactions.add(transaction);
     }
 
     /**
      * for coding style
      */
-    public void addTransaction(PayOnlineTransaction transaction) {
+    public void addTransaction(final PayOnlineTransaction transaction) {
         transactions.add(transaction);
     }
 
@@ -131,7 +136,7 @@ public abstract class Account {
      * differently. If a pattern occurs in at least 2 classes consider deleting the
      * abstract identifier and implement a general method in this class
      */
-    public ObjectNode generateReport(int startTimestamp, int endTimestamp) {
+    public ObjectNode generateReport(final int startTimestamp, final int endTimestamp) {
         ObjectNode reportNode = Utils.MAPPER.createObjectNode();
         reportNode.put("balance", getBalance());
         reportNode.put("currency", getCurrency());
@@ -159,7 +164,8 @@ public abstract class Account {
      * This is used to generateReportTransactions. Since different accounts generate
      * different reports (e.g. savings accounts don t take all the transactions in consideration)
      */
-    protected abstract ArrayNode generateReportTransaction(int startTimestamp, int endTimestamp);
+    protected abstract ArrayNode
+    generateReportTransaction(int startTimestamp, int endTimestamp);
 
     /**
      * This method is used to generate a spending report.
@@ -175,7 +181,7 @@ public abstract class Account {
      * @param card card to check
      * @return true if it exists, false otherwise
      */
-    public boolean hasCard(Card card) {
+    public boolean hasCard(final Card card) {
         return cards.contains(card);
     }
 
@@ -183,7 +189,7 @@ public abstract class Account {
      * Method used to add a card to this account
      * @param card card to be added
      */
-    public void addCard(Card card) {
+    public void addCard(final Card card) {
         cards.add(card);
     }
 
@@ -191,7 +197,7 @@ public abstract class Account {
      * Method used to remove a card from this account
      * @param card card to be removed
      */
-    public void removeCard(Card card) {
+    public void removeCard(final Card card) {
         cards.remove(card);
     }
 

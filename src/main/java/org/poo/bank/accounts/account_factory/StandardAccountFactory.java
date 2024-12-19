@@ -18,7 +18,7 @@ public class StandardAccountFactory implements AccountFactory {
     /**
      * Constructor for the EconomyAccountFactory
      */
-    public StandardAccountFactory(AccountInput input) {
+    public StandardAccountFactory(final AccountInput input) {
         ownerEmail = input.getOwnerEmail();
         currency = input.getCurrency();
         accountType = input.getAccountType();

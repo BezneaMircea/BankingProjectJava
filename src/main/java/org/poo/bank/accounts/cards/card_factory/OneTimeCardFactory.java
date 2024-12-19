@@ -17,7 +17,7 @@ public final class OneTimeCardFactory implements CardFactory {
      * Constructor for the OneTimeCardFactory
      * @param input the card input
      */
-    public OneTimeCardFactory(CardInput input) {
+    public OneTimeCardFactory(final CardInput input) {
         status = input.getStatus();
         account = input.getAccount();
         cardType = input.getCardType();
