@@ -4,7 +4,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.poo.commands.Command;
-import org.poo.commands.factory.*;
+import org.poo.commands.command_factory.*;
 import org.poo.fileio.*;
 import org.poo.users.User;
 
