@@ -75,9 +75,6 @@ public final class StandardAccount extends Account {
         return spendingsReportNode;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void addTransaction(final PayOnlineTransaction transaction) {
         if (transaction == null) {

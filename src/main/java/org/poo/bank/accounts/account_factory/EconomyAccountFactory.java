@@ -23,9 +23,6 @@ public class EconomyAccountFactory implements AccountFactory {
         interestRate = input.getInterestRate();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Account createAccount() {
         return new EconomyAccount(ownerEmail, currency, accountType, interestRate);

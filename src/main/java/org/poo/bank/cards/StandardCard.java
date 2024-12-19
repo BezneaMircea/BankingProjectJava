@@ -22,9 +22,6 @@ public final class StandardCard extends Card {
         super(status, account, cardType);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void pay(final Bank bank, final double amount,
                     final int timestamp, final String commerciant) {

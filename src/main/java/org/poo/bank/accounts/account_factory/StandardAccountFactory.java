@@ -24,9 +24,6 @@ public class StandardAccountFactory implements AccountFactory {
         accountType = input.getAccountType();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Account createAccount() {
         return new StandardAccount(ownerEmail, currency, accountType);

@@ -23,9 +23,6 @@ public final class OneTimeCard extends Card {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void pay(final Bank bank, final double amount,
                     final int timestamp, final String commerciant) {
