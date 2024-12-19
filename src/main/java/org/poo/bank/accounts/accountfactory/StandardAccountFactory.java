@@ -1,8 +1,9 @@
-package org.poo.bank.accounts.factory;
+package org.poo.bank.accounts.accountfactory;
 
 
 import lombok.Getter;
 import org.poo.bank.accounts.Account;
+import org.poo.bank.accounts.AccountInput;
 import org.poo.bank.accounts.StandardAccount;
 
 /**
@@ -12,15 +13,15 @@ import org.poo.bank.accounts.StandardAccount;
 public class StandardAccountFactory implements AccountFactory {
     private final String ownerEmail;
     private final String currency;
-    private final String accountType;
+    private final Account.Type accountType;
 
     /**
      * Constructor for the EconomyAccountFactory
      */
-    public StandardAccountFactory(String ownerEmail, String currency, String accountType) {
-        this.ownerEmail = ownerEmail;
-        this.currency = currency;
-        this.accountType = accountType;
+    public StandardAccountFactory(AccountInput input) {
+        ownerEmail = input.getOwnerEmail();
+        currency = input.getCurrency();
+        accountType = input.getAccountType();
     }
 
     /**

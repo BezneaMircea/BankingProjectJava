@@ -1,6 +1,7 @@
 package org.poo.commands.factory;
 
 import org.poo.bank.Bank;
+import org.poo.bank.accounts.Account;
 import org.poo.commands.AddAccount;
 import org.poo.commands.Command;
 import org.poo.fileio.CommandInput;
@@ -10,7 +11,7 @@ public class AddAccountFactory implements CommandFactory {
     private final String command;
     private final String email;
     private final String currency;
-    private final String accountType;
+    private final Account.Type accountType;
     private final int timestamp;
     private final double interestRate;
 
@@ -19,7 +20,7 @@ public class AddAccountFactory implements CommandFactory {
         command = input.getCommand();
         email = input.getEmail();
         currency = input.getCurrency();
-        accountType = input.getAccountType();
+        accountType = Account.Type.fromString(input.getAccountType());
         timestamp = input.getTimestamp();
         interestRate = input.getInterestRate();
     }

@@ -1,4 +1,4 @@
-package org.poo.bank.accounts.factory;
+package org.poo.bank.accounts.accountfactory;
 
 import org.poo.bank.accounts.Account;
 

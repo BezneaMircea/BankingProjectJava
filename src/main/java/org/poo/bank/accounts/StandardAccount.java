@@ -25,7 +25,7 @@ public final class StandardAccount extends Account {
      * @param currency currency of the account
      * @param accountType the accountType
      */
-    public StandardAccount(String ownerEmail, String currency, String accountType) {
+    public StandardAccount(final String ownerEmail, final String currency, final Type accountType) {
         super(ownerEmail, currency, accountType);
         onlineTransactions = new ArrayList<>();
         commerciants = new ArrayList<>();

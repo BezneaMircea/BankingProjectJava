@@ -4,16 +4,16 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import org.jgrapht.Graph;
-import org.jgrapht.alg.shortestpath.FloydWarshallShortestPaths;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.poo.bank.accounts.Account;
+import org.poo.bank.accounts.AccountInput;
 import org.poo.bank.accounts.cards.Card;
 import org.poo.bank.accounts.cards.cardfactory.CardFactory;
 import org.poo.bank.accounts.cards.cardfactory.OneTimeCardFactory;
 import org.poo.bank.accounts.cards.cardfactory.StandardCardFactory;
-import org.poo.bank.accounts.factory.AccountFactory;
-import org.poo.bank.accounts.factory.EconomyAccountFactory;
-import org.poo.bank.accounts.factory.StandardAccountFactory;
+import org.poo.bank.accounts.accountfactory.AccountFactory;
+import org.poo.bank.accounts.accountfactory.EconomyAccountFactory;
+import org.poo.bank.accounts.accountfactory.StandardAccountFactory;
 import org.poo.commands.transactions.Transaction;
 import org.poo.commands.transactions.TransactionInput;
 import org.poo.commands.transactions.transactionsfactory.*;
@@ -69,19 +69,16 @@ public class Bank {
 
     /**
      * Method used to create an account
-     * @param email email of the account owner
-     * @param currency the currency of the account
-     * @param accountType the type of the account (currently "savings" or "classic")
-     * @param interestRate optional field, used only for the construction of a savings account
+     * @param input input for the new account to create
      * @return the created Account
      * @throws IllegalArgumentException if the account type doesn't correspond to the account types
      */
-    public Account createAccount(String email, String currency, String accountType, double interestRate) {
+    public Account createAccount(AccountInput input) {
         AccountFactory factory;
 
-        switch (accountType) {
-            case "savings" -> factory = new EconomyAccountFactory(email, currency, accountType, interestRate);
-            case "classic" -> factory = new StandardAccountFactory(email, currency, accountType);
+        switch (input.getAccountType()) {
+            case Account.Type.SAVINGS -> factory = new EconomyAccountFactory(input);
+            case Account.Type.CLASSIC -> factory = new StandardAccountFactory(input);
             default -> throw new IllegalArgumentException("Invalid account type");
         }
 

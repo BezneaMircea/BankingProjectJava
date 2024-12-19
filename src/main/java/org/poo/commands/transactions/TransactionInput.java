@@ -1,25 +1,25 @@
 package org.poo.commands.transactions;
 
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
 public final class TransactionInput {
-    private Transaction.Type transactionType;
-    private int timestamp;
-    private String description;
-    private String currency;
-    private double amount;
-    private List<String> involvedAccounts;
-    private String error;
-    private String senderIBAN;
-    private String receiverIBAN;
-    private String transferType;
-    private String card;
-    private String cardHolder;
-    private String account;
-    private String commerciant;
+    private final Transaction.Type transactionType;
+    private final int timestamp;
+    private final String description;
+    private final String currency;
+    private final double amount;
+    private final List<String> involvedAccounts;
+    private final String error;
+    private final String senderIBAN;
+    private final String receiverIBAN;
+    private final String transferType;
+    private final String card;
+    private final String cardHolder;
+    private final String account;
+    private final String commerciant;
 
     private TransactionInput(Builder builder) {
         transactionType = builder.transactionType;

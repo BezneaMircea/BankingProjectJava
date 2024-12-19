@@ -29,7 +29,7 @@ public final class EconomyAccount extends Account {
      * @param interestRate the interest rate of the account
      */
     public EconomyAccount(final String ownerEmail, final String currency,
-                          final String accountType, final double interestRate) {
+                          final Type accountType, final double interestRate) {
         super(ownerEmail, currency, accountType);
         this.interestRate = interestRate;
         interestTransactions = new ArrayList<>();

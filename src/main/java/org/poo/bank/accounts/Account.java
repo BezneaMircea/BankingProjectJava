@@ -32,12 +32,34 @@ public abstract class Account {
 
     private final String ownerEmail;
     private final String currency;
-    private final String accountType;
+    private final Type accountType;
     private final String iban;
     private double balance;
     private double minBalance;
     private final List<Card> cards;
     private final List<Transaction> transactions;
+
+    @Getter
+    public enum Type {
+        CLASSIC("classic"),
+        SAVINGS("savings");
+
+        private final String value;
+
+        Type(String value) {
+            this.value = value;
+        }
+
+        public static Type fromString(String input) {
+            for (Type type : Type.values()) {
+                if (type.value.equalsIgnoreCase(input)) {
+                    return type;
+                }
+            } throw new IllegalArgumentException("Not a valid type: " + input);
+        }
+
+    }
+
 
     /**
      * Constructor for the account class
@@ -45,7 +67,7 @@ public abstract class Account {
      * @param currency currency of the account
      * @param accountType the account type
      */
-    public Account(String ownerEmail, String currency, String accountType) {
+    public Account(String ownerEmail, String currency, Type accountType) {
         this.ownerEmail = ownerEmail;
         this.currency = currency;
         this.accountType = accountType;
@@ -182,7 +204,7 @@ public abstract class Account {
         accountNode.put("IBAN", iban);
         accountNode.put("balance", balance);
         accountNode.put("currency", currency);
-        accountNode.put("type", accountType);
+        accountNode.put("type", accountType.getValue());
         accountNode.set("cards", writeCards());
 
         return accountNode;

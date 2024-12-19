@@ -3,6 +3,7 @@ package org.poo.commands;
 import lombok.Getter;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
+import org.poo.bank.accounts.AccountInput;
 import org.poo.commands.transactions.AddAccountTransaction;
 import org.poo.commands.transactions.Transaction;
 import org.poo.commands.transactions.TransactionInput;
@@ -17,7 +18,7 @@ public final class AddAccount implements Command, Transactionable {
     private final String command;
     private final String email;
     private final String currency;
-    private final String accountType;
+    private final Account.Type accountType;
     private final int timestamp;
     private final double interestRate;
 
@@ -33,7 +34,7 @@ public final class AddAccount implements Command, Transactionable {
      */
     public AddAccount(final Bank bank, final String command,
                       final String email, final String currency,
-                      final String accountType, final int timestamp, final double interestRate) {
+                      final Account.Type accountType, final int timestamp, final double interestRate) {
         this.bank = bank;
         this.command = command;
         this.email = email;
@@ -49,7 +50,11 @@ public final class AddAccount implements Command, Transactionable {
      */
     @Override
     public void execute() {
-        Account accountToAdd = bank.createAccount(email, currency, accountType, interestRate);
+        AccountInput newAccountInput = new AccountInput.Builder(email, currency, accountType)
+                .interestRate(interestRate)
+                .build();
+
+        Account accountToAdd = bank.createAccount(newAccountInput);
         String error = bank.addAccount(accountToAdd);
 
         /// Logic could be added here to print the error (if the given email wasn't valid)
