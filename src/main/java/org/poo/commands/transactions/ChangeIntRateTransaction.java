@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
-public class ChangeIntRateTransaction extends Transaction {
+public final class ChangeIntRateTransaction extends Transaction {
     public static String IRATE_CHANGED= "Interest rate of the account changed to %.2f";
 
 

@@ -14,6 +14,8 @@ public abstract class Card {
     public final static String FROZEN = "frozen";
     public final static String NOT_FOUND = "Card not found";
     public final static String DESTROYED = "The card has been destroyed";
+    public static String LIMIT_REACHED = "You have reached the minimum amount of funds, the card will be frozen";
+
 
     private final String cardNumber;
     private String status;

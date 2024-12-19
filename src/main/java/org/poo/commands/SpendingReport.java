@@ -5,7 +5,10 @@ import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
-public class SpendingReport implements Command {
+/**
+ * Class used to represent the spendingReport command
+ */
+public final class SpendingReport implements Command {
     private final Bank bank;
     private final String command;
     private final int startTimestamp;
@@ -13,8 +16,17 @@ public class SpendingReport implements Command {
     private final String account;
     private final int timestamp;
 
+    /**
+     * Constructor for the spendingReport command
+     * @param bank the receiver bank of the command
+     * @param command the command name
+     * @param startTimestamp starting timestamp for the report
+     * @param endTimestamp ending timestamp for the report
+     * @param account IBAN of the account to generate report to
+     * @param timestamp timestamp of the command
+     */
     public SpendingReport(final Bank bank, final String command, final int startTimestamp,
-                  final int endTimestamp, final String account, final int timestamp) {
+                          final int endTimestamp, final String account, final int timestamp) {
         this.bank = bank;
         this.command = command;
         this.startTimestamp = startTimestamp;
@@ -23,21 +35,14 @@ public class SpendingReport implements Command {
         this.timestamp = timestamp;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute() {
-        Account accountToCreateReport = bank.getIbanToAccount().get(account);
+        Account accountToCreateReport = bank.getAccount(account);
         if (accountToCreateReport == null) {
-            ObjectNode outputNode = Utils.mapper.createObjectNode();
-            outputNode.put("description", Account.NOT_FOUND);
-            outputNode.put("timestamp", timestamp);
-
-            ObjectNode commandNode = Utils.mapper.createObjectNode();
-            commandNode.put("command", command);
-            commandNode.set("output", outputNode);
-            commandNode.put("timestamp", timestamp);
-
-            bank.getOutput().add(commandNode);
-
+            bank.errorOccured(timestamp, command, Account.NOT_FOUND);
             return;
         }
 

@@ -1,16 +1,10 @@
 package org.poo.commands.transactions;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.poo.utils.Utils;
 
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public final class TransactionInput {
     private Transaction.Type transactionType;
     private int timestamp;
@@ -129,8 +123,5 @@ public final class TransactionInput {
         }
     }
 
-    public ObjectNode toJson() {
-        return Utils.mapper.valueToTree(this);
-    }
 
 }

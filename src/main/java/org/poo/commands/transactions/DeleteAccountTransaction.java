@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
-public class DeleteAccountTransaction extends Transaction {
+public final class DeleteAccountTransaction extends Transaction {
     public static String FUNDS_REMAINING = "Account couldn't be deleted - there are funds remaining";
 
     public DeleteAccountTransaction(final Type transactionType, final int timestamp, final String description) {

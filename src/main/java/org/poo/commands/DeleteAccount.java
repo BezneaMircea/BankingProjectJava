@@ -42,8 +42,8 @@ public final class DeleteAccount implements Command, Transactionable {
      */
     @Override
     public void execute() {
-        Account accountToDelete = bank.getIbanToAccount().get(account);
-        User ownerOfAccount = bank.getEmailToUser().get(email);
+        Account accountToDelete = bank.getAccount(account);
+        User ownerOfAccount = bank.getUser(email);
 
         if (accountToDelete == null || ownerOfAccount == null)
             return;

@@ -5,13 +5,12 @@ import org.poo.bank.accounts.Account;
 import org.poo.commands.transactions.SendMoneyTransaction;
 import org.poo.commands.transactions.Transaction;
 import org.poo.commands.transactions.TransactionInput;
-import org.poo.commands.transactions.transactionsfactory.AddAccountTransactionFactory;
-import org.poo.commands.transactions.transactionsfactory.CreateCardTransactionFactory;
-import org.poo.commands.transactions.transactionsfactory.SendMoneyTransactionFactory;
-import org.poo.commands.transactions.transactionsfactory.TransactionFactory;
 import org.poo.users.User;
 
-public class SendMoney implements Command, Transactionable {
+/**
+ * Class used to represent the sendMoney command
+ */
+public final class SendMoney implements Command, Transactionable {
     private final Bank bank;
     private final String command;
     private final String account;
@@ -20,6 +19,16 @@ public class SendMoney implements Command, Transactionable {
     private final int timestamp;
     private final String description;
 
+    /**
+     * Constructor for the sendMoney command
+     * @param bank the receiver bank of the command
+     * @param command the command name
+     * @param account IBAN of the sender account
+     * @param amount amount to transfer
+     * @param receiver IBAN of the receiver account
+     * @param timestamp timestamp of the command
+     * @param description description of the transfer
+     */
     public SendMoney(final Bank bank, final String command,
                      final String account, final double amount,
                      final String receiver, final int timestamp, final String description) {
@@ -33,29 +42,31 @@ public class SendMoney implements Command, Transactionable {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute() {
-        Account senderAccount = bank.getIbanToAccount().get(account);
+        Account senderAccount = bank.getAccount(account);
         if (senderAccount == null)
             return;
 
-        User senderUser = bank.getEmailToUser().get(senderAccount.getOwnerEmail());
+        User senderUser = bank.getUser(senderAccount.getOwnerEmail());
         if (senderUser == null)
             return;
 
-        Account receiverAccount = bank.getIbanToAccount().get(receiver);
-        if (senderUser.getAliases().containsKey(receiver))
-            receiverAccount = senderUser.getAliases().get(receiver);
+        Account receiverAccount = bank.getAccount(receiver);
+        if (senderUser.hasAlias(receiver))
+            receiverAccount = senderUser.getAccountFromAlias(receiver);
 
         if (receiverAccount == null)
             return;
 
-        User receiverUser = bank.getEmailToUser().get(receiverAccount.getOwnerEmail());
+        User receiverUser = bank.getUser(receiverAccount.getOwnerEmail());
         if (receiverUser == null) {
             return;
         }
 
-        String error = null;
         if (senderAccount.getBalance() < amount) {
             TransactionInput input = new TransactionInput.Builder(Transaction.Type.SEND_MONEY, timestamp, description)
                     .error(SendMoneyTransaction.INSUFFICIENT_FUNDS)
@@ -67,10 +78,28 @@ public class SendMoney implements Command, Transactionable {
 
         double convertRate = bank.getExchangeRates().getRate(senderAccount.getCurrency(), receiverAccount.getCurrency());
         double receivedSum = amount * convertRate;
-
         senderAccount.transfer(receiverAccount, amount, receivedSum);
 
-        TransactionInput transactionSent = new TransactionInput.Builder(Transaction.Type.SEND_MONEY, timestamp, description)
+        TransactionInput transactionSent = createSendInput(senderAccount);
+        TransactionInput transactionReceived = createReceiveInput(receiverAccount, receivedSum);
+
+        addTransaction(transactionSent, senderUser, senderAccount);
+        addTransaction(transactionReceived, receiverUser, receiverAccount);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addTransaction(TransactionInput input, User user, Account account) {
+        bank.generateTransaction(input).addTransaction(user, account);
+    }
+
+
+    private TransactionInput
+    createSendInput(final Account senderAccount) {
+        return new TransactionInput.Builder(Transaction.Type.SEND_MONEY, timestamp, description)
                 .senderIBAN(account)
                 .receiverIBAN(receiver)
                 .amount(amount)
@@ -78,8 +107,11 @@ public class SendMoney implements Command, Transactionable {
                 .transferType(SendMoneyTransaction.SENT)
                 .error(null)
                 .build();
+    }
 
-        TransactionInput transactionReceived = new TransactionInput.Builder(Transaction.Type.SEND_MONEY, timestamp, description)
+    private TransactionInput
+    createReceiveInput(Account receiverAccount, final double receivedSum) {
+        return new TransactionInput.Builder(Transaction.Type.SEND_MONEY, timestamp, description)
                 .senderIBAN(account)
                 .receiverIBAN(receiver)
                 .amount(receivedSum)
@@ -87,14 +119,6 @@ public class SendMoney implements Command, Transactionable {
                 .transferType(SendMoneyTransaction.RECEIVED)
                 .error(null)
                 .build();
-
-        addTransaction(transactionSent, senderUser, senderAccount);
-        addTransaction(transactionReceived, receiverUser, receiverAccount);
     }
 
-
-    @Override
-    public void addTransaction(TransactionInput input, User user, Account account) {
-        bank.generateTransaction(input).addTransaction(user, account);
-    }
 }

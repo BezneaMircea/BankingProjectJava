@@ -11,6 +11,7 @@ public class SetAliasFactory implements CommandFactory {
     private final String email;
     private final String alias;
     private final String account;
+    private final int timestamp;
 
     public SetAliasFactory(Bank bank, CommandInput input) {
         this.bank = bank;
@@ -18,10 +19,11 @@ public class SetAliasFactory implements CommandFactory {
         email = input.getEmail();
         alias = input.getAlias();
         account = input.getAccount();
+        timestamp = input.getTimestamp();
     }
 
     @Override
     public Command createCommand() {
-        return new SetAlias(bank, command, email, alias, account);
+        return new SetAlias(bank, command, email, alias, account, timestamp);
     }
 }

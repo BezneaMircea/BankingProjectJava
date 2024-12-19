@@ -22,7 +22,7 @@ public final class AddFunds implements Command {
      * @param timestamp the timestamp of the command
      */
     public AddFunds(final Bank bank, final String command,
-                         final String account, final double amount, final int timestamp) {
+                    final String account, final double amount, final int timestamp) {
         this.bank = bank;
         this.command = command;
         this.account = account;

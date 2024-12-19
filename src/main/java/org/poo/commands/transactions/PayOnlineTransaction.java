@@ -5,13 +5,9 @@ import lombok.Getter;
 import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
-import static java.lang.Math.round;
 
 @Getter
-public class PayOnlineTransaction extends Transaction {
+public final class PayOnlineTransaction extends Transaction {
     public static String IS_FROZEN = "The card is frozen";
 
     private final double amount;

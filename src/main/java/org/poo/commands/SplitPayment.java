@@ -9,7 +9,10 @@ import org.poo.users.User;
 
 import java.util.List;
 
-public class SplitPayment implements Command, Transactionable {
+/**
+ * Class used to represent splitPayment command
+ */
+public final class SplitPayment implements Command, Transactionable {
     private final Bank bank;
     private final String command;
     private final List<String> accountsForSplit;
@@ -17,6 +20,16 @@ public class SplitPayment implements Command, Transactionable {
     private final String currency;
     private final double amount;
 
+    /**
+     * Constructor for the spendingReport command
+     * @param bank the receiver bank of the command
+     * @param command the command name
+     * @param accountsForSplit list of IBANs corresponding to the accounts involved
+     *                         in the split payment
+     * @param timestamp timestamp of the command
+     * @param currency currency in which the payment is performed
+     * @param amount the amount that is to be paid
+     */
     public SplitPayment(final Bank bank, final String command, final List<String> accountsForSplit,
                         final int timestamp, final String currency, final double amount) {
         this.bank = bank;
@@ -27,18 +40,21 @@ public class SplitPayment implements Command, Transactionable {
         this.amount = amount;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute() {
-        String error = null;
-
         int nrAccounts = accountsForSplit.size();
         double amountToPay = amount / nrAccounts;
+
+        String error = null;
         for (String account : accountsForSplit.reversed()) {
-            Account currentAccount = bank.getIbanToAccount().get(account);
+            Account currentAccount = bank.getAccount(account);
             if (currentAccount == null)
                 return;
 
-            User owner = bank.getEmailToUser().get(currentAccount.getOwnerEmail());
+            User owner = bank.getUser(currentAccount.getOwnerEmail());
             if (owner == null)
                 return;
 
@@ -70,6 +86,9 @@ public class SplitPayment implements Command, Transactionable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addTransaction(TransactionInput input, User user, Account account) {
         bank.generateTransaction(input).addTransaction(user, account);

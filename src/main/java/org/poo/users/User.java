@@ -44,6 +44,19 @@ abstract public class User {
         return accounts.contains(account);
     }
 
+    public void addAlias(Account account, String alias) {
+        aliases.put(alias, account);
+    }
+
+    public boolean hasAlias(String alias) {
+        return aliases.containsKey(alias);
+    }
+
+    public Account getAccountFromAlias(String alias) {
+        return aliases.get(alias);
+    }
+
+
     public ObjectNode userToObjectNode() {
         ObjectNode userNode = Utils.mapper.createObjectNode();
 
@@ -53,6 +66,15 @@ abstract public class User {
         userNode.set("accounts", writeAccounts());
 
         return userNode;
+    }
+
+    public ArrayNode transactionsToObjectNode() {
+        ArrayNode transactionsArray = Utils.mapper.createArrayNode();
+        for (Transaction transaction : transactions) {
+            transactionsArray.add(transaction.toJson());
+        }
+
+        return transactionsArray;
     }
 
     private ArrayNode writeAccounts() {

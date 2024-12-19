@@ -40,8 +40,8 @@ public final class CreateCard implements Command, Transactionable {
      */
     @Override
     public void execute() {
-        User owner = bank.getEmailToUser().get(email);
-        Account associatedAccount = bank.getIbanToAccount().get(account);
+        User owner = bank.getUser(email);
+        Account associatedAccount = bank.getAccount(account);
 
          /* The last condition in this if statement might be
           * a separate case, but tests don't check this so

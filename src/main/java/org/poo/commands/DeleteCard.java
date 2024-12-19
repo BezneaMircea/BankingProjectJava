@@ -3,7 +3,6 @@ package org.poo.commands;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.accounts.cards.Card;
-import org.poo.commands.transactions.DeleteCardTransaction;
 import org.poo.commands.transactions.Transaction;
 import org.poo.commands.transactions.TransactionInput;
 import org.poo.users.User;
@@ -24,7 +23,8 @@ public final class DeleteCard implements Command, Transactionable {
      * @param cardNumber the number of the card to be deleted
      * @param timestamp timestamp of the command
      */
-    public DeleteCard(final Bank bank, final String command, final String cardNumber, final int timestamp) {
+    public DeleteCard(final Bank bank, final String command,
+                      final String cardNumber, final int timestamp) {
         this.bank = bank;
         this.command = command;
         this.cardNumber = cardNumber;
@@ -37,12 +37,12 @@ public final class DeleteCard implements Command, Transactionable {
      */
     @Override
     public void execute() {
-        Card cardToDelete = bank.getCardNrToCard().get(cardNumber);
+        Card cardToDelete = bank.getCard(cardNumber);
         if (cardToDelete == null)
             return;
 
         Account associatedAccount = cardToDelete.getAccount();
-        User owner = bank.getEmailToUser().get(associatedAccount.getOwnerEmail());
+        User owner = bank.getUser(associatedAccount.getOwnerEmail());
 
         bank.deleteCard(cardToDelete);
 

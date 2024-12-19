@@ -65,7 +65,7 @@ public final class CheckCardStatus implements Command, Transactionable {
      */
     @Override
     public void addTransaction(TransactionInput input, User user, Account account) {
-        input = new TransactionInput.Builder(Transaction.Type.CHECK_CARD_STAT, timestamp, CheckCardStatusTransaction.LIMIT_REACHED).build();
+        input = new TransactionInput.Builder(Transaction.Type.CHECK_CARD_STAT, timestamp, Card.LIMIT_REACHED).build();
         bank.generateTransaction(input).addTransaction(user, account);
     }
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
-public class CreateCardTransaction extends Transaction {
+public final class CreateCardTransaction extends Transaction {
     public static String CARD_CREATED = "New card created";
 
     private final String card;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
-public class DeleteCardTransaction extends Transaction {
+public final class DeleteCardTransaction extends Transaction {
     private final String card;
     private final String cardHolder;
     private final String account;
