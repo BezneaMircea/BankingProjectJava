@@ -3,6 +3,7 @@ package org.poo.commands;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.accounts.cards.Card;
+import org.poo.bank.accounts.cards.CardInput;
 import org.poo.commands.transactions.CreateCardTransaction;
 import org.poo.commands.transactions.Transaction;
 import org.poo.commands.transactions.TransactionInput;
@@ -16,6 +17,7 @@ public final class CreateCard implements Command, Transactionable {
     private final String command;
     private final String account;
     private final String email;
+    private final Card.Type cardType;
     private final int timestamp;
 
     /**
@@ -24,14 +26,16 @@ public final class CreateCard implements Command, Transactionable {
      * @param command the command name
      * @param account the associatedAccount IBAN
      * @param email the email of the User that owns the account && newCard
+     * @param cardType the card type
      * @param timestamp the timestamp of the command
      */
     public CreateCard(final Bank bank, final String command, final String account,
-                      final String email, final int timestamp) {
+                      final String email, final Card.Type cardType, final int timestamp) {
         this.bank = bank;
         this.command = command;
         this.account = account;
         this.email = email;
+        this.cardType = cardType;
         this.timestamp = timestamp;
     }
 
@@ -50,7 +54,8 @@ public final class CreateCard implements Command, Transactionable {
             return;
 
 
-        Card cardToAdd = bank.createCard(Card.ACTIVE, associatedAccount, command);
+        CardInput newCard = new CardInput(Card.ACTIVE, associatedAccount, cardType);
+        Card cardToAdd = bank.createCard(newCard);
         bank.addCard(cardToAdd);
 
         TransactionInput input = new TransactionInput.Builder(Transaction.Type.CREATE_CARD, timestamp, Card.CARD_CREATED)

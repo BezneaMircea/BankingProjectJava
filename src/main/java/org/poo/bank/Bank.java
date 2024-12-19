@@ -8,6 +8,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.accounts.AccountInput;
 import org.poo.bank.accounts.cards.Card;
+import org.poo.bank.accounts.cards.CardInput;
 import org.poo.bank.accounts.cards.cardfactory.CardFactory;
 import org.poo.bank.accounts.cards.cardfactory.OneTimeCardFactory;
 import org.poo.bank.accounts.cards.cardfactory.StandardCardFactory;
@@ -87,16 +88,14 @@ public class Bank {
 
     /**
      * Method used to create a card
-     * @param status the status of the card (initially should be "active")
-     * @param account the account that owns the card
-     * @param type the type of card
+     * @param input the card input
      * @return the created Card
      */
-    public Card createCard(String status, Account account, String type) {
+    public Card createCard(CardInput input) {
         CardFactory factory;
-        switch (type) {
-            case "createOneTimeCard" -> factory = new OneTimeCardFactory(status, account);
-            case "createCard" -> factory = new StandardCardFactory(status, account);
+        switch (input.getCardType()) {
+            case Card.Type.ONE_TIME -> factory = new OneTimeCardFactory(input);
+            case Card.Type.STANDARD -> factory = new StandardCardFactory(input);
             default -> throw new IllegalArgumentException("Invalid card type");
         }
 

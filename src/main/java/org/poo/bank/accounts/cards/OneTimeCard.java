@@ -15,8 +15,8 @@ public final class OneTimeCard extends Card {
      * @param status status of the card
      * @param account account to which the card is linked
      */
-    public OneTimeCard(String status, Account account) {
-        super(status, account);
+    public OneTimeCard(String status, Account account, Type cardType) {
+        super(status, account, cardType);
     }
 
 
@@ -56,7 +56,8 @@ public final class OneTimeCard extends Card {
         associatedAccount.removeCard(this);
         bank.getCardNrToCard().remove(getCardNumber());
 
-        Card cardToAdd = new OneTimeCard(getStatus(), getAccount());
+        CardInput newCardInput = new CardInput(getStatus(), getAccount(), Type.ONE_TIME);
+        Card cardToAdd = bank.createCard(newCardInput);
         associatedAccount.addCard(cardToAdd);
         bank.getCardNrToCard().put(cardToAdd.getCardNumber(), cardToAdd);
 

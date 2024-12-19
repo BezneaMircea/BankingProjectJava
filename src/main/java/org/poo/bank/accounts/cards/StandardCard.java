@@ -16,8 +16,8 @@ public final class StandardCard extends Card {
      * @param status status of the card
      * @param account account to which the card is linked
      */
-    public StandardCard(String status, Account account) {
-        super(status, account);
+    public StandardCard(String status, Account account, Type cardType) {
+        super(status, account, cardType);
     }
 
     /**

@@ -55,7 +55,7 @@ public abstract class Account {
                 if (type.value.equalsIgnoreCase(input)) {
                     return type;
                 }
-            } throw new IllegalArgumentException("Not a valid type: " + input);
+            } throw new IllegalArgumentException("Not a valid account type: " + input);
         }
 
     }

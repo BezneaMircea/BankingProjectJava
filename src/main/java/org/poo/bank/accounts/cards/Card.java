@@ -24,16 +24,38 @@ public abstract class Card {
     private final String cardNumber;
     private String status;
     private final Account account;
+    private final Type accountType;
+
+
+    public enum Type {
+        ONE_TIME("oneTimeCard"),
+        STANDARD("standardCard");
+
+        private final String value;
+
+        Type(String value) {
+            this.value = value;
+        }
+
+        public static Type fromString(String input) {
+            for (Type type : Type.values()) {
+                if (type.value.equalsIgnoreCase(input)) {
+                    return type;
+                }
+            } throw new IllegalArgumentException("Not a valid card type: " + input);
+        }
+    }
 
     /**
      * Constructor for the Card class
      * @param status the status of the card (should be active)
      * @param account the account to which the card is linked
      */
-    public Card(String status, Account account) {
+    public Card(String status, Account account, Type accountType) {
         cardNumber = Utils.generateCardNumber();
         this.account = account;
         this.status = status;
+        this.accountType = accountType;
     }
 
     /**

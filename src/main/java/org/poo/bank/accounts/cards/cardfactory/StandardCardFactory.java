@@ -2,6 +2,7 @@ package org.poo.bank.accounts.cards.cardfactory;
 
 import org.poo.bank.accounts.Account;
 import org.poo.bank.accounts.cards.Card;
+import org.poo.bank.accounts.cards.CardInput;
 import org.poo.bank.accounts.cards.StandardCard;
 
 /**
@@ -10,15 +11,16 @@ import org.poo.bank.accounts.cards.StandardCard;
 public final class StandardCardFactory implements CardFactory {
     private final String status;
     private final Account account;
+    private final Card.Type cardType;
 
     /**
      * Constructor for the OneTimeCardFactory
-     * @param status the status of the card
-     * @param account the account to which the card is linked
+     * @param input the card input
      */
-    public StandardCardFactory(String status, Account account) {
-        this.status = status;
-        this.account = account;
+    public StandardCardFactory(CardInput input) {
+        status = input.getStatus();
+        account = input.getAccount();
+        cardType = input.getCardType();
     }
 
     /**
@@ -26,6 +28,6 @@ public final class StandardCardFactory implements CardFactory {
      */
     @Override
     public Card createCard() {
-        return new StandardCard(status, account);
+        return new StandardCard(status, account, cardType);
     }
 }
