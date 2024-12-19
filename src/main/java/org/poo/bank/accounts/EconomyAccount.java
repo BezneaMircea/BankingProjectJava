@@ -37,46 +37,25 @@ public final class EconomyAccount extends Account {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String addInterest() {
         setInterestRate(getInterestRate() + interestRate);
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String changeInterest(final double newInterestRate) {
         interestRate = newInterestRate;
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected ArrayNode
     generateReportTransaction(final int startTimestamp, final int endTimestamp) {
-        ArrayNode transactionArray = Utils.MAPPER.createArrayNode();
-        for (Transaction transaction : interestTransactions) {
-            int transactionTimestamp = transaction.getTimestamp();
-            if (transactionTimestamp >= startTimestamp && transactionTimestamp <= endTimestamp) {
-                transactionArray.add(transaction.toJson());
-            } else if (transactionTimestamp > endTimestamp) {
-                break;
-            }
-        }
-
-        return transactionArray;
+        return transactionsToObjectNode(interestTransactions, startTimestamp, endTimestamp);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public ObjectNode spendingsReport(final int startTimestamp, final int endTimestamp) {
         ObjectNode errorNode = Utils.MAPPER.createObjectNode();
@@ -84,9 +63,6 @@ public final class EconomyAccount extends Account {
         return errorNode;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void addTransaction(final ChangeIntRateTransaction transaction) {
         getTransactions().add(transaction);

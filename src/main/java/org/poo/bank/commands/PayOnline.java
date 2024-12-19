@@ -48,9 +48,6 @@ public final class PayOnline implements Command, Transactionable {
         this.email = email;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         Card usedCard = bank.getCard(cardNumber);
@@ -75,9 +72,6 @@ public final class PayOnline implements Command, Transactionable {
         usedCard.pay(bank, totalSumToPay, timestamp, commerciant);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void addTransaction(final TransactionInput input, final User user, final Account account) {
     }

@@ -28,9 +28,6 @@ public final class AddInterest implements Command {
         this.timestamp = timestamp;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         Account accountToAddInterest = bank.getAccount(account);

@@ -30,9 +30,6 @@ public final class PrintTransactions implements Command {
         this.timestamp = timestamp;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         User user = bank.getUser(email);

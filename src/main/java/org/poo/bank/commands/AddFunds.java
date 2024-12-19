@@ -31,9 +31,7 @@ public final class AddFunds implements Command {
         this.timestamp = timestamp;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void execute() {
         Account accountToAddFunds = bank.getAccount(account);

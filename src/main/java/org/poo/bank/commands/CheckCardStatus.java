@@ -33,9 +33,6 @@ public final class CheckCardStatus implements Command, Transactionable {
         this.timestamp = timestamp;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         Card cardToCheck = bank.getCard(cardNumber);
@@ -60,10 +57,6 @@ public final class CheckCardStatus implements Command, Transactionable {
 
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void addTransaction(TransactionInput input, final User user, final Account account) {
         input = new TransactionInput.Builder(Transaction.Type.CHECK_CARD_STAT, timestamp, Card.LIMIT_REACHED).build();

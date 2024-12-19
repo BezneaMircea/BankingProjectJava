@@ -36,9 +36,6 @@ public final class SpendingReport implements Command {
         this.timestamp = timestamp;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         Account accountToCreateReport = bank.getAccount(account);

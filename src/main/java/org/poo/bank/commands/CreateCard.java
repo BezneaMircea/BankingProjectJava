@@ -39,9 +39,6 @@ public final class CreateCard implements Command, Transactionable {
         this.timestamp = timestamp;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         User owner = bank.getUser(email);
@@ -69,9 +66,6 @@ public final class CreateCard implements Command, Transactionable {
         addTransaction(input, owner, associatedAccount);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void
     addTransaction(final TransactionInput input, final User user, final Account account) {

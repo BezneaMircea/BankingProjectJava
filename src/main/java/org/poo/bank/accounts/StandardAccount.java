@@ -35,61 +35,32 @@ public final class StandardAccount extends Account {
         commerciants = new ArrayList<>();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public String addInterest() {
         return NOT_SAVINGS_ACCOUNT;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String changeInterest(final double interestRate) {
         return NOT_SAVINGS_ACCOUNT;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected ArrayNode
     generateReportTransaction(final int startTimestamp, final int endTimestamp) {
-        ArrayNode transactionArray = Utils.MAPPER.createArrayNode();
-        for (Transaction transaction : getTransactions()) {
-            int transactionTimestamp = transaction.getTimestamp();
-            if (transactionTimestamp >= startTimestamp && transactionTimestamp <= endTimestamp) {
-                transactionArray.add(transaction.toJson());
-            } else if (transactionTimestamp > endTimestamp) {
-                break;
-            }
-        }
-
-        return transactionArray;
+        return transactionsToObjectNode(getTransactions(), startTimestamp, endTimestamp);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public ObjectNode spendingsReport(final int startTimestamp, final int endTimestamp) {
         ObjectNode spendingsReportNode = Utils.MAPPER.createObjectNode();
         spendingsReportNode.put("IBAN", getIban());
         spendingsReportNode.put("balance", getBalance());
         spendingsReportNode.put("currency", getCurrency());
-
-        ArrayNode transactionsArray = Utils.MAPPER.createArrayNode();
-        for (Transaction transaction : onlineTransactions) {
-            int transactionTimestamp = transaction.getTimestamp();
-            if (transactionTimestamp >= startTimestamp && transactionTimestamp <= endTimestamp) {
-                transactionsArray.add(transaction.toJson());
-            } else if (transactionTimestamp > endTimestamp) {
-                break;
-            }
-        }
-        spendingsReportNode.set("transactions", transactionsArray);
+        spendingsReportNode.set("transactions", transactionsToObjectNode(onlineTransactions,
+                                                                         startTimestamp,
+                                                                         endTimestamp));
 
         Collections.sort(commerciants);
         ArrayNode commerciantsArray = Utils.MAPPER.createArrayNode();

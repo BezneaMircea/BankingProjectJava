@@ -239,6 +239,20 @@ public abstract class Account {
         return accountNode;
     }
 
+    public ArrayNode transactionsToObjectNode(final List<Transaction> transactions,
+                                              final int startTimestamp, final int endTimestamp) {
+        ArrayNode transactionArray = Utils.MAPPER.createArrayNode();
+        for (Transaction transaction : transactions) {
+            int transactionTimestamp = transaction.getTimestamp();
+            if (transactionTimestamp >= startTimestamp && transactionTimestamp <= endTimestamp) {
+                transactionArray.add(transaction.toJson());
+            } else if (transactionTimestamp > endTimestamp) {
+                break;
+            }
+        }
+
+        return transactionArray;
+    }
 
     private ArrayNode writeCards() {
         ArrayNode cardsNode = Utils.MAPPER.createArrayNode();

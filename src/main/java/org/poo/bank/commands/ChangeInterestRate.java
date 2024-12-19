@@ -36,9 +36,6 @@ public final class ChangeInterestRate implements Command, Transactionable {
         this.timestamp = timestamp;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         Account accountToChangeInterest = bank.getAccount(account);
@@ -61,9 +58,6 @@ public final class ChangeInterestRate implements Command, Transactionable {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void addTransaction(TransactionInput input, final User user, final Account acc) {
         String description = String.format(ChangeIntRateTransaction.IRATE_CHANGED, interestRate);

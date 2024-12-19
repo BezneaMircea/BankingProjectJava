@@ -41,9 +41,6 @@ public final class SplitPayment implements Command, Transactionable {
         this.amount = amount;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         int nrAccounts = accountsForSplit.size();
@@ -92,9 +89,6 @@ public final class SplitPayment implements Command, Transactionable {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void
     addTransaction(final TransactionInput input, final User user, final Account account) {

@@ -32,10 +32,6 @@ public final class DeleteCard implements Command, Transactionable {
         this.timestamp = timestamp;
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         Card cardToDelete = bank.getCard(cardNumber);
@@ -51,9 +47,6 @@ public final class DeleteCard implements Command, Transactionable {
         addTransaction(null, owner, associatedAccount);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void addTransaction(TransactionInput input, final User user, final Account account) {
         input = new TransactionInput.Builder(Transaction.Type.DELETE_CARD, timestamp, Card.DESTROYED)

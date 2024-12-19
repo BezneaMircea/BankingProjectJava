@@ -17,7 +17,11 @@ import java.util.Map;
  */
 @Data
 public abstract class User {
-    public static final String NOT_FOUND = "User not found";
+    public static final String NOT_FOUND;
+
+    static {
+        NOT_FOUND = "User not found";
+    }
 
     enum Type {
         BASIC
@@ -47,6 +51,42 @@ public abstract class User {
         aliases = new HashMap<>();
     }
 
+    /**
+     * Method used to write and user to an ObjectNode
+     * @return the corresponding ObjectNode
+     */
+    public ObjectNode userToObjectNode() {
+        ObjectNode userNode = Utils.MAPPER.createObjectNode();
+
+        userNode.put("firstName", firstName);
+        userNode.put("lastName", lastName);
+        userNode.put("email", email);
+        userNode.set("accounts", writeAccounts());
+
+        return userNode;
+    }
+
+    private ArrayNode writeAccounts() {
+        ArrayNode accountsNode = Utils.MAPPER.createArrayNode();
+        for (Account account : accounts) {
+            accountsNode.add(account.accountToObjectNode());
+        }
+
+        return accountsNode;
+    }
+
+    /**
+     * Method used to write the users transactions to an ArrayNode
+     * @return the ArrayNode
+     */
+    public ArrayNode transactionsToObjectNode() {
+        ArrayNode transactionsArray = Utils.MAPPER.createArrayNode();
+        for (Transaction transaction : transactions) {
+            transactionsArray.add(transaction.toJson());
+        }
+
+        return transactionsArray;
+    }
 
     /**
      * Method used to add an account to the users account list
@@ -92,42 +132,6 @@ public abstract class User {
         return aliases.get(alias);
     }
 
-    /**
-     * Method used to write and user to an ObjectNode
-     * @return the corresponding ObjectNode
-     */
-    public ObjectNode userToObjectNode() {
-        ObjectNode userNode = Utils.MAPPER.createObjectNode();
-
-        userNode.put("firstName", firstName);
-        userNode.put("lastName", lastName);
-        userNode.put("email", email);
-        userNode.set("accounts", writeAccounts());
-
-        return userNode;
-    }
-
-    /**
-     * Method used to write the users transactions to an ArrayNode
-     * @return the ArrayNode
-     */
-    public ArrayNode transactionsToObjectNode() {
-        ArrayNode transactionsArray = Utils.MAPPER.createArrayNode();
-        for (Transaction transaction : transactions) {
-            transactionsArray.add(transaction.toJson());
-        }
-
-        return transactionsArray;
-    }
-
-    private ArrayNode writeAccounts() {
-        ArrayNode accountsNode = Utils.MAPPER.createArrayNode();
-        for (Account account : accounts) {
-            accountsNode.add(account.accountToObjectNode());
-        }
-
-        return accountsNode;
-    }
 
 }
 

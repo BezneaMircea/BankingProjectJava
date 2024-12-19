@@ -45,9 +45,6 @@ public final class AddAccount implements Command, Transactionable {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         AccountInput newAccountInput = new AccountInput.Builder(email, currency, accountType)
@@ -65,9 +62,7 @@ public final class AddAccount implements Command, Transactionable {
         addTransaction(null, bank.getEmailToUser().get(accountToAdd.getOwnerEmail()), accountToAdd);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void addTransaction(TransactionInput input, final User user, final Account account) {
         input = new TransactionInput.Builder(Transaction.Type.ADD_ACCOUNT, timestamp, Account.ACCOUNT_CREATED)

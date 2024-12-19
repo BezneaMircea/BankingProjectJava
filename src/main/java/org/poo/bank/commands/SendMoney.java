@@ -94,10 +94,6 @@ public final class SendMoney implements Command, Transactionable {
         addTransaction(transactionReceived, receiverUser, receiverAccount);
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void
     addTransaction(final TransactionInput input, final User user, final Account acc) {

@@ -31,9 +31,6 @@ public final class SetMinBalance implements Command {
         this.timestamp = timestamp;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         Account targetedAccount = bank.getAccount(account);

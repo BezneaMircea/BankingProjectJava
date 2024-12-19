@@ -43,39 +43,21 @@ public class BankSettup {
         this.output = output;
     }
 
-    private List<User> createUsers() {
-        List<User> bankUsers = new ArrayList<>();
+    /**
+     * Method used to execute the commands given in input.
+     * Internally, it calls two private methods that create the bank (Receiver) and
+     * commands and thencalls command.execute(). If the given command is not in the
+     * commands list nothing happens
+     */
+    public void executeCommands() {
+        Bank bank = createBank();
 
-        /// Switch statement can be added in case of new type of users apear in the project
-        for (UserInput user : users) {
-            UserFactory factory = new BasicUserFactory(user);
-            bankUsers.add(factory.createUser());
+        for (CommandInput command : commands) {
+            Command commandToExecute = createCommand(bank, command);
+            if (commandToExecute != null) {
+                commandToExecute.execute();
+            }
         }
-
-        return bankUsers;
-    }
-
-    private Graph<String, DefaultWeightedEdge> createExchange() {
-        if (exchangeRates == null || exchangeRates.length == 0) {
-            return null;
-        }
-
-        Graph<String, DefaultWeightedEdge>
-                myExchange = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
-        for (ExchangeInput exchange : exchangeRates) {
-            myExchange.addVertex(exchange.getFrom());
-            myExchange.addVertex(exchange.getTo());
-
-            DefaultWeightedEdge edgeFromTo = myExchange.addEdge(exchange.getFrom(),
-                                                                exchange.getTo());
-            myExchange.setEdgeWeight(edgeFromTo, exchange.getRate());
-
-            DefaultWeightedEdge edgeToFrom = myExchange.addEdge(exchange.getTo(),
-                                                                exchange.getFrom());
-            myExchange.setEdgeWeight(edgeToFrom, 1 / exchange.getRate());
-        }
-
-        return myExchange;
     }
 
     private Command createCommand(final Bank bank, final CommandInput command) {
@@ -107,26 +89,42 @@ public class BankSettup {
         return factory.createCommand();
     }
 
-    /**
-     * Method used to execute the commands given in input.
-     * Internally, it calls two private methods that create the bank (Receiver) and
-     * commands and thencalls command.execute(). If the given command is not in the
-     * commands list nothing happens
-     */
-    public void executeCommands() {
-        Bank bank = createBank();
-
-        for (CommandInput command : commands) {
-            Command commandToExecute = createCommand(bank, command);
-            if (commandToExecute != null) {
-                commandToExecute.execute();
-            }
-        }
-    }
-
     private Bank createBank() {
         return new Bank(createUsers(), createExchange(), output);
     }
 
+    private List<User> createUsers() {
+        List<User> bankUsers = new ArrayList<>();
 
+        /// Switch statement can be added in case of new type of users apear in the project
+        for (UserInput user : users) {
+            UserFactory factory = new BasicUserFactory(user);
+            bankUsers.add(factory.createUser());
+        }
+
+        return bankUsers;
+    }
+
+    private Graph<String, DefaultWeightedEdge> createExchange() {
+        if (exchangeRates == null || exchangeRates.length == 0) {
+            return null;
+        }
+
+        Graph<String, DefaultWeightedEdge>
+                myExchange = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
+        for (ExchangeInput exchange : exchangeRates) {
+            myExchange.addVertex(exchange.getFrom());
+            myExchange.addVertex(exchange.getTo());
+
+            DefaultWeightedEdge edgeFromTo = myExchange.addEdge(exchange.getFrom(),
+                    exchange.getTo());
+            myExchange.setEdgeWeight(edgeFromTo, exchange.getRate());
+
+            DefaultWeightedEdge edgeToFrom = myExchange.addEdge(exchange.getTo(),
+                    exchange.getFrom());
+            myExchange.setEdgeWeight(edgeToFrom, 1 / exchange.getRate());
+        }
+
+        return myExchange;
+    }
 }

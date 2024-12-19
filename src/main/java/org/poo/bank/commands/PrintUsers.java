@@ -25,9 +25,6 @@ public final class PrintUsers implements Command {
         this.timestamp = timestamp;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         ObjectNode commandNode = Utils.MAPPER.createObjectNode();

@@ -36,9 +36,6 @@ public final class SetAlias implements Command {
         this.timestamp = timestamp;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void execute() {
         Account associatedAccount = bank.getAccount(account);

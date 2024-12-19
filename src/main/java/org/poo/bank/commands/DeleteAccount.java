@@ -37,9 +37,7 @@ public final class DeleteAccount implements Command, Transactionable {
         this.timestamp = timestamp;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void execute() {
         Account accountToDelete = bank.getAccount(account);
@@ -71,10 +69,6 @@ public final class DeleteAccount implements Command, Transactionable {
         bank.getOutput().add(deleteAccountNode);
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void addTransaction(TransactionInput input, final User user, final Account account) {
         input = new TransactionInput.Builder(Transaction.Type.DELETE_ACCOUNT, timestamp, Account.FUNDS_REMAINING)
