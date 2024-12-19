@@ -58,13 +58,15 @@ public final class PayOnline implements Command, Transactionable {
 
         Account associatedAccount = usedCard.getAccount();
         User cardOwner = bank.getUser(email);
-        if (cardOwner == null || associatedAccount == null ||
-                !(cardOwner.hasAccount(associatedAccount) && associatedAccount.hasCard(usedCard))) {
+        if (cardOwner == null || associatedAccount == null
+                || !(cardOwner.hasAccount(associatedAccount)
+                     && associatedAccount.hasCard(usedCard))) {
             return;
         }
 
 
-        double exchangeRate = bank.getExchangeRates().getRate(currency, associatedAccount.getCurrency());
+        double exchangeRate = bank.getExchangeRates().getRate(currency,
+                                                              associatedAccount.getCurrency());
         double totalSumToPay = amount * exchangeRate;
 
         /* The transactions are handled here, in pay method due to the fact that
@@ -73,6 +75,7 @@ public final class PayOnline implements Command, Transactionable {
     }
 
     @Override
-    public void addTransaction(final TransactionInput input, final User user, final Account account) {
+    public void addTransaction(final TransactionInput input, final User user,
+                               final Account account) {
     }
 }

@@ -70,10 +70,10 @@ public final class DeleteAccount implements Command, Transactionable {
     }
 
     @Override
-    public void addTransaction(TransactionInput input, final User user, final Account account) {
-        input = new TransactionInput.Builder(Transaction.Type.DELETE_ACCOUNT, timestamp, Account.FUNDS_REMAINING)
-                .build();
+    public void addTransaction(TransactionInput input, final User user, final Account acc) {
+        input = new TransactionInput.Builder(Transaction.Type.DELETE_ACCOUNT,
+                                             timestamp, Account.FUNDS_REMAINING).build();
 
-        bank.generateTransaction(input).addTransaction(user, account);
+        bank.generateTransaction(input).addTransaction(user, acc);
     }
 }

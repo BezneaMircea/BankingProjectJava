@@ -61,8 +61,8 @@ public final class ChangeInterestRate implements Command, Transactionable {
     @Override
     public void addTransaction(TransactionInput input, final User user, final Account acc) {
         String description = String.format(ChangeIntRateTransaction.IRATE_CHANGED, interestRate);
-        input = new TransactionInput.Builder(Transaction.Type.CHANGE_INT_RATE, timestamp, description)
-                .build();
+        input = new TransactionInput.Builder(Transaction.Type.CHANGE_INT_RATE,
+                                             timestamp, description).build();
 
         bank.generateTransaction(input).addTransaction(user, acc);
     }

@@ -46,7 +46,8 @@ public final class Report implements Command {
 
         ObjectNode reportNode = Utils.MAPPER.createObjectNode();
         reportNode.put("command", command);
-        reportNode.set("output", accountToCreateReport.generateReport(startTimestamp, endTimestamp));
+        reportNode.set("output", accountToCreateReport.generateReport(startTimestamp,
+                                                                      endTimestamp));
         reportNode.put("timestamp", timestamp);
 
         bank.getOutput().add(reportNode);

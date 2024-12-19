@@ -34,7 +34,8 @@ public final class AddAccount implements Command, Transactionable {
      */
     public AddAccount(final Bank bank, final String command,
                       final String email, final String currency,
-                      final Account.Type accountType, final int timestamp, final double interestRate) {
+                      final Account.Type accountType, final int timestamp,
+                      final double interestRate) {
         this.bank = bank;
         this.command = command;
         this.email = email;
@@ -59,14 +60,14 @@ public final class AddAccount implements Command, Transactionable {
             return;
         }
 
-        addTransaction(null, bank.getEmailToUser().get(accountToAdd.getOwnerEmail()), accountToAdd);
+        addTransaction(null, bank.getUser(accountToAdd.getOwnerEmail()), accountToAdd);
     }
 
 
     @Override
     public void addTransaction(TransactionInput input, final User user, final Account account) {
-        input = new TransactionInput.Builder(Transaction.Type.ADD_ACCOUNT, timestamp, Account.ACCOUNT_CREATED)
-                .build();
+        input = new TransactionInput.Builder(Transaction.Type.ADD_ACCOUNT, timestamp,
+                                             Account.ACCOUNT_CREATED).build();
 
         bank.generateTransaction(input).addTransaction(user, account);
     }

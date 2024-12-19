@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.poo.bank.cards.Card;
-import org.poo.bank.transactions.*;
+import org.poo.bank.transactions.ChangeIntRateTransaction;
+import org.poo.bank.transactions.PayOnlineTransaction;
+import org.poo.bank.transactions.Transaction;
 import org.poo.utils.Utils;
 
 
@@ -28,7 +30,7 @@ public abstract class Account {
     public static final String ACCOUNT_CREATED;
     public static final String FUNDS_REMAINING;
     public static final String SPLIT_PAYMENT_ERROR;
-    public static final int WARNING_THRESHOLD;
+    public static final int WARNING_THRESHOLD = 30;
 
     static {
         NOT_SAVINGS_ACCOUNT = "This is not a savings account";
@@ -40,7 +42,6 @@ public abstract class Account {
         ACCOUNT_CREATED = "New account created";
         FUNDS_REMAINING = "Account couldn't be deleted - there are funds remaining";
         SPLIT_PAYMENT_ERROR = "Account %s has insufficient funds for a split payment.";
-        WARNING_THRESHOLD = 30;
     }
 
     @Getter
@@ -154,7 +155,7 @@ public abstract class Account {
      */
     public ObjectNode generateReport(final int startTimestamp, final int endTimestamp) {
         ObjectNode reportNode = Utils.MAPPER.createObjectNode();
-        reportNode.put("balance", Utils.roundIfClose(getBalance()));
+        reportNode.put("balance", Utils.approximateToFourthDecimal(getBalance()));
         reportNode.put("currency", getCurrency());
         reportNode.put("IBAN", getIban());
         reportNode.set("transactions", generateReportTransaction(startTimestamp, endTimestamp));
@@ -239,10 +240,17 @@ public abstract class Account {
         return accountNode;
     }
 
-    public ArrayNode transactionsToArrayNode(final List<Transaction> transactions,
+    /**
+     * Method used to create an arrayNode of a transactions in a given timestamp interval
+     * @param transactionsToPrint the transactions
+     * @param startTimestamp the start timestamp
+     * @param endTimestamp the end timestamp
+     * @return the corresponding ArrayNode
+     */
+    public ArrayNode transactionsToArrayNode(final List<Transaction> transactionsToPrint,
                                               final int startTimestamp, final int endTimestamp) {
         ArrayNode transactionArray = Utils.MAPPER.createArrayNode();
-        for (Transaction transaction : transactions) {
+        for (Transaction transaction : transactionsToPrint) {
             int transactionTimestamp = transaction.getTimestamp();
             if (transactionTimestamp >= startTimestamp && transactionTimestamp <= endTimestamp) {
                 transactionArray.add(transaction.toJson());

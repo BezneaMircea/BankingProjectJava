@@ -16,6 +16,7 @@ public final class Utils {
     private static final String RO_STR = "RO";
     private static final String POO_STR = "POOB";
     private static final double TOLERANCE = 1e-4;
+    private static final double POWER = 10000.0;
 
 
     private static Random ibanRandom = new Random(IBAN_SEED);
@@ -36,8 +37,13 @@ public final class Utils {
         return number;
     }
 
+    /**
+     * rounds a number to four decimals
+     * @param value number to round
+     * @return the rounded number
+     */
     public static double approximateToFourthDecimal(final double value) {
-        return Math.round(value * 10000.0) / 10000.0;
+        return Math.round(value * POWER) / POWER;
     }
 
     /**

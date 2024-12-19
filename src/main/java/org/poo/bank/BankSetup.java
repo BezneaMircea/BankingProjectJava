@@ -5,7 +5,25 @@ import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.poo.bank.commands.Command;
 
-import org.poo.bank.commands.command_factory.*;
+import org.poo.bank.commands.command_factory.AddAccountFactory;
+import org.poo.bank.commands.command_factory.AddFundsFactory;
+import org.poo.bank.commands.command_factory.CommandFactory;
+import org.poo.bank.commands.command_factory.PrintUsersFactory;
+import org.poo.bank.commands.command_factory.DeleteCardFactory;
+import org.poo.bank.commands.command_factory.AddInterestFactory;
+import org.poo.bank.commands.command_factory.SplitPaymentFactory;
+import org.poo.bank.commands.command_factory.SetMinBalanceFactory;
+import org.poo.bank.commands.command_factory.ReportFactory;
+import org.poo.bank.commands.command_factory.SetAliasFactory;
+import org.poo.bank.commands.command_factory.ChangeInterestRateFactory;
+import org.poo.bank.commands.command_factory.CreateCardFactory;
+import org.poo.bank.commands.command_factory.DeleteAccountFactory;
+import org.poo.bank.commands.command_factory.CheckCardStatusFactory;
+import org.poo.bank.commands.command_factory.SpendingReportFactory;
+import org.poo.bank.commands.command_factory.PrintTransactionsFactory;
+import org.poo.bank.commands.command_factory.PayOnlineFactory;
+import org.poo.bank.commands.command_factory.SendMoneyFactory;
+
 import org.poo.bank.users.User;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;

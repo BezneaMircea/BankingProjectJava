@@ -42,7 +42,7 @@ public final class StandardCard extends Card {
 
         TransactionInput payOnline = new TransactionInput.Builder(Transaction.Type.PAY_ONLINE,
                 timestamp, Card.CARD_PAYMENT)
-                .amount(Utils.roundIfClose(amount))
+                .amount(Utils.approximateToFourthDecimal(amount))
                 .commerciant(commerciant)
                 .error(error)
                 .build();

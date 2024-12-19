@@ -48,8 +48,10 @@ public final class DeleteCard implements Command, Transactionable {
     }
 
     @Override
-    public void addTransaction(TransactionInput input, final User user, final Account account) {
-        input = new TransactionInput.Builder(Transaction.Type.DELETE_CARD, timestamp, Card.DESTROYED)
+    public void addTransaction(TransactionInput input, final User user,
+                               final Account account) {
+        input = new TransactionInput.Builder(Transaction.Type.DELETE_CARD, timestamp,
+                                             Card.DESTROYED)
                 .card(cardNumber)
                 .cardHolder(user.getEmail())
                 .account(account.getIban())

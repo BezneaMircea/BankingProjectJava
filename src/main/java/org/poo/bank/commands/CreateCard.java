@@ -47,7 +47,8 @@ public final class CreateCard implements Command, Transactionable {
         /* The last condition in this if statement might be
          * a separate case, but tests don't check this so
          * it can t be treated properly yet */
-        if (owner == null || associatedAccount == null || !email.equals(associatedAccount.getOwnerEmail())) {
+        if (owner == null || associatedAccount == null
+                || !email.equals(associatedAccount.getOwnerEmail())) {
             return;
         }
 
@@ -56,7 +57,8 @@ public final class CreateCard implements Command, Transactionable {
         Card cardToAdd = bank.createCard(newCard);
         bank.addCard(cardToAdd);
 
-        TransactionInput input = new TransactionInput.Builder(Transaction.Type.CREATE_CARD, timestamp, Card.CARD_CREATED)
+        TransactionInput input = new TransactionInput.Builder(Transaction.Type.CREATE_CARD,
+                                                              timestamp, Card.CARD_CREATED)
                 .card(cardToAdd.getCardNumber())
                 .cardHolder(owner.getEmail())
                 .account(account)
@@ -68,7 +70,7 @@ public final class CreateCard implements Command, Transactionable {
 
     @Override
     public void
-    addTransaction(final TransactionInput input, final User user, final Account account) {
-        bank.generateTransaction(input).addTransaction(user, account);
+    addTransaction(final TransactionInput input, final User user, final Account acc) {
+        bank.generateTransaction(input).addTransaction(user, acc);
     }
 }

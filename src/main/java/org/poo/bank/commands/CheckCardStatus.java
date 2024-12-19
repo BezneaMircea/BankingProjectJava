@@ -48,7 +48,8 @@ public final class CheckCardStatus implements Command, Transactionable {
         Account associatedAccount = cardToCheck.getAccount();
         if (associatedAccount.getBalance() < associatedAccount.getMinBalance()) {
             cardToCheck.setStatus(Card.FROZEN);
-        } else if (associatedAccount.getBalance() - associatedAccount.getMinBalance() < Account.WARNING_THRESHOLD) {
+        } else if (associatedAccount.getBalance() - associatedAccount.getMinBalance()
+                    < Account.WARNING_THRESHOLD) {
             cardToCheck.setStatus(Card.FROZEN);
 
             User owner = bank.getUser(associatedAccount.getOwnerEmail());
@@ -59,7 +60,8 @@ public final class CheckCardStatus implements Command, Transactionable {
 
     @Override
     public void addTransaction(TransactionInput input, final User user, final Account account) {
-        input = new TransactionInput.Builder(Transaction.Type.CHECK_CARD_STAT, timestamp, Card.LIMIT_REACHED).build();
+        input = new TransactionInput.Builder(Transaction.Type.CHECK_CARD_STAT,
+                                             timestamp, Card.LIMIT_REACHED).build();
         bank.generateTransaction(input).addTransaction(user, account);
     }
 }
