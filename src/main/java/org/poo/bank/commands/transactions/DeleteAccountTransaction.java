@@ -5,13 +5,9 @@ import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
 public final class DeleteAccountTransaction extends Transaction {
-    public DeleteAccountTransaction(final Type transactionType, final int timestamp, final String description) {
+    public DeleteAccountTransaction(final Type transactionType, final int timestamp,
+                                    final String description) {
         super(transactionType, timestamp, description);
-    }
-
-    @Override
-    public void addTransactionToAccount(Account account) {
-        account.addTransaction(this);
     }
 
     @Override
@@ -22,4 +18,10 @@ public final class DeleteAccountTransaction extends Transaction {
 
         return jsonNode;
     }
+
+    @Override
+    public void addTransactionToAccount(final Account account) {
+        account.addTransaction(this);
+    }
+
 }

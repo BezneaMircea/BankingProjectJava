@@ -6,8 +6,8 @@ import org.poo.utils.Utils;
 
 
 public final class SendMoneyTransaction extends Transaction {
-    public static String SENT = "sent";
-    public static String RECEIVED = "received";
+    public static final String SENT = "sent";
+    public static final String RECEIVED = "received";
 
     private final String senderIBAN;
     private final String receiverIBAN;
@@ -16,10 +16,11 @@ public final class SendMoneyTransaction extends Transaction {
     private final String transferType;
     private final String error;
 
-    public SendMoneyTransaction(final Type transactionType, int timestamp, String description,
-                                String senderIBAN, String receiverIBAN,
-                                double amount, String currency,
-                                String transferType, String error) {
+    public SendMoneyTransaction(final Type transactionType, final int timestamp,
+                                final String description, final String senderIBAN,
+                                final String receiverIBAN, final double amount,
+                                final String currency, final String transferType,
+                                final String error) {
         super(transactionType, timestamp, description);
         this.senderIBAN = senderIBAN;
         this.receiverIBAN = receiverIBAN;
@@ -49,6 +50,7 @@ public final class SendMoneyTransaction extends Transaction {
         return jsonNode;
     }
 
+    @Override
     public void addTransactionToAccount(final Account account) {
         account.addTransaction(this);
     }

@@ -40,7 +40,8 @@ public final class OneTimeCard extends Card {
             error = Account.INSUFFICIENT_FUNDS;
         }
 
-        TransactionInput payOnline = new TransactionInput.Builder(Transaction.Type.PAY_ONLINE, timestamp, "Card payment")
+        TransactionInput payOnline = new TransactionInput.Builder(Transaction.Type.PAY_ONLINE,
+                timestamp, Card.CARD_PAYMENT)
                 .amount(amount)
                 .commerciant(commerciant)
                 .error(error)
@@ -62,13 +63,15 @@ public final class OneTimeCard extends Card {
         bank.getCardNrToCard().put(cardToAdd.getCardNumber(), cardToAdd);
 
 
-        TransactionInput deleteCard = new TransactionInput.Builder(Transaction.Type.DELETE_CARD, timestamp, Card.DESTROYED)
+        TransactionInput deleteCard = new TransactionInput.Builder(Transaction.Type.DELETE_CARD,
+                timestamp, Card.DESTROYED)
                 .card(getCardNumber())
                 .cardHolder(getAccount().getOwnerEmail())
                 .account(getAccount().getIban())
                 .build();
 
-        TransactionInput createCard = new TransactionInput.Builder(Transaction.Type.CREATE_CARD, timestamp, Card.CARD_CREATED)
+        TransactionInput createCard = new TransactionInput.Builder(Transaction.Type.CREATE_CARD,
+                timestamp, Card.CARD_CREATED)
                 .card(cardToAdd.getCardNumber())
                 .cardHolder(getAccount().getOwnerEmail())
                 .account(getAccount().getIban())

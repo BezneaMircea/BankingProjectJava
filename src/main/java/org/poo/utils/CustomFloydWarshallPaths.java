@@ -16,7 +16,7 @@ import java.util.Map;
  * @param <E>
  * @see org.jgrapht.alg.shortestpath.FloydWarshallShortestPaths
  */
-public final class CustomFloydWarshallPaths <V, E> {
+public final class CustomFloydWarshallPaths<V, E> {
     private final Graph<V, E> graph;
     private final double[][] distanceMatrix;
     private final Map<V, Integer> vertexMap;
@@ -26,7 +26,7 @@ public final class CustomFloydWarshallPaths <V, E> {
      * Constructor used to run initialize the data needed for applying the algorithm
      * @param graph the graph on which we want to compute FloydWarshall
      */
-    public CustomFloydWarshallPaths(Graph<V, E> graph) {
+    public CustomFloydWarshallPaths(final Graph<V, E> graph) {
         this.graph = graph;
         distanceMatrix = new double[graph.vertexSet().size()][graph.vertexSet().size()];
         vertexMap = new HashMap<>();
@@ -41,10 +41,11 @@ public final class CustomFloydWarshallPaths <V, E> {
         for (int i = 0; i < vertexList.size(); i++) {
             vertexMap.put(vertexList.get(i), i);
             for (int j = 0; j < graph.vertexSet().size(); j++) {
-                if (i == j)
+                if (i == j) {
                     distanceMatrix[j][i] = 1;
-                else
+                } else {
                     distanceMatrix[j][i] = Double.POSITIVE_INFINITY;
+                }
             }
         }
 
@@ -61,8 +62,9 @@ public final class CustomFloydWarshallPaths <V, E> {
         for (int k = 0; k < graph.vertexSet().size(); k++) {
             for (int i = 0; i < graph.vertexSet().size(); i++) {
                 for (int j = 0; j < graph.vertexSet().size(); j++) {
-                    if (distanceMatrix[i][k] * distanceMatrix[k][j] < distanceMatrix[i][j])
+                    if (distanceMatrix[i][k] * distanceMatrix[k][j] < distanceMatrix[i][j]) {
                         distanceMatrix[i][j] = distanceMatrix[i][k] * distanceMatrix[k][j];
+                    }
                 }
             }
         }
@@ -75,7 +77,7 @@ public final class CustomFloydWarshallPaths <V, E> {
      * @param dest destination node
      * @return the shortest path from source to dest
      */
-    public double getRate(V source, V dest) {
+    public double getRate(final V source, final V dest) {
         int sourceIndex = vertexMap.get(source);
         int destIndex = vertexMap.get(dest);
 

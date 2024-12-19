@@ -12,9 +12,9 @@ public final class PayOnlineTransaction extends Transaction {
     private final String commerciant;
     private final String error;
 
-    public PayOnlineTransaction(final Type transactionType, final int timestamp, final String description,
-                                final double amount, final String commerciant,
-                                final String error) {
+    public PayOnlineTransaction(final Type transactionType, final int timestamp,
+                                final String description, final double amount,
+                                final String commerciant, final String error) {
         super(transactionType, timestamp, description);
         this.amount = amount;
         this.commerciant = commerciant;
@@ -38,6 +38,7 @@ public final class PayOnlineTransaction extends Transaction {
         return jsonNode;
     }
 
+    @Override
     public void addTransactionToAccount(final Account account) {
         account.addTransaction(this);
     }

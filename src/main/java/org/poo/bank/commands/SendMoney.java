@@ -73,7 +73,8 @@ public final class SendMoney implements Command, Transactionable {
         }
 
         if (senderAccount.getBalance() < amount) {
-            TransactionInput input = new TransactionInput.Builder(Transaction.Type.SEND_MONEY, timestamp, description)
+            TransactionInput input = new TransactionInput.Builder(Transaction.Type.SEND_MONEY,
+                    timestamp, description)
                     .error(Account.INSUFFICIENT_FUNDS)
                     .build();
 
@@ -81,7 +82,8 @@ public final class SendMoney implements Command, Transactionable {
             return;
         }
 
-        double convertRate = bank.getExchangeRates().getRate(senderAccount.getCurrency(), receiverAccount.getCurrency());
+        double convertRate = bank.getRate(senderAccount.getCurrency(),
+                                          receiverAccount.getCurrency());
         double receivedSum = amount * convertRate;
         senderAccount.transfer(receiverAccount, amount, receivedSum);
 
@@ -98,8 +100,8 @@ public final class SendMoney implements Command, Transactionable {
      */
     @Override
     public void
-    addTransaction(final TransactionInput input, final User user, final Account account) {
-        bank.generateTransaction(input).addTransaction(user, account);
+    addTransaction(final TransactionInput input, final User user, final Account acc) {
+        bank.generateTransaction(input).addTransaction(user, acc);
     }
 
 

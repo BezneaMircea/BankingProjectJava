@@ -5,10 +5,11 @@ import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
 public final class ChangeIntRateTransaction extends Transaction {
-    public static String IRATE_CHANGED = "Interest rate of the account changed to %.2f";
+    public static final String IRATE_CHANGED = "Interest rate of the account changed to %.2f";
 
 
-    public ChangeIntRateTransaction(final Type transactionType, final int timestamp, final String description) {
+    public ChangeIntRateTransaction(final Type transactionType, final int timestamp,
+                                    final String description) {
         super(transactionType, timestamp, description);
     }
 
@@ -21,6 +22,7 @@ public final class ChangeIntRateTransaction extends Transaction {
         return jsonNode;
     }
 
+    @Override
     public void addTransactionToAccount(final Account account) {
         account.addTransaction(this);
     }

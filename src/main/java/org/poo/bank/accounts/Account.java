@@ -19,16 +19,29 @@ import java.util.List;
 @Getter
 @Setter
 public abstract class Account {
-    public static final String NOT_SAVINGS_ACCOUNT = "This is not a savings account";
-    public static final String NOT_FOR_SAVINGS_ACCOUNT = "This kind of report is not supported for a saving account";
-    public static final String NOT_FOUND = "Account not found";
-    public static final String DELETED = "Account deleted";
-    public static final String CANT_DELETE = "Account couldn't be deleted - see org.poo.transactions for details";
-    public static final String INSUFFICIENT_FUNDS = "Insufficient funds";
-    public static final String ACCOUNT_CREATED = "New account created";
-    public static final String FUNDS_REMAINING = "Account couldn't be deleted - there are funds remaining";
-    public static final String SPLIT_PAYMENT_ERROR = "Account %s has insufficient funds for a split payment.";
-    public static final int WARNING_THRESHOLD = 30;
+    public static final String NOT_SAVINGS_ACCOUNT;
+    public static final String NOT_FOR_SAVINGS_ACCOUNT;
+    public static final String NOT_FOUND;
+    public static final String DELETED;
+    public static final String CANT_DELETE;
+    public static final String INSUFFICIENT_FUNDS;
+    public static final String ACCOUNT_CREATED;
+    public static final String FUNDS_REMAINING;
+    public static final String SPLIT_PAYMENT_ERROR;
+    public static final int WARNING_THRESHOLD;
+
+    static {
+        NOT_SAVINGS_ACCOUNT = "This is not a savings account";
+        NOT_FOR_SAVINGS_ACCOUNT = "This kind of report is not supported for a saving account";
+        NOT_FOUND = "Account not found";
+        DELETED = "Account deleted";
+        CANT_DELETE = "Account couldn't be deleted - see org.poo.transactions for details";
+        INSUFFICIENT_FUNDS = "Insufficient funds";
+        ACCOUNT_CREATED = "New account created";
+        FUNDS_REMAINING = "Account couldn't be deleted - there are funds remaining";
+        SPLIT_PAYMENT_ERROR = "Account %s has insufficient funds for a split payment.";
+        WARNING_THRESHOLD = 30;
+    }
 
     @Getter
     public enum Type {

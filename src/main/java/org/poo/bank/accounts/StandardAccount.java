@@ -123,7 +123,8 @@ public final class StandardAccount extends Account {
         /// If the commerciant exists in the list just add the new payment to it
         for (Commerciant commerciant : commerciants) {
             if (commerciant.getName().equals(transaction.getCommerciant())) {
-                Commerciant.Payment payment = new Commerciant.Payment(transaction.getAmount(), transaction.getTimestamp());
+                Commerciant.Payment payment = new Commerciant.Payment(transaction.getAmount(),
+                                                                      transaction.getTimestamp());
                 commerciant.getReceivedPayments().add(payment);
                 return;
             }
@@ -131,7 +132,8 @@ public final class StandardAccount extends Account {
 
         /// If it does not exist create it and add the payment to the list
         Commerciant commerciantToAdd = new Commerciant(this, transaction.getCommerciant());
-        Commerciant.Payment payment = new Commerciant.Payment(transaction.getAmount(), transaction.getTimestamp());
+        Commerciant.Payment payment = new Commerciant.Payment(transaction.getAmount(),
+                                                              transaction.getTimestamp());
         commerciantToAdd.getReceivedPayments().add(payment);
         commerciants.add(commerciantToAdd);
     }

@@ -39,7 +39,8 @@ public final class StandardCard extends Card {
             error = Account.INSUFFICIENT_FUNDS;
         }
 
-        TransactionInput payOnline = new TransactionInput.Builder(Transaction.Type.PAY_ONLINE, timestamp, "Card payment")
+        TransactionInput payOnline = new TransactionInput.Builder(Transaction.Type.PAY_ONLINE,
+                timestamp, Card.CARD_PAYMENT)
                 .amount(amount)
                 .commerciant(commerciant)
                 .error(error)

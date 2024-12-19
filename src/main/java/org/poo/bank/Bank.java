@@ -280,4 +280,14 @@ public final class Bank {
         associatedAccount.removeCard(cardToDelete);
     }
 
+    /**
+     * Method used to get the conversion rate from a currency to another
+     * @param from from currency
+     * @param to to currency
+     * @return the conversion rate
+     */
+    public double getRate(final String from, final String to) {
+        return exchangeRates.getRate(from, to);
+    }
+
 }

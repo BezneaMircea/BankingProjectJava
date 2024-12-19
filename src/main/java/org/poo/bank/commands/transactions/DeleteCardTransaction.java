@@ -9,7 +9,8 @@ public final class DeleteCardTransaction extends Transaction {
     private final String cardHolder;
     private final String account;
 
-    public DeleteCardTransaction(final Type transactionType, final int timestamp, final String description, final String card,
+    public DeleteCardTransaction(final Type transactionType, final int timestamp,
+                                 final String description, final String card,
                                  final String cardHolder, final String account) {
         super(transactionType, timestamp, description);
         this.card = card;
@@ -30,7 +31,8 @@ public final class DeleteCardTransaction extends Transaction {
         return jsonNode;
     }
 
-    public void addTransactionToAccount(final Account account) {
-        account.addTransaction(this);
+    @Override
+    public void addTransactionToAccount(final Account acc) {
+        acc.addTransaction(this);
     }
 }

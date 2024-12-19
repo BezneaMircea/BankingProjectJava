@@ -9,16 +9,17 @@ import java.util.List;
 
 
 public final class SplitPaymentTranscation extends Transaction {
-    public static String SPLIT_PAYMENT_DESCRIPTION = "Split payment of %.2f %s";
+    public static final String SPLIT_PAYMENT_DESCRIPTION = "Split payment of %.2f %s";
 
     private final String currency;
     private final double amount;
     private final List<String> involvedAccounts;
     private final String error;
 
-    public SplitPaymentTranscation(final Type transactionType, final int timestamp, final String description,
-                                   final String currency, final double amount,
-                                   final List<String> involvedAccounts, final String error) {
+    public SplitPaymentTranscation(final Type transactionType, final int timestamp,
+                                   final String description, final String currency,
+                                   final double amount, final List<String> involvedAccounts,
+                                   final String error) {
         super(transactionType, timestamp, description);
         this.currency = currency;
         this.amount = amount;
@@ -49,6 +50,7 @@ public final class SplitPaymentTranscation extends Transaction {
         return toJson;
     }
 
+    @Override
     public void addTransactionToAccount(final Account account) {
         account.addTransaction(this);
     }

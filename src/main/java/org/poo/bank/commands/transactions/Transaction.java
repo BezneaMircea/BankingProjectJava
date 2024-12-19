@@ -17,7 +17,7 @@ public abstract class Transaction {
     private final int timestamp;
     private final String description;
 
-    public Transaction(final Type transactionType, int timestamp, final String description) {
+    public Transaction(final Type transactionType, final int timestamp, final String description) {
         this.transactionType = transactionType;
         this.timestamp = timestamp;
         this.description = description;
@@ -26,8 +26,8 @@ public abstract class Transaction {
     /**
      * Method used to add a Transaction to and user and an account.
      * Note that all types of users will add any type of transaction
-     * @param user
-     * @param account
+     * @param user user to add transaction to
+     * @param account account to add transaction to
      */
     public void addTransaction(final User user, final Account account) {
         user.getTransactions().add(this);
@@ -39,7 +39,7 @@ public abstract class Transaction {
      * might interact differently with different types of accounts (double dispatch)
      * @param account the account that should receive the transaction
      */
-    public abstract void addTransactionToAccount(final Account account);
+    public abstract void addTransactionToAccount(Account account);
 
     /**
      * Method used to write a Transaction to an ObjectNode

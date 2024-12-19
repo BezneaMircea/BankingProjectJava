@@ -49,7 +49,8 @@ public final class SpendingReport implements Command {
 
         ObjectNode spendingReportNode = Utils.MAPPER.createObjectNode();
         spendingReportNode.put("command", command);
-        spendingReportNode.set("output", accountToCreateReport.spendingsReport(startTimestamp, endTimestamp));
+        spendingReportNode.set("output", accountToCreateReport.spendingsReport(startTimestamp,
+                                                                                endTimestamp));
         spendingReportNode.put("timestamp", timestamp);
 
         bank.getOutput().add(spendingReportNode);

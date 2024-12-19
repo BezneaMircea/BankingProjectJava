@@ -43,10 +43,6 @@ public class BankSettup {
         this.output = output;
     }
 
-    private Bank createBank() {
-        return new Bank(createUsers(), createExchange(), output);
-    }
-
     private List<User> createUsers() {
         List<User> bankUsers = new ArrayList<>();
 
@@ -64,15 +60,18 @@ public class BankSettup {
             return null;
         }
 
-        Graph<String, DefaultWeightedEdge> myExchange = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
+        Graph<String, DefaultWeightedEdge>
+                myExchange = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
         for (ExchangeInput exchange : exchangeRates) {
             myExchange.addVertex(exchange.getFrom());
             myExchange.addVertex(exchange.getTo());
 
-            DefaultWeightedEdge edgeFromTo = myExchange.addEdge(exchange.getFrom(), exchange.getTo());
+            DefaultWeightedEdge edgeFromTo = myExchange.addEdge(exchange.getFrom(),
+                                                                exchange.getTo());
             myExchange.setEdgeWeight(edgeFromTo, exchange.getRate());
 
-            DefaultWeightedEdge edgeToFrom = myExchange.addEdge(exchange.getTo(), exchange.getFrom());
+            DefaultWeightedEdge edgeToFrom = myExchange.addEdge(exchange.getTo(),
+                                                                exchange.getFrom());
             myExchange.setEdgeWeight(edgeToFrom, 1 / exchange.getRate());
         }
 
@@ -85,11 +84,10 @@ public class BankSettup {
         switch (command.getCommand()) {
             case "addAccount" -> factory = new AddAccountFactory(bank, command);
             case "printUsers" -> factory = new PrintUsersFactory(bank, command);
-            case "createCard", "createOneTimeCard" -> factory = new CreateCardFactory(bank, command);
             case "addFunds" -> factory = new AddFundsFactory(bank, command);
             case "deleteAccount" -> factory = new DeleteAccountFactory(bank, command);
             case "deleteCard" -> factory = new DeleteCardFactory(bank, command);
-            case "setMinBalance" -> factory = new SetMinBalanceFactory(bank, command);
+            case "setMinimumBalance" -> factory = new SetMinBalanceFactory(bank, command);
             case "checkCardStatus" -> factory = new CheckCardStatusFactory(bank, command);
             case "payOnline" -> factory = new PayOnlineFactory(bank, command);
             case "sendMoney" -> factory = new SendMoneyFactory(bank, command);
@@ -100,10 +98,10 @@ public class BankSettup {
             case "changeInterestRate" -> factory = new ChangeInterestRateFactory(bank, command);
             case "report" -> factory = new ReportFactory(bank, command);
             case "spendingsReport" -> factory = new SpendingReportFactory(bank, command);
-            ///default -> throw new IllegalArgumentException("Invalid command");
-            default -> {
-                return null;
-            }
+            case "createCard", "createOneTimeCard" -> factory = new CreateCardFactory(bank,
+                                                                                      command);
+            default -> throw new IllegalArgumentException("Invalid command");
+
         }
 
         return factory.createCommand();
@@ -125,5 +123,10 @@ public class BankSettup {
             }
         }
     }
+
+    private Bank createBank() {
+        return new Bank(createUsers(), createExchange(), output);
+    }
+
 
 }

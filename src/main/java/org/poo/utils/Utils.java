@@ -20,7 +20,7 @@ public final class Utils {
     private static Random ibanRandom = new Random(IBAN_SEED);
     private static Random cardRandom = new Random(CARD_SEED);
 
-    public final static ObjectMapper MAPPER = new ObjectMapper();
+    public static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * Utility method for generating an IBAN code.

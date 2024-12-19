@@ -13,13 +13,25 @@ import org.poo.utils.Utils;
 @Getter
 @Setter
 public abstract class Card {
-    public static final String ACTIVE = "active";
-    public static final String FROZEN = "frozen";
-    public static final String NOT_FOUND = "Card not found";
-    public static final String DESTROYED = "The card has been destroyed";
-    public static final String LIMIT_REACHED = "You have reached the minimum amount of funds, the card will be frozen";
-    public static final String CARD_CREATED = "New card created";
-    public static final String IS_FROZEN = "The card is frozen";
+    public static final String ACTIVE;
+    public static final String FROZEN;
+    public static final String NOT_FOUND;
+    public static final String DESTROYED;
+    public static final String LIMIT_REACHED;
+    public static final String CARD_CREATED;
+    public static final String IS_FROZEN;
+    public static final String CARD_PAYMENT;
+
+    static {
+        ACTIVE = "active";
+        FROZEN = "frozen";
+        NOT_FOUND = "Card not found";
+        DESTROYED = "The card has been destroyed";
+        LIMIT_REACHED = "You have reached the minimum amount of funds, the card will be frozen";
+        CARD_CREATED = "New card created";
+        IS_FROZEN = "The card is frozen";
+        CARD_PAYMENT = "Card payment";
+    }
 
     public enum Type {
         ONE_TIME("oneTimeCard"),

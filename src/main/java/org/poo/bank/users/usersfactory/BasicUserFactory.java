@@ -4,12 +4,12 @@ import org.poo.fileio.UserInput;
 import org.poo.bank.users.BasicUser;
 import org.poo.bank.users.User;
 
-public class BasicUserFactory implements UserFactory {
+public final class BasicUserFactory implements UserFactory {
     private final String firstName;
     private final String lastName;
     private final String email;
 
-    public BasicUserFactory(UserInput input) {
+    public BasicUserFactory(final UserInput input) {
         firstName = input.getFirstName();
         lastName = input.getLastName();
         email = input.getEmail();

@@ -10,8 +10,10 @@ public final class CreateCardTransaction extends Transaction {
     private final String account;
     private final String error;
 
-    public CreateCardTransaction(final Type transactionType, int timestamp, String description, String card,
-                                 String cardHolder, String account, String error) {
+    public CreateCardTransaction(final Type transactionType, final int timestamp,
+                                 final String description, final String card,
+                                 final String cardHolder, final String account,
+                                 final String error) {
         super(transactionType, timestamp, description);
         this.card = card;
         this.cardHolder = cardHolder;
@@ -34,7 +36,8 @@ public final class CreateCardTransaction extends Transaction {
         return jsonNode;
     }
 
-    public void addTransactionToAccount(final Account account) {
-        account.addTransaction(this);
+    @Override
+    public void addTransactionToAccount(final Account acc) {
+        acc.addTransaction(this);
     }
 }

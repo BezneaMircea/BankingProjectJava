@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @Data
 public abstract class User {
-    public static String NOT_FOUND = "User not found";
+    public static final String NOT_FOUND = "User not found";
 
     enum Type {
         BASIC
@@ -48,27 +48,54 @@ public abstract class User {
     }
 
 
-    public void addAccount(Account account) {
+    /**
+     * Method used to add an account to the users account list
+     * @param account account to add
+     */
+    public void addAccount(final Account account) {
         accounts.add(account);
     }
 
-    public boolean hasAccount(Account account) {
+    /**
+     * Method used to check if the User owns the account
+     * @param account account to check if exists
+     * @return true if it exists, false otherwise
+     */
+    public boolean hasAccount(final Account account) {
         return accounts.contains(account);
     }
 
-    public void addAlias(Account account, String alias) {
+    /**
+     * Method used to add an alias
+     * @param account account
+     * @param alias alias that links to the account
+     */
+    public void addAlias(final Account account, final String alias) {
         aliases.put(alias, account);
     }
 
-    public boolean hasAlias(String alias) {
+    /**
+     * Method used to check if the user has an alias
+     * @param alias the alias to check
+     * @return true if the user has the alias, false otherwise
+     */
+    public boolean hasAlias(final String alias) {
         return aliases.containsKey(alias);
     }
 
-    public Account getAccountFromAlias(String alias) {
+    /**
+     * Method used to get the account associated with the alias
+     * @param alias the alias
+     * @return the account if it exists, null otherwise
+     */
+    public Account getAccountFromAlias(final String alias) {
         return aliases.get(alias);
     }
 
-
+    /**
+     * Method used to write and user to an ObjectNode
+     * @return the corresponding ObjectNode
+     */
     public ObjectNode userToObjectNode() {
         ObjectNode userNode = Utils.MAPPER.createObjectNode();
 
@@ -80,6 +107,10 @@ public abstract class User {
         return userNode;
     }
 
+    /**
+     * Method used to write the users transactions to an ArrayNode
+     * @return the ArrayNode
+     */
     public ArrayNode transactionsToObjectNode() {
         ArrayNode transactionsArray = Utils.MAPPER.createArrayNode();
         for (Transaction transaction : transactions) {

@@ -5,7 +5,8 @@ import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
 public final class CheckCardStatusTransaction extends Transaction {
-    public CheckCardStatusTransaction(final Type transactionType, int timestamp, String description) {
+    public CheckCardStatusTransaction(final Type transactionType,
+                                      final int timestamp, final String description) {
         super(transactionType, timestamp, description);
     }
 
@@ -18,6 +19,7 @@ public final class CheckCardStatusTransaction extends Transaction {
         return jsonNode;
     }
 
+    @Override
     public void addTransactionToAccount(final Account account) {
         account.addTransaction(this);
     }

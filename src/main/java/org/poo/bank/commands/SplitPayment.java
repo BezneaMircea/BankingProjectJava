@@ -61,7 +61,7 @@ public final class SplitPayment implements Command, Transactionable {
                 return;
             }
 
-            double exchangeRate = bank.getExchangeRates().getRate(currency, currentAccount.getCurrency());
+            double exchangeRate = bank.getRate(currency, currentAccount.getCurrency());
             double totalSumToPay = exchangeRate * amountToPay;
             if (currentAccount.getBalance() < totalSumToPay) {
                 error = String.format(Account.SPLIT_PAYMENT_ERROR, currentAccount.getIban());
@@ -69,8 +69,11 @@ public final class SplitPayment implements Command, Transactionable {
             }
         }
 
-        String description = String.format(SplitPaymentTranscation.SPLIT_PAYMENT_DESCRIPTION, amount, currency);
-        TransactionInput input = new TransactionInput.Builder(Transaction.Type.SPLIT_PAYMENT, timestamp, description)
+        String description = String.format(SplitPaymentTranscation.SPLIT_PAYMENT_DESCRIPTION,
+                amount, currency);
+
+        TransactionInput input = new TransactionInput.Builder(Transaction.Type.SPLIT_PAYMENT,
+                timestamp, description)
                 .currency(currency)
                 .amount(amountToPay)
                 .involvedAccounts(accountsForSplit)
@@ -78,10 +81,10 @@ public final class SplitPayment implements Command, Transactionable {
                 .build();
 
         for (String account : accountsForSplit) {
-            Account currentAccount = bank.getIbanToAccount().get(account);
-            User owner = bank.getEmailToUser().get(currentAccount.getOwnerEmail());
+            Account currentAccount = bank.getAccount(account);
+            User owner = bank.getUser(currentAccount.getOwnerEmail());
             if (error == null) {
-                double exchangeRate = bank.getExchangeRates().getRate(currency, currentAccount.getCurrency());
+                double exchangeRate = bank.getRate(currency, currentAccount.getCurrency());
                 double totalSumToPay = exchangeRate * amountToPay;
                 currentAccount.setBalance(currentAccount.getBalance() - totalSumToPay);
             }
