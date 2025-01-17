@@ -20,6 +20,7 @@ public final class TransactionInput {
     private final String cardHolder;
     private final String account;
     private final String commerciant;
+    private final String newPlanType;
 
     private TransactionInput(final Builder builder) {
         transactionType = builder.transactionType;
@@ -36,6 +37,7 @@ public final class TransactionInput {
         cardHolder = builder.cardHolder;
         account = builder.account;
         commerciant = builder.commerciant;
+        newPlanType = builder.newPlanType;
     }
 
     public static final class Builder {
@@ -54,6 +56,7 @@ public final class TransactionInput {
         private String cardHolder = null;
         private String account = null;
         private String commerciant = null;
+        private String newPlanType = null;
 
         public Builder(final Transaction.Type transactionType, final int timestamp,
                        final String description) {
@@ -150,6 +153,13 @@ public final class TransactionInput {
             return this;
         }
 
+        /**
+         * for coding style
+         */
+        public Builder newPlanType(final String setNewPlanType) {
+            newPlanType = setNewPlanType;
+            return this;
+        }
 
         /**
          * for coding style

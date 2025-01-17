@@ -17,16 +17,7 @@ import org.poo.bank.accounts.account_factory.EconomyAccountFactory;
 import org.poo.bank.accounts.account_factory.StandardAccountFactory;
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
-import org.poo.bank.transactions.transaction_factory.AddAccountTransactionFactory;
-import org.poo.bank.transactions.transaction_factory.TransactionFactory;
-import org.poo.bank.transactions.transaction_factory.CreateCardTransactionFactory;
-import org.poo.bank.transactions.transaction_factory.DeleteAccountTransactionFactory;
-import org.poo.bank.transactions.transaction_factory.PayOnlineTransactionFactory;
-import org.poo.bank.transactions.transaction_factory.SendMoneyTransactionFactory;
-import org.poo.bank.transactions.transaction_factory.DeleteCardTransactionFactory;
-import org.poo.bank.transactions.transaction_factory.SplitPaymenTransactionFactory;
-import org.poo.bank.transactions.transaction_factory.CheckCardStatusTransactionFactory;
-import org.poo.bank.transactions.transaction_factory.ChangeIntRateTransactionFactory;
+import org.poo.bank.transactions.transaction_factory.*;
 import org.poo.bank.users.User;
 import org.poo.utils.CustomFloydWarshallPaths;
 import org.poo.utils.Utils;
@@ -40,6 +31,8 @@ import java.util.Map;
  */
 @Getter
 public final class Bank {
+    public static final int CURRENT_YEAR = 2025;
+
     private final Map<String, User> emailToUser;
     private final Map<String, Account> ibanToAccount;
     private final Map<String, Card> cardNrToCard;
@@ -105,6 +98,8 @@ public final class Bank {
             case PAY_ONLINE -> factory = new PayOnlineTransactionFactory(input);
             case SEND_MONEY -> factory = new SendMoneyTransactionFactory(input);
             case SPLIT_PAYMENT -> factory = new SplitPaymenTransactionFactory(input);
+            case UPGRADE_PLAN -> factory = new UpgradePlanTransactionFactory(input);
+            case WITHDRAW_SAVINGS -> factory = new WithdrawSavingsTransactionFactory(input);
             default -> throw new IllegalArgumentException("Invalid transaction type");
         }
 

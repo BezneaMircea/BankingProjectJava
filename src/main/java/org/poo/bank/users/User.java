@@ -5,8 +5,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Data;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.transactions.Transaction;
+import org.poo.bank.users.users_strategy.*;
 import org.poo.utils.Utils;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,9 +21,17 @@ import java.util.Map;
 @Data
 public abstract class User {
     public static final String NOT_FOUND;
+    public static final String HAS_PLAN;
+    public static final String CANT_DOWNGRADE;
+    public static final String NOT_OLD_ENOUGH;
+    public static final int MINIMUM_AGE = 21;
+
 
     static {
         NOT_FOUND = "User not found";
+        HAS_PLAN = "The user already has the %s plan.";
+        CANT_DOWNGRADE = "You cannot downgrade your plan.";
+        NOT_OLD_ENOUGH = "You don't have the minimum age required.";
     }
 
     enum Type {
@@ -30,9 +41,12 @@ public abstract class User {
     private final String firstName;
     private final String lastName;
     private final String email;
+    private final String birthDate;
+    private final String occupation;
     private final List<Account> accounts;
     private final List<Transaction> transactions;
     private final Map<String, Account> aliases;
+    private UserStrategy strategy;
 
     /**
      * Constructor of the User class
@@ -41,10 +55,14 @@ public abstract class User {
      * @param lastName  last name of the user
      * @param email     email of the user
      */
-    public User(final String firstName, final String lastName, final String email) {
+    public User(final String firstName, final String lastName, final String email,
+                final String birthDate, final String occupation, final UserStrategy strategy) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.birthDate = birthDate;
+        this.occupation = occupation;
+        this.strategy = strategy;
 
         accounts = new ArrayList<>();
         transactions = new ArrayList<>();
@@ -132,6 +150,40 @@ public abstract class User {
         return aliases.get(alias);
     }
 
+    public void setStrategy(final UserStrategy.Type strategyType) {
+        switch (strategyType) {
+            case SILVER -> strategy = new SilverStrategy();
+            case GOLD -> strategy = new GoldStrategy();
+            case STANDARD -> strategy = new StandardStrategy();
+            case STUDENT -> strategy = new StudentStrategy();
 
+            default -> throw new IllegalArgumentException("Invalid strategy type");
+        }
+    }
+
+    public boolean isOldEnough() {
+        LocalDate birthDay = LocalDate.parse(birthDate);
+        LocalDate currentTime = LocalDate.now();
+
+        int age = Period.between(birthDay, currentTime).getYears();
+        return age >= MINIMUM_AGE;
+    }
+
+    /**
+     * This method searches for the first classic account having the
+     * specified currency
+     * @param currency the wanted currency for the searched account
+     * @return the account or null if no account was present
+     */
+    public Account getClassicAccWithCurrency(String currency) {
+        for (Account account : accounts) {
+            if (account.getAccountType() == Account.Type.CLASSIC
+                    && account.getCurrency().equals(currency)) {
+                return account;
+            }
+        }
+
+        return null;
+    }
 }
 

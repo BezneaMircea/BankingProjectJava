@@ -67,7 +67,8 @@ public abstract class Account {
                     return type;
                 }
             }
-            throw new IllegalArgumentException("Not a valid account type: " + input);
+            ///throw new IllegalArgumentException("Not a valid account type: " + input);
+            return Type.CLASSIC;
         }
 
     }

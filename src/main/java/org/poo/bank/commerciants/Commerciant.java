@@ -20,7 +20,6 @@ public final class Commerciant implements Comparable<Commerciant> {
     private final Account belongsToAccount;
     private final String name;
     private final List<Payment> receivedPayments;
-
     /**
      * Class used to represent a payment
      */
