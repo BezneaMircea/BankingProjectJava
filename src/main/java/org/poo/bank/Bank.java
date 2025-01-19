@@ -15,6 +15,7 @@ import org.poo.bank.cards.card_factory.StandardCardFactory;
 import org.poo.bank.accounts.account_factory.AccountFactory;
 import org.poo.bank.accounts.account_factory.EconomyAccountFactory;
 import org.poo.bank.accounts.account_factory.StandardAccountFactory;
+import org.poo.bank.commerciants.Commerciant;
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
 import org.poo.bank.transactions.transaction_factory.*;
@@ -31,13 +32,13 @@ import java.util.Map;
  */
 @Getter
 public final class Bank {
-    public static final int CURRENT_YEAR = 2025;
-
     private final Map<String, User> emailToUser;
     private final Map<String, Account> ibanToAccount;
     private final Map<String, Card> cardNrToCard;
+    private final Map<String, Commerciant> nameOrIbanToCommerciant;
     private final CustomFloydWarshallPaths<String, DefaultWeightedEdge> exchangeRates;
     private final List<User> users;
+    private final List<Commerciant> commerciants;
     private final ArrayNode output;
 
     /**
@@ -48,15 +49,18 @@ public final class Bank {
      */
     public Bank(final List<User> users,
                 final Graph<String, DefaultWeightedEdge> exchangeRates,
-                final ArrayNode output) {
+                final List<Commerciant> commerciants, final ArrayNode output) {
         this.users = users;
+        this.commerciants = commerciants;
         this.output = output;
 
         this.exchangeRates = initializeExchangeRates(exchangeRates);
         ibanToAccount = new HashMap<>();
         cardNrToCard = new HashMap<>();
         emailToUser = new HashMap<>();
+        nameOrIbanToCommerciant = new HashMap<>();
         mapEmailToUser();
+        mapNameOrIbanToCommerciant();
     }
 
     private CustomFloydWarshallPaths<String, DefaultWeightedEdge>
@@ -66,6 +70,13 @@ public final class Bank {
         }
 
         return new CustomFloydWarshallPaths<>(rates);
+    }
+
+    private void mapNameOrIbanToCommerciant() {
+        for (Commerciant commerciant : commerciants) {
+            nameOrIbanToCommerciant.put(commerciant.getName(), commerciant);
+            nameOrIbanToCommerciant.put(commerciant.getAccount(), commerciant);
+        }
     }
 
 

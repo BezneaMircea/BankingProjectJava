@@ -7,15 +7,21 @@ import org.poo.bank.commands.Command;
 
 import org.poo.bank.commands.command_factory.*;
 
+import org.poo.bank.commerciants.Commerciant;
+import org.poo.bank.commerciants.commerciant_factory.ClothesCommerciantFactory;
+import org.poo.bank.commerciants.commerciant_factory.CommerciantFactory;
+import org.poo.bank.commerciants.commerciant_factory.FoodCommerciantFactory;
+import org.poo.bank.commerciants.commerciant_factory.TechCommerciantFactory;
+import org.poo.bank.commerciants.commerciant_strategies.CashBackStrategy;
+import org.poo.bank.commerciants.commerciant_strategies.CashBackStrategyFactory;
+import org.poo.bank.commerciants.commerciant_strategies.NrTransactionsStrategy;
+import org.poo.bank.commerciants.commerciant_strategies.SpendingThresholdStrategy;
 import org.poo.bank.users.User;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.bank.users.usersfactory.BasicUserFactory;
 import org.poo.bank.users.usersfactory.UserFactory;
-import org.poo.fileio.CommandInput;
-import org.poo.fileio.ExchangeInput;
-import org.poo.fileio.ObjectInput;
-import org.poo.fileio.UserInput;
+import org.poo.fileio.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +35,7 @@ public class BankSetup {
     private final UserInput[] users;
     private final ExchangeInput[] exchangeRates;
     private final CommandInput[] commands;
+    private final CommerciantInput[] commerciants;
     private final ArrayNode output;
 
     /**
@@ -41,6 +48,7 @@ public class BankSetup {
         users = inputData.getUsers();
         exchangeRates = inputData.getExchangeRates();
         commands = inputData.getCommands();
+        commerciants = inputData.getCommerciants();
         this.output = output;
     }
 
@@ -96,7 +104,7 @@ public class BankSetup {
     }
 
     private Bank createBank() {
-        return new Bank(createUsers(), createExchange(), output);
+        return new Bank(createUsers(), createExchange(), createCommerciants(), output);
     }
 
     private List<User> createUsers() {
@@ -133,4 +141,25 @@ public class BankSetup {
 
         return myExchange;
     }
+
+    private List<Commerciant> createCommerciants() {
+        List<Commerciant> bankCommerciants = new ArrayList<>();
+
+        for (CommerciantInput commerciant : commerciants) {
+            CommerciantFactory factory;
+            Commerciant.Type commerciantType = Commerciant.Type.fromString(commerciant.getType());
+
+            switch (commerciantType) {
+                case TECH -> factory = new TechCommerciantFactory(commerciant);
+                case CLOTHES -> factory = new ClothesCommerciantFactory(commerciant);
+                case FOOD -> factory = new FoodCommerciantFactory(commerciant);
+
+                default -> throw new IllegalStateException("Unexpected value: " + commerciantType);
+            }
+            bankCommerciants.add(factory.createCommerciant());
+        }
+
+        return bankCommerciants;
+    }
+
 }

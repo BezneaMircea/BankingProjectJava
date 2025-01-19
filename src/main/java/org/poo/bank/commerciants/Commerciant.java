@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.poo.bank.accounts.Account;
+import org.poo.bank.commerciants.commerciant_strategies.CashBackStrategy;
 import org.poo.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -16,10 +19,48 @@ import java.util.List;
  */
 @Getter
 @Setter
-public final class Commerciant implements Comparable<Commerciant> {
-    private final Account belongsToAccount;
+public class Commerciant implements Comparable<Commerciant> {
     private final String name;
+    private final int id;
+    private final String account;
+    private final Type type;
+    private final CashBackStrategy cashBackStrategy;
+    private final Map<Account, Integer> nrTransactionsByAcount;
     private final List<Payment> receivedPayments;
+
+
+    @Getter
+    public enum Type {
+        CLOTHES("clothes"),
+        TECH("tech"),
+        FOOD("food");
+
+        private final String value;
+
+        Type(final String value) {
+            this.value = value;
+        }
+
+        public String getString() {
+            return value;
+        }
+
+        /**
+         * returns the associated Type of input string;
+         *
+         * @param input the input string
+         * @return the associated Type
+         */
+        public static Type fromString(final String input) {
+            for (Type type : Type.values()) {
+                if (type.value.equalsIgnoreCase(input)) {
+                    return type;
+                }
+            }
+
+            throw new IllegalArgumentException("Not a valid commerciant type: " + input);
+        }
+    }
     /**
      * Class used to represent a payment
      */
@@ -42,16 +83,35 @@ public final class Commerciant implements Comparable<Commerciant> {
 
     /**
      * Constructor for a commerciant
-     *
-     * @param belongsToAccount the account that this commerciant belongs to
-     * @param name             the name of the commerciant
+     * @param name the name of the commerciant
+     * @param id the id of the commerciant
+     * @param type the type of the commerciant
+     * @see Type
+     * @param cashBackStrategy the strategy of the commerciant
+     * @see CashBackStrategy
      */
-    public Commerciant(final Account belongsToAccount, final String name) {
-        this.belongsToAccount = belongsToAccount;
+    public Commerciant(final String name, final int id, final String account,
+                       final Type type, final CashBackStrategy cashBackStrategy) {
         this.name = name;
+        this.id = id;
+        this.account = account;
+        this.type = type;
+        this.cashBackStrategy = cashBackStrategy;
+        nrTransactionsByAcount = new HashMap<>();
         receivedPayments = new ArrayList<>();
     }
 
+    public void incrementAccountTransactions(Account account) {
+        nrTransactionsByAcount.merge(account, 1, Integer::sum);
+    }
+
+    public int getNrAccountTransactions(Account account) {
+        Integer nrTransactions = nrTransactionsByAcount.get(account);
+        if (nrTransactions == null)
+            return 0;
+
+        return nrTransactions;
+    }
 
     @Override
     public int compareTo(final Commerciant o) {

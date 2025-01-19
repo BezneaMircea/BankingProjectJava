@@ -4,6 +4,7 @@ package org.poo.bank.accounts;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
+import org.poo.bank.commerciants.AccountBonuses;
 import org.poo.bank.commerciants.Commerciant;
 import org.poo.bank.transactions.PayOnlineTransaction;
 import org.poo.bank.transactions.Transaction;
@@ -21,6 +22,7 @@ import java.util.List;
 public final class StandardAccount extends Account {
     private final List<Transaction> onlineTransactions;
     private final List<Commerciant> commerciants;
+    private final AccountBonuses bonuses;
 
     /**
      * Constructor used to the StandardAccount class
@@ -33,6 +35,7 @@ public final class StandardAccount extends Account {
         super(ownerEmail, currency, accountType);
         onlineTransactions = new ArrayList<>();
         commerciants = new ArrayList<>();
+        bonuses = new AccountBonuses();
     }
 
 
@@ -99,7 +102,7 @@ public final class StandardAccount extends Account {
         }
 
         /// If it does not exist create it and add the payment to the list
-        Commerciant commerciantToAdd = new Commerciant(this, transaction.getCommerciant());
+        Commerciant commerciantToAdd = new Commerciant(transaction.getCommerciant());
         Commerciant.Payment payment = new Commerciant.Payment(transaction.getAmount(),
                                                               transaction.getTimestamp());
         commerciantToAdd.getReceivedPayments().add(payment);

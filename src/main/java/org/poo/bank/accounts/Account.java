@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.poo.bank.cards.Card;
+import org.poo.bank.commerciants.AccountBonuses;
 import org.poo.bank.transactions.ChangeIntRateTransaction;
 import org.poo.bank.transactions.PayOnlineTransaction;
 import org.poo.bank.transactions.Transaction;
@@ -156,6 +157,7 @@ public abstract class Account {
      */
     public ObjectNode generateReport(final int startTimestamp, final int endTimestamp) {
         ObjectNode reportNode = Utils.MAPPER.createObjectNode();
+
         reportNode.put("balance", Utils.approximateToFourthDecimal(getBalance()));
         reportNode.put("currency", getCurrency());
         reportNode.put("IBAN", getIban());
@@ -233,6 +235,8 @@ public abstract class Account {
     public ObjectNode accountToObjectNode() {
         ObjectNode accountNode = Utils.MAPPER.createObjectNode();
         accountNode.put("IBAN", iban);
+
+
         accountNode.put("balance", Utils.roundIfClose(balance));
         accountNode.put("currency", currency);
         accountNode.put("type", accountType.getValue());
@@ -270,5 +274,14 @@ public abstract class Account {
         }
 
         return cardsNode;
+    }
+
+    /**
+     * Not all accounts have bonuses.
+     * @return the bonuses of the account or null if the account
+     * doesn't support bonuses
+     */
+    public AccountBonuses getBonuses() {
+        return null;
     }
 }

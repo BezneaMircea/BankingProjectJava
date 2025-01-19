@@ -22,14 +22,12 @@ public interface UserStrategy extends StrategyVisitor, VisitableStrategy {
             this.value = value;
         }
 
-
         public String getString() {
             return value;
         }
 
         /**
          * returns the associated Type of input string;
-         *
          * @param input the input string
          * @return the associated Type
          */
