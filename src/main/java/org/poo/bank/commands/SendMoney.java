@@ -2,6 +2,7 @@ package org.poo.bank.commands;
 
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
+import org.poo.bank.commerciants.Commerciant;
 import org.poo.bank.transactions.SendMoneyTransaction;
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
@@ -49,16 +50,31 @@ public final class SendMoney implements Command, Transactionable {
      */
     @Override
     public void execute() {
+        /// Get the sender account
         Account senderAccount = bank.getAccount(account);
         if (senderAccount == null) {
             return;
         }
 
+        /// Get the sending user
         User senderUser = bank.getUser(senderAccount.getOwnerEmail());
         if (senderUser == null) {
             return;
         }
 
+        if (ErrorCheck(senderAccount, senderUser))
+            return;
+
+        /// Get the commerciant if the payment is towards a commerciant
+        Commerciant commerciant = bank.getCommerciant(receiver);
+        if (commerciant != null) {
+            senderAccount.transferToCommerciant(bank, amount, timestamp, commerciant);
+            TransactionInput transactionSent = createSendInput(senderAccount, commerciant);
+            addTransaction(transactionSent, senderUser, senderAccount);
+            return;
+        }
+
+        /// If the payment is not towards a commerciant. Get the receiver account
         Account receiverAccount = bank.getAccount(receiver);
         if (senderUser.hasAlias(receiver)) {
             receiverAccount = senderUser.getAccountFromAlias(receiver);
@@ -73,22 +89,14 @@ public final class SendMoney implements Command, Transactionable {
             return;
         }
 
-        if (senderAccount.getBalance() < amount) {
-            TransactionInput input = new TransactionInput.Builder(Transaction.Type.SEND_MONEY,
-                    timestamp, description)
-                    .error(Account.INSUFFICIENT_FUNDS)
-                    .build();
-
-            addTransaction(input, senderUser, senderAccount);
-            return;
-        }
-
         double convertRate = bank.getRate(senderAccount.getCurrency(),
                                           receiverAccount.getCurrency());
         double receivedSum = amount * convertRate;
-        senderAccount.transfer(receiverAccount, amount, receivedSum);
+        double totalSumToPay = senderUser.getStrategy().calculateSumWithComision(amount);
 
-        TransactionInput transactionSent = createSendInput(senderAccount);
+        senderAccount.transfer(receiverAccount, totalSumToPay, receivedSum);
+
+        TransactionInput transactionSent = createSendInput(senderAccount, null);
         TransactionInput transactionReceived = createReceiveInput(receiverAccount, receivedSum);
 
         addTransaction(transactionSent, senderUser, senderAccount);
@@ -101,14 +109,14 @@ public final class SendMoney implements Command, Transactionable {
         bank.generateTransaction(input).addTransaction(user, acc);
     }
 
-
     private TransactionInput
-    createSendInput(final Account senderAccount) {
+    createSendInput(final Account senderAccount, final Commerciant commerciant) {
         return new TransactionInput.Builder(Transaction.Type.SEND_MONEY, timestamp, description)
                 .senderIBAN(account)
                 .receiverIBAN(receiver)
                 .amount(Utils.approximateToFourthDecimal(amount))
                 .currency(senderAccount.getCurrency())
+                .commerciant(commerciant)
                 .transferType(SendMoneyTransaction.SENT)
                 .error(null)
                 .build();
@@ -124,6 +132,28 @@ public final class SendMoney implements Command, Transactionable {
                 .transferType(SendMoneyTransaction.RECEIVED)
                 .error(null)
                 .build();
+    }
+
+    /**
+     * Checks for errors and adds a corresponding transaction
+     * @param senderAccount the sending account
+     * @param senderUser the sending user
+     * @return true if an error occured, false otherwise
+     */
+    private boolean ErrorCheck(Account senderAccount, User senderUser) {
+        double totalAmount = senderUser.getStrategy().calculateSumWithComision(amount);
+
+        if (senderAccount.getBalance() < totalAmount) {
+            TransactionInput input = new TransactionInput.Builder(Transaction.Type.SEND_MONEY,
+                    timestamp, description)
+                    .error(Account.INSUFFICIENT_FUNDS)
+                    .build();
+
+            addTransaction(input, senderUser, senderAccount);
+            return true;
+        }
+
+        return false;
     }
 
 }

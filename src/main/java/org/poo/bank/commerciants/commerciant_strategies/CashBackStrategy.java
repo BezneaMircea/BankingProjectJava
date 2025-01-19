@@ -1,10 +1,12 @@
 package org.poo.bank.commerciants.commerciant_strategies;
 
+import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.commerciants.ClothesCommerciant;
 import org.poo.bank.commerciants.Commerciant;
 import org.poo.bank.commerciants.FoodCommerciant;
 import org.poo.bank.commerciants.TechCommerciant;
+import org.poo.bank.users.users_strategy.UserStrategy;
 
 public interface CashBackStrategy {
 
@@ -29,7 +31,14 @@ public interface CashBackStrategy {
         }
     }
 
-    void payCommerciant(Account account, TechCommerciant commerciant, double amount);
-    void payCommerciant(Account account, FoodCommerciant commerciant, double amount);
-    void payCommerciant(Account account, ClothesCommerciant commerciant, double amount);
+
+
+    void cashBack(UserStrategy ownerStrategy, Account account,
+                  TechCommerciant commerciant, double amount, double conversionRate);
+
+    void cashBack(UserStrategy ownerStrategy, Account account,
+                  FoodCommerciant commerciant, double amount, double conversionRate);
+
+    void cashBack(UserStrategy ownerStrategy, Account account,
+                  ClothesCommerciant commerciant, double amount, double conversionRate);
 }

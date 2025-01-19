@@ -1,5 +1,6 @@
 package org.poo.bank.transactions.transaction_factory;
 
+import org.poo.bank.commerciants.Commerciant;
 import org.poo.bank.transactions.PayOnlineTransaction;
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
@@ -9,7 +10,7 @@ public final class PayOnlineTransactionFactory implements TransactionFactory {
     private final int timestamp;
     private final String description;
     private final double amount;
-    private final String commerciant;
+    private final Commerciant commerciant;
     private final String error;
 
     public PayOnlineTransactionFactory(final TransactionInput input) {

@@ -1,6 +1,7 @@
 package org.poo.bank.transactions;
 
 import lombok.Getter;
+import org.poo.bank.commerciants.Commerciant;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public final class TransactionInput {
     private final String card;
     private final String cardHolder;
     private final String account;
-    private final String commerciant;
+    private final Commerciant commerciant;
     private final String newPlanType;
 
     private TransactionInput(final Builder builder) {
@@ -55,7 +56,7 @@ public final class TransactionInput {
         private String card = null;
         private String cardHolder = null;
         private String account = null;
-        private String commerciant = null;
+        private Commerciant commerciant = null;
         private String newPlanType = null;
 
         public Builder(final Transaction.Type transactionType, final int timestamp,
@@ -148,7 +149,7 @@ public final class TransactionInput {
         /**
          * for coding style
          */
-        public Builder commerciant(final String setCommerciant) {
+        public Builder commerciant(final Commerciant setCommerciant) {
             commerciant = setCommerciant;
             return this;
         }

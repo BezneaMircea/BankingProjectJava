@@ -1,6 +1,8 @@
 package org.poo.bank.users.users_strategy;
 
 import lombok.Getter;
+import org.poo.bank.accounts.Account;
+
 
 public interface UserStrategy extends StrategyVisitor, VisitableStrategy {
 
@@ -42,6 +44,7 @@ public interface UserStrategy extends StrategyVisitor, VisitableStrategy {
         }
     }
 
+    double calculateCashBack(double sum, Account account);
     double calculateSumWithComision(double sum);
     Type getStrategy();
 }

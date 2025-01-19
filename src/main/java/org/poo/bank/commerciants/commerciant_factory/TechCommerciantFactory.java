@@ -19,7 +19,7 @@ public class TechCommerciantFactory implements CommerciantFactory {
         account = input.getAccount();
         type = Commerciant.Type.fromString(input.getType());
         cashBackStrategy = CashBackStrategyFactory
-                .createStrategy(CashBackStrategy.StrategyName.fromString(input.getType()));
+                .createStrategy(CashBackStrategy.StrategyName.fromString(input.getCashbackStrategy()));
     }
 
 

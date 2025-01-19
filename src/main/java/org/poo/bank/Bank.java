@@ -302,6 +302,13 @@ public final class Bank {
     }
 
     /**
+     * for coding style
+     */
+    public Commerciant getCommerciant(final String commerciantKey) {
+        return nameOrIbanToCommerciant.get(commerciantKey);
+    }
+
+    /**
      * Method used to get the conversion rate from a currency to another
      * @param from from currency
      * @param to to currency

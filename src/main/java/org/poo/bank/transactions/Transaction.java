@@ -25,7 +25,7 @@ public abstract class Transaction {
     }
 
     /**
-     * Method used to add a Transaction to and user and an account.
+     * Method used to add a Transaction to a user and an account.
      * Note that all types of users will add any type of transaction
      * @param user user to add transaction to
      * @param account account to add transaction to

@@ -44,10 +44,12 @@ public class UpgradePlan implements Command, Transactionable {
         try {
             double neededSum = Double.parseDouble(neededSumString);
             double convertedSum = neededSum * bank.getRate("RON", account.getCurrency());
-            if (account.getBalance() < convertedSum) {
+            double convertedSumWithCommision = associatedUser.getStrategy().calculateSumWithComision(convertedSum);
+            System.out.println("sum is: " + convertedSumWithCommision);
+            if (account.getBalance() < convertedSumWithCommision) {
                 error = Account.INSUFFICIENT_FUNDS;
             } else {
-                account.setBalance(account.getBalance() - convertedSum);
+                account.setBalance(account.getBalance() - convertedSumWithCommision);
                 associatedUser.setStrategy(UserStrategy.Type.fromString(newPlanType));
             }
         } catch (NumberFormatException e) {

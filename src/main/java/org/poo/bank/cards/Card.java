@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
+import org.poo.bank.commerciants.Commerciant;
 import org.poo.utils.Utils;
 
 /**
@@ -99,5 +100,5 @@ public abstract class Card {
      * @param timestamp   timestamp of the payment
      * @param commerciant commerciant to pay
      */
-    public abstract void pay(Bank bank, double amount, int timestamp, String commerciant);
+    public abstract void pay(Bank bank, double amount, int timestamp, Commerciant commerciant);
 }

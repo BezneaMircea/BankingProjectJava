@@ -1,6 +1,8 @@
 package org.poo.bank.commerciants;
 
+import org.poo.bank.accounts.Account;
 import org.poo.bank.commerciants.commerciant_strategies.CashBackStrategy;
+import org.poo.bank.users.users_strategy.UserStrategy;
 
 public final class TechCommerciant extends Commerciant {
 
@@ -9,4 +11,8 @@ public final class TechCommerciant extends Commerciant {
         super(name, id, account, type, cashBackStrategy);
     }
 
+    @Override
+    public void acceptCashback(UserStrategy ownerStrategy, Account account, double amount, double conversionRate) {
+        getCashBackStrategy().cashBack(ownerStrategy, account, this, amount, conversionRate);
+    }
 }

@@ -4,10 +4,13 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
+import org.poo.bank.Bank;
 import org.poo.bank.cards.Card;
 import org.poo.bank.commerciants.AccountBonuses;
+import org.poo.bank.commerciants.Commerciant;
 import org.poo.bank.transactions.ChangeIntRateTransaction;
 import org.poo.bank.transactions.PayOnlineTransaction;
+import org.poo.bank.transactions.SendMoneyTransaction;
 import org.poo.bank.transactions.Transaction;
 import org.poo.utils.Utils;
 
@@ -82,6 +85,7 @@ public abstract class Account {
     private double minBalance;
     private final List<Card> cards;
     private final List<Transaction> transactions;
+    private final AccountBonuses bonuses;
 
 
     /**
@@ -98,6 +102,7 @@ public abstract class Account {
         iban = Utils.generateIBAN();
         cards = new ArrayList<>();
         transactions = new ArrayList<>();
+        bonuses = new AccountBonuses();
         balance = 0;
         minBalance = 0;
     }
@@ -116,6 +121,8 @@ public abstract class Account {
         accountToTransfer.balance += amountToReceive;
     }
 
+    public void transferToCommerciant(Bank bank, double amount, int timestamp, Commerciant commerciant) {
+    }
 
     /**
      * Method used to add a transaction to an account. This must be overridden
@@ -130,6 +137,10 @@ public abstract class Account {
      * in case the functionality will be set clear.} if implemented == true
      */
     public void addTransaction(final Transaction transaction) {
+        transactions.add(transaction);
+    }
+
+    public void addTransaction(final SendMoneyTransaction transaction) {
         transactions.add(transaction);
     }
 
@@ -277,11 +288,11 @@ public abstract class Account {
     }
 
     /**
-     * Not all accounts have bonuses.
-     * @return the bonuses of the account or null if the account
+     * Not all can spend money to commerciants that have spendingThreshold strategy.
+     * @return the amount spent or null if the account
      * doesn't support bonuses
      */
-    public AccountBonuses getBonuses() {
-        return null;
-    }
+    public Double getSpendingThresholdAmount() { return null;}
+    public void setSpendingThresholdAmount(Double newAmount ) {}
+
 }

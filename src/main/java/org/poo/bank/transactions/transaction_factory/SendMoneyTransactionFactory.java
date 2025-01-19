@@ -1,5 +1,6 @@
 package org.poo.bank.transactions.transaction_factory;
 
+import org.poo.bank.commerciants.Commerciant;
 import org.poo.bank.transactions.SendMoneyTransaction;
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
@@ -14,6 +15,7 @@ public final class SendMoneyTransactionFactory implements TransactionFactory {
     private final String currency;
     private final String transferType;
     private final String error;
+    private final Commerciant commerciant;
 
     public SendMoneyTransactionFactory(final TransactionInput input) {
         transactionType = input.getTransactionType();
@@ -25,12 +27,13 @@ public final class SendMoneyTransactionFactory implements TransactionFactory {
         currency = input.getCurrency();
         transferType = input.getTransferType();
         error = input.getError();
+        commerciant = input.getCommerciant();
     }
 
     @Override
     public Transaction createTransaction() {
         return new SendMoneyTransaction(transactionType, timestamp, description,
                 senderIBAN, receiverIBAN, amount,
-                currency, transferType, error);
+                currency, transferType, error, commerciant);
     }
 }

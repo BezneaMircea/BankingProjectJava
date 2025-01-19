@@ -1,11 +1,37 @@
 package org.poo.bank.users.users_strategy;
 
+import org.poo.bank.accounts.Account;
+import org.poo.bank.commerciants.commerciant_strategies.SpendingThresholdStrategy;
 import org.poo.bank.users.User;
 
 public final class StandardStrategy implements UserStrategy {
-    public static final double STANDARD_COMMISSION = 0.2;
-    public static final String STANDARD_TO_GOLD = "350";
-    public static final String STANDARD_TO_SILVER = "100";
+    public static final double STANDARD_COMMISSION = 0.002;
+
+    public static final double FIRST_THRESHOLD_COMMISION = 0.001;
+    public static final double SECOND_THRESHOLD_COMMISION = 0.002;
+    public static final double THIRD_THRESHOLD_COMMISION = 0.0025;
+
+
+    @Override
+    public double calculateCashBack(double sum, Account account) {
+        Double amountSpent = account.getSpendingThresholdAmount();
+
+        if (amountSpent == null)
+            throw new IllegalArgumentException("You can t have cashBack on this account");
+
+        double commision = 0;
+
+        if (amountSpent + sum >= SpendingThresholdStrategy.FIRST_THRESHOLD)
+            commision = FIRST_THRESHOLD_COMMISION;
+
+        if (amountSpent + sum>= SpendingThresholdStrategy.SECOND_THRESHOLD)
+            commision = SECOND_THRESHOLD_COMMISION;
+
+        if (amountSpent + sum >= SpendingThresholdStrategy.THIRD_THRESHOLD)
+            commision = THIRD_THRESHOLD_COMMISION;
+
+        return commision * sum;
+    }
 
     @Override
     public double calculateSumWithComision(double sum) {
@@ -24,12 +50,12 @@ public final class StandardStrategy implements UserStrategy {
 
     @Override
     public String visit(GoldStrategy strategy) {
-        return STANDARD_TO_GOLD;
+        return User.CANT_DOWNGRADE;
     }
 
     @Override
     public String visit(SilverStrategy strategy) {
-        return STANDARD_TO_SILVER;
+        return User.CANT_DOWNGRADE;
     }
 
     @Override

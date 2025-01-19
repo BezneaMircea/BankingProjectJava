@@ -2,6 +2,7 @@ package org.poo.bank.cards;
 
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
+import org.poo.bank.commerciants.Commerciant;
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
 import org.poo.bank.users.User;
@@ -24,16 +25,18 @@ public final class StandardCard extends Card {
 
     @Override
     public void pay(final Bank bank, final double amount,
-                    final int timestamp, final String commerciant) {
+                    final int timestamp, final Commerciant commerciant) {
         String error = null;
+
         if (getStatus().equals(FROZEN)) {
             error = Card.IS_FROZEN;
         }
 
         Account associatedAccount = getAccount();
-        User owner = bank.getEmailToUser().get(associatedAccount.getOwnerEmail());
+        User owner = bank.getUser(associatedAccount.getOwnerEmail());
+        double totalAmount = owner.getStrategy().calculateSumWithComision(amount);
 
-        if (associatedAccount.getBalance() < amount && error == null) {
+        if (associatedAccount.getBalance() < totalAmount && error == null) {
             error = Account.INSUFFICIENT_FUNDS;
         }
 
@@ -47,7 +50,9 @@ public final class StandardCard extends Card {
         bank.generateTransaction(payOnline).addTransaction(owner, associatedAccount);
 
         if (error == null) {
-            associatedAccount.setBalance(associatedAccount.getBalance() - amount);
+            associatedAccount.setBalance(associatedAccount.getBalance() - totalAmount);
+            double conversionRate = bank.getRate(associatedAccount.getCurrency(), Commerciant.MAIN_CURRENCY);
+            commerciant.acceptCashback(owner.getStrategy(), associatedAccount, amount, conversionRate);
         }
 
     }

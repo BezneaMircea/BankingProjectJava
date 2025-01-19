@@ -65,6 +65,7 @@ public final class CreateCard implements Command, Transactionable {
                 .error(null)
                 .build();
 
+        System.out.println("card nr is: " + cardToAdd.getCardNumber() + " iban of account is: " + account);
         addTransaction(input, owner, associatedAccount);
     }
 

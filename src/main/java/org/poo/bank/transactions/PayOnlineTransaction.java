@@ -3,18 +3,19 @@ package org.poo.bank.transactions;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import org.poo.bank.accounts.Account;
+import org.poo.bank.commerciants.Commerciant;
 import org.poo.utils.Utils;
 
 
 @Getter
 public final class PayOnlineTransaction extends Transaction {
     private final double amount;
-    private final String commerciant;
+    private final Commerciant commerciant;
     private final String error;
 
     public PayOnlineTransaction(final Type transactionType, final int timestamp,
                                 final String description, final double amount,
-                                final String commerciant, final String error) {
+                                final Commerciant commerciant, final String error) {
         super(transactionType, timestamp, description);
         this.amount = amount;
         this.commerciant = commerciant;
@@ -29,7 +30,7 @@ public final class PayOnlineTransaction extends Transaction {
             jsonNode.put("timestamp", getTimestamp());
             jsonNode.put("description", getDescription());
             jsonNode.put("amount", Utils.approximateToFourthDecimal(amount));
-            jsonNode.put("commerciant", commerciant);
+            jsonNode.put("commerciant", commerciant.getName());
         } else {
             jsonNode.put("timestamp", getTimestamp());
             jsonNode.put("description", error);

@@ -1,10 +1,9 @@
 package org.poo.bank.commerciants.commerciant_strategies;
 
+
 import org.poo.bank.accounts.Account;
-import org.poo.bank.commerciants.AccountBonuses;
-import org.poo.bank.commerciants.ClothesCommerciant;
-import org.poo.bank.commerciants.FoodCommerciant;
-import org.poo.bank.commerciants.TechCommerciant;
+import org.poo.bank.commerciants.*;
+import org.poo.bank.users.users_strategy.UserStrategy;
 
 public class NrTransactionsStrategy implements CashBackStrategy{
     public static final double FOOD_CASHBACK = 0.02;
@@ -16,43 +15,52 @@ public class NrTransactionsStrategy implements CashBackStrategy{
     public static final double TECH_CASHBACK = 0.1;
     public static final int TECH_THRESHOLD = 10;
 
+
+
+
     @Override
-    public void payCommerciant(Account account, TechCommerciant commerciant, double amount) {
-        double sumToPay = amount;
+    public void cashBack(final UserStrategy ownerStrategy, final Account account,
+                         final TechCommerciant commerciant, final double amount,
+                         final double conversionRate) {
+        double cashBackSum = 0;
         if (account.getBonuses().hasBonus(AccountBonuses.BonusType.TECH)) {
-            sumToPay -= TECH_CASHBACK * amount;
+            cashBackSum = TECH_CASHBACK * amount;
             account.getBonuses().setBonusUsed(AccountBonuses.BonusType.TECH);
         }
 
-        account.setBalance(account.getBalance() - sumToPay);
+        account.setBalance(account.getBalance() + cashBackSum);
         commerciant.incrementAccountTransactions(account);
 
         tryGiveBonus(account, commerciant.getNrAccountTransactions(account));
     }
 
     @Override
-    public void payCommerciant(Account account, FoodCommerciant commerciant, double amount) {
-        double sumToPay = amount;
+    public void cashBack(final UserStrategy ownerStrategy, final Account account,
+                         final FoodCommerciant commerciant, final double amount,
+                         final double conversionRate) {
+        double cashBackSum = 0;
         if (account.getBonuses().hasBonus(AccountBonuses.BonusType.FOOD)) {
-            sumToPay -= FOOD_CASHBACK * amount;
+            cashBackSum = FOOD_CASHBACK * amount;
             account.getBonuses().setBonusUsed(AccountBonuses.BonusType.FOOD);
         }
 
-        account.setBalance(account.getBalance() - sumToPay);
+        account.setBalance(account.getBalance() + cashBackSum);
         commerciant.incrementAccountTransactions(account);
 
         tryGiveBonus(account, commerciant.getNrAccountTransactions(account));
     }
 
     @Override
-    public void payCommerciant(Account account, ClothesCommerciant commerciant, double amount) {
-        double sumToPay = amount;
+    public void cashBack(final UserStrategy ownerStrategy, final Account account,
+                         final ClothesCommerciant commerciant, final double amount,
+                         final double conversionRate) {
+        double cashBackSum = 0;
         if (account.getBonuses().hasBonus(AccountBonuses.BonusType.CLOTHES)) {
-            sumToPay -= CLOTHES_CASHBACK * amount;
+            cashBackSum = CLOTHES_CASHBACK * amount;
             account.getBonuses().setBonusUsed(AccountBonuses.BonusType.CLOTHES);
         }
 
-        account.setBalance(account.getBalance() - sumToPay);
+        account.setBalance(account.getBalance() + cashBackSum);
         commerciant.incrementAccountTransactions(account);
 
         tryGiveBonus(account, commerciant.getNrAccountTransactions(account));

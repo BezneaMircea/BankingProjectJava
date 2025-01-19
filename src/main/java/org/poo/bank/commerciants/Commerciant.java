@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.commerciants.commerciant_strategies.CashBackStrategy;
+import org.poo.bank.users.users_strategy.UserStrategy;
 import org.poo.utils.Utils;
 
 import java.util.ArrayList;
@@ -19,14 +20,17 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class Commerciant implements Comparable<Commerciant> {
+public abstract class Commerciant implements Comparable<Commerciant> {
+    public static final String MAIN_CURRENCY = "RON";
+
+
     private final String name;
     private final int id;
     private final String account;
     private final Type type;
     private final CashBackStrategy cashBackStrategy;
-    private final Map<Account, Integer> nrTransactionsByAcount;
-    private final List<Payment> receivedPayments;
+    private final Map<Account, Integer> nrTransactionsByAccount;
+    private final Map<Account, List<Payment>> receivedPaymentsFromAccount;
 
 
     @Getter
@@ -80,7 +84,6 @@ public class Commerciant implements Comparable<Commerciant> {
         }
     }
 
-
     /**
      * Constructor for a commerciant
      * @param name the name of the commerciant
@@ -97,16 +100,19 @@ public class Commerciant implements Comparable<Commerciant> {
         this.account = account;
         this.type = type;
         this.cashBackStrategy = cashBackStrategy;
-        nrTransactionsByAcount = new HashMap<>();
-        receivedPayments = new ArrayList<>();
+        nrTransactionsByAccount = new HashMap<>();
+        receivedPaymentsFromAccount = new HashMap<>();
     }
 
+    public abstract void acceptCashback(UserStrategy ownerStrategy,
+                                        Account account, double amount, double conversionRate);
+
     public void incrementAccountTransactions(Account account) {
-        nrTransactionsByAcount.merge(account, 1, Integer::sum);
+        nrTransactionsByAccount.merge(account, 1, Integer::sum);
     }
 
     public int getNrAccountTransactions(Account account) {
-        Integer nrTransactions = nrTransactionsByAcount.get(account);
+        Integer nrTransactions = nrTransactionsByAccount.get(account);
         if (nrTransactions == null)
             return 0;
 
@@ -119,15 +125,17 @@ public class Commerciant implements Comparable<Commerciant> {
     }
 
     /**
-     * Method used to write the payments towards this commerciant in a
+     * Method used to write the payments by account towards this commerciant in a
      * time interval
      *
+     * @param account the account that made the payments
      * @param startingTimestamp start of the time interval
      * @param endingTimestamp   end o the time interval
      * @return null if no sum was paid to this commerciant, an appropriate ObjectNode otherwise
      */
-    public ObjectNode commerciantToJson(final int startingTimestamp, final int endingTimestamp) {
-        double totalSumPayed = sumTransactions(startingTimestamp, endingTimestamp);
+    public ObjectNode commerciantToJson(Account account, final int startingTimestamp, final int endingTimestamp) {
+        List<Payment> payments = receivedPaymentsFromAccount.get(account);
+        double totalSumPayed = sumPayments(payments, startingTimestamp, endingTimestamp);
 
         if (totalSumPayed == 0) {
             return null;
@@ -140,9 +148,9 @@ public class Commerciant implements Comparable<Commerciant> {
         return nodeToReturn;
     }
 
-    private double sumTransactions(final int startingTimestamp, final int endingTimestamp) {
+    private double sumPayments(final List<Payment> payments, final int startingTimestamp, final int endingTimestamp) {
         double sum = 0;
-        for (Payment payment : receivedPayments) {
+        for (Payment payment : payments) {
             if (payment.timestamp >= startingTimestamp && payment.timestamp <= endingTimestamp) {
                 sum += payment.amount;
             } else if (payment.timestamp > endingTimestamp) {

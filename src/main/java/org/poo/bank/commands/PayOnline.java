@@ -3,6 +3,7 @@ package org.poo.bank.commands;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.cards.Card;
+import org.poo.bank.commerciants.Commerciant;
 import org.poo.bank.transactions.TransactionInput;
 import org.poo.bank.users.User;
 
@@ -18,7 +19,7 @@ public final class PayOnline implements Command, Transactionable {
     private final String currency;
     private final int timestamp;
     private final String description;
-    private final String commerciant;
+    private final String commerciantName;
     private final String email;
 
     /**
@@ -31,12 +32,12 @@ public final class PayOnline implements Command, Transactionable {
      * @param currency    the currency in which the payment will be proceeded
      * @param timestamp   timestamp of the command
      * @param description description of the payment
-     * @param commerciant the commerciant to which the payment is done
+     * @param commerciantName the commerciant to which the payment is done
      * @param email       email of the owner that has the account where the card is linked
      */
     public PayOnline(final Bank bank, final String command, final String cardNumber,
                      final double amount, final String currency, final int timestamp,
-                     final String description, final String commerciant, final String email) {
+                     final String description, final String commerciantName, final String email) {
         this.bank = bank;
         this.command = command;
         this.cardNumber = cardNumber;
@@ -44,7 +45,7 @@ public final class PayOnline implements Command, Transactionable {
         this.currency = currency;
         this.timestamp = timestamp;
         this.description = description;
-        this.commerciant = commerciant;
+        this.commerciantName = commerciantName;
         this.email = email;
     }
 
@@ -64,6 +65,11 @@ public final class PayOnline implements Command, Transactionable {
             return;
         }
 
+        Commerciant commerciant = bank.getCommerciant(commerciantName);
+        if (commerciant == null) {
+            System.out.println("Commerciant " + commerciantName + " not found");
+            return;
+        }
 
         double exchangeRate = bank.getExchangeRates().getRate(currency,
                                                               associatedAccount.getCurrency());

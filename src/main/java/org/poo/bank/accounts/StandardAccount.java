@@ -4,10 +4,15 @@ package org.poo.bank.accounts;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
+import lombok.Setter;
+import org.poo.bank.Bank;
 import org.poo.bank.commerciants.AccountBonuses;
 import org.poo.bank.commerciants.Commerciant;
 import org.poo.bank.transactions.PayOnlineTransaction;
+import org.poo.bank.transactions.SendMoneyTransaction;
 import org.poo.bank.transactions.Transaction;
+import org.poo.bank.transactions.TransactionInput;
+import org.poo.bank.users.User;
 import org.poo.utils.Utils;
 
 import java.util.ArrayList;
@@ -19,10 +24,11 @@ import java.util.List;
  * Class used to represent a StandardAccount
  */
 @Getter
+@Setter
 public final class StandardAccount extends Account {
     private final List<Transaction> onlineTransactions;
     private final List<Commerciant> commerciants;
-    private final AccountBonuses bonuses;
+    private Double spendingThresholdAmount;
 
     /**
      * Constructor used to the StandardAccount class
@@ -35,7 +41,7 @@ public final class StandardAccount extends Account {
         super(ownerEmail, currency, accountType);
         onlineTransactions = new ArrayList<>();
         commerciants = new ArrayList<>();
-        bonuses = new AccountBonuses();
+        spendingThresholdAmount = 0.0;
     }
 
 
@@ -68,7 +74,7 @@ public final class StandardAccount extends Account {
         Collections.sort(commerciants);
         ArrayNode commerciantsArray = Utils.MAPPER.createArrayNode();
         for (Commerciant commerciant : commerciants) {
-            ObjectNode toAdd = commerciant.commerciantToJson(startTimestamp, endTimestamp);
+            ObjectNode toAdd = commerciant.commerciantToJson(this, startTimestamp, endTimestamp);
             if (toAdd != null) {
                 commerciantsArray.add(toAdd);
             }
@@ -91,22 +97,55 @@ public final class StandardAccount extends Account {
         getTransactions().add(transaction);
         onlineTransactions.add(transaction);
 
-        /// If the commerciant exists in the list just add the new payment to it
+        Commerciant transactionCommerciant = transaction.getCommerciant();
+        addTransactionHelper(transactionCommerciant, transaction.getAmount(), transaction.getTimestamp());
+    }
+
+    public void addTransaction(final SendMoneyTransaction transaction) {
+        if (transaction == null) {
+            return;
+        }
+
+        if (transaction.getCommerciant() == null) {
+            getTransactions().add(transaction);
+            return;
+        }
+
+        onlineTransactions.add(transaction);
+        Commerciant transactionCommerciant = transaction.getCommerciant();
+        addTransactionHelper(transactionCommerciant, transaction.getAmount(), transaction.getTimestamp());
+    }
+
+    private void
+    addTransactionHelper(final Commerciant transactionCommerciant,
+                         final double amount, final int timestamp) {
+
+        Commerciant.Payment payment = new Commerciant.Payment(amount, timestamp);
+
         for (Commerciant commerciant : commerciants) {
-            if (commerciant.getName().equals(transaction.getCommerciant())) {
-                Commerciant.Payment payment = new Commerciant.Payment(transaction.getAmount(),
-                                                                      transaction.getTimestamp());
-                commerciant.getReceivedPayments().add(payment);
+            if (commerciant.equals(transactionCommerciant)) {
+                commerciant.getReceivedPaymentsFromAccount().get(this).add(payment);
                 return;
             }
         }
 
-        /// If it does not exist create it and add the payment to the list
-        Commerciant commerciantToAdd = new Commerciant(transaction.getCommerciant());
-        Commerciant.Payment payment = new Commerciant.Payment(transaction.getAmount(),
-                                                              transaction.getTimestamp());
-        commerciantToAdd.getReceivedPayments().add(payment);
-        commerciants.add(commerciantToAdd);
+        /// If it does not exist
+        List<Commerciant.Payment> paymentList = new ArrayList<>();
+        paymentList.add(payment);
+
+        transactionCommerciant.getReceivedPaymentsFromAccount().put(this, paymentList);
+        commerciants.add(transactionCommerciant);
     }
+
+    /// amount is without commission
+    public void transferToCommerciant(Bank bank, double amount, int timestamp, Commerciant commerciant) {
+        User accountOwner = bank.getUser(getOwnerEmail());
+        double conversionRate = bank.getRate(getCurrency(), Commerciant.MAIN_CURRENCY);
+
+        double totalSumWithCommission = accountOwner.getStrategy().calculateSumWithComision(amount);
+        setBalance(getBalance() - totalSumWithCommission);
+        commerciant.acceptCashback(accountOwner.getStrategy(), this, amount, conversionRate);
+    }
+
 
 }

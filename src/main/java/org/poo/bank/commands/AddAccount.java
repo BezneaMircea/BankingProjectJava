@@ -55,6 +55,7 @@ public final class AddAccount implements Command, Transactionable {
         Account accountToAdd = bank.createAccount(newAccountInput);
         String error = bank.addAccount(accountToAdd);
 
+
         /// Logic could be added here to print the error (if the given email wasn't valid)
         if (error != null) {
             return;
