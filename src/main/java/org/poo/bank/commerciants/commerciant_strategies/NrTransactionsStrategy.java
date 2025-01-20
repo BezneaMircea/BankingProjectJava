@@ -16,8 +16,6 @@ public class NrTransactionsStrategy implements CashBackStrategy{
     public static final int TECH_THRESHOLD = 10;
 
 
-
-
     @Override
     public void cashBack(final UserStrategy ownerStrategy, final Account account,
                          final TechCommerciant commerciant, final double amount,

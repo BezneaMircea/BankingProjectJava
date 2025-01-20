@@ -3,6 +3,7 @@ package org.poo.bank.commands;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
 
+import org.poo.bank.commerciants.Commerciant;
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
 import org.poo.bank.transactions.UpgradePlanTransaction;
@@ -11,6 +12,10 @@ import org.poo.bank.users.users_strategy.UserStrategy;
 import org.poo.bank.users.users_strategy.UserStrategyFactory;
 
 public final class UpgradePlan implements Command, Transactionable {
+    /// Note that this is currently in "RON"
+    public static final int MIN_PAYMENT_FOR_UPGRADE = 300;
+    public static final int MIN_NR_OF_PAYMENTS_FOR_UPGRADE = 5;
+
     private final Bank bank;
     private final String command;
     private final String newPlanType;
@@ -44,8 +49,7 @@ public final class UpgradePlan implements Command, Transactionable {
         String neededSumString = currentStrategy.accept(targetedStrategy);
         try {
             double neededSum = Double.parseDouble(neededSumString);
-            double convertedSum = neededSum * bank.getRate("RON", account.getCurrency());
-            System.out.println("sum is: " + convertedSum);
+            double convertedSum = neededSum * bank.getRate(Commerciant.MAIN_CURRENCY, account.getCurrency());
             if (account.getBalance() < convertedSum) {
                 error = Account.INSUFFICIENT_FUNDS;
             } else {

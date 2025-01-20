@@ -84,5 +84,10 @@ public final class OneTimeCard extends Card {
         bank.generateTransaction(payOnline).addTransaction(owner, associatedAccount);
         bank.generateTransaction(deleteCard).addTransaction(owner, associatedAccount);
         bank.generateTransaction(createCard).addTransaction(owner, associatedAccount);
+
+        /// Increment nr of transactions for automatic upgrade if needed.
+        owner.tryIncrementAutomaticUpgradePayments(conversionRate * amount);
+        /// Try to upgrade the owner plan in case he has enough transactions
+        owner.tryAutomaticUpgrade(bank, associatedAccount, timestamp);
     }
 }

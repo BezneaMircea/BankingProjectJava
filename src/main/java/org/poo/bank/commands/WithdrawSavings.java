@@ -5,6 +5,7 @@ import org.poo.bank.accounts.Account;
 import org.poo.bank.commerciants.Commerciant;
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
+import org.poo.bank.transactions.WithdrawSavingsTransaction;
 import org.poo.bank.users.User;
 
 public final class WithdrawSavings implements Command, Transactionable {
@@ -40,6 +41,7 @@ public final class WithdrawSavings implements Command, Transactionable {
         if (!owner.isOldEnough()) {
             TransactionInput input = new TransactionInput.Builder(Transaction.Type.WITHDRAW_SAVINGS,
                     timestamp, User.NOT_OLD_ENOUGH)
+                    .error(User.NOT_OLD_ENOUGH)
                     .build();
             addTransaction(input, owner, savingsAccount);
             return;
@@ -49,6 +51,7 @@ public final class WithdrawSavings implements Command, Transactionable {
         if (receiverAccount == null) {
             TransactionInput input = new TransactionInput.Builder(Transaction.Type.WITHDRAW_SAVINGS,
                     timestamp, User.DONT_HAVE_CLASSIC)
+                    .error(User.DONT_HAVE_CLASSIC)
                     .build();
             addTransaction(input, owner, savingsAccount);
             return;
@@ -60,6 +63,16 @@ public final class WithdrawSavings implements Command, Transactionable {
 
         savingsAccount.setBalance(savingsAccount.getBalance() - convertedTotalAmount);
         receiverAccount.setBalance(receiverAccount.getBalance() + amount);
+
+        TransactionInput input = new TransactionInput.Builder(Transaction.Type.WITHDRAW_SAVINGS,
+                timestamp, WithdrawSavingsTransaction.SAVINGS_WITHDRAWAL)
+                .amount(amount)
+                .senderIBAN(account)
+                .receiverIBAN(receiverAccount.getIban())
+                .build();
+
+        addTransaction(input, owner, receiverAccount);
+        addTransaction(input, owner, savingsAccount);
     }
 
     @Override

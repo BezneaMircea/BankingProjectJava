@@ -68,6 +68,7 @@ public final class PayOnline implements Command, Transactionable {
             return;
         }
 
+
         Commerciant commerciant = bank.getCommerciant(commerciantName);
         if (commerciant == null) {
             System.out.println("Commerciant " + commerciantName + " not found");
@@ -78,8 +79,7 @@ public final class PayOnline implements Command, Transactionable {
                                                               associatedAccount.getCurrency());
         double totalSumToPay = amount * exchangeRate;
 
-        /* The transactions are handled here, in pay method due to the fact that
-         * different types of card generate different and multiple transactions */
+
         usedCard.pay(bank, totalSumToPay, timestamp, commerciant);
     }
 

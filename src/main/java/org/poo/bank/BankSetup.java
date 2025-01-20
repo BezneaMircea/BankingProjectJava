@@ -88,6 +88,8 @@ public class BankSetup {
             case "upgradePlan" -> factory = new UpgradePlanFactory(bank, command);
             case "withdrawSavings" -> factory = new WithdrawSavingsFactory(bank, command);
             case "cashWithdrawal" -> factory = new CashWithdrawalFactory(bank, command);
+            case "rejectSplitPayment" -> factory = new RejectSplitPaymentFactory(bank, command);
+            case "acceptSplitPayment" -> factory = new AcceptSplitPaymentFactory(bank, command);
             case "createCard", "createOneTimeCard" -> factory = new CreateCardFactory(bank,
                                                                                       command);
             default -> {

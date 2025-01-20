@@ -3,17 +3,21 @@ package org.poo.bank.users;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Data;
+import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
+import org.poo.bank.commands.Command;
+import org.poo.bank.commands.SplitPayment;
+import org.poo.bank.commands.UpgradePlan;
+import org.poo.bank.commands.command_factory.SplitPaymentFactory;
 import org.poo.bank.transactions.Transaction;
+import org.poo.bank.transactions.TransactionInput;
+import org.poo.bank.transactions.UpgradePlanTransaction;
 import org.poo.bank.users.users_strategy.*;
 import org.poo.utils.Utils;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class used to represent a user of our banking application
@@ -49,7 +53,10 @@ public abstract class User {
     private final List<Account> accounts;
     private final List<Transaction> transactions;
     private final Map<String, Account> aliases;
+    private int automaticUpgradeCounter;
     private UserStrategy strategy;
+    private final List<SplitPayment> allSplitPayments;
+
 
     /**
      * Constructor of the User class
@@ -66,10 +73,12 @@ public abstract class User {
         this.birthDate = birthDate;
         this.occupation = occupation;
         this.strategy = strategy;
+        automaticUpgradeCounter = 0;
 
         accounts = new ArrayList<>();
         transactions = new ArrayList<>();
         aliases = new HashMap<>();
+        allSplitPayments = new ArrayList<>();
     }
 
     /**
@@ -101,6 +110,7 @@ public abstract class User {
      * @return the ArrayNode
      */
     public ArrayNode transactionsToObjectNode() {
+        transactions.sort(Comparator.comparingInt(Transaction::getTimestamp));
         ArrayNode transactionsArray = Utils.MAPPER.createArrayNode();
         for (Transaction transaction : transactions) {
             transactionsArray.add(transaction.toJson());
@@ -188,5 +198,54 @@ public abstract class User {
 
         return null;
     }
-}
 
+    /**
+     * This method is used to try increment the number of payments.
+     * This happens only if the sum > MIN_PAYMENT_FOR_UPGRADE and if
+     * the user has the silver plan
+     * @param sum sum in "RON" (currently)
+     */
+    public void tryIncrementAutomaticUpgradePayments(double sum) {
+        if (strategy.getStrategy() != UserStrategy.Type.SILVER)
+            return;
+
+        if (sum < UpgradePlan.MIN_PAYMENT_FOR_UPGRADE)
+            return;
+
+        automaticUpgradeCounter++;
+    }
+
+    public void tryAutomaticUpgrade(Bank bank, Account account, final int timestamp) {
+        if (strategy.getStrategy() == UserStrategy.Type.SILVER
+                && automaticUpgradeCounter == UpgradePlan.MIN_NR_OF_PAYMENTS_FOR_UPGRADE) {
+            strategy = UserStrategyFactory.createStrategy(UserStrategy.Type.GOLD);
+            TransactionInput input = new TransactionInput.Builder(Transaction.Type.UPGRADE_PLAN,
+                    timestamp, UpgradePlanTransaction.UPGRADE_PLAN)
+                    .newPlanType(UserStrategy.Type.GOLD.getString())
+                    .account(account.getIban())
+                    .build();
+
+            bank.generateTransaction(input).addTransaction(this, account);
+        }
+    }
+
+    /**
+     * Get the first split payment
+     * @param paymentType the type of the payment that we want
+     */
+    public SplitPayment getFirstSplitPayment(String paymentType) {
+        SplitPaymentFactory.Type type = SplitPaymentFactory.Type.fromString(paymentType);
+        SplitPayment splitToReturn = null;
+        for (SplitPayment split : allSplitPayments) {
+            if (split.getType() == type) {
+                splitToReturn = split;
+                break;
+            }
+        }
+
+        allSplitPayments.remove(splitToReturn);
+        return splitToReturn;
+    }
+
+
+}

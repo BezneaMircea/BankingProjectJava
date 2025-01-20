@@ -5,10 +5,22 @@ import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
 public final class WithdrawSavingsTransaction extends Transaction {
-    public WithdrawSavingsTransaction(final Type transactionType,
-                                      final int timestamp,
-                                      final String description) {
+    public static String SAVINGS_WITHDRAWAL = "Savings withdrawal";
+
+    private final String error;
+    private final String classicAccountIban;
+    private final String savingsAccountIban;
+    private final double amount;
+
+    public WithdrawSavingsTransaction(final Type transactionType, final int timestamp,
+                                      final String description, final String error,
+                                      final String classicAccountIban,
+                                      final String savingsAccountIban, final double amount) {
         super(transactionType, timestamp, description);
+        this.error = error;
+        this.classicAccountIban = classicAccountIban;
+        this.savingsAccountIban = savingsAccountIban;
+        this.amount = amount;
     }
 
 
@@ -21,8 +33,16 @@ public final class WithdrawSavingsTransaction extends Transaction {
     public ObjectNode toJson() {
         ObjectNode toJson = Utils.MAPPER.createObjectNode();
 
-        toJson.put("timestamp", getTimestamp());
-        toJson.put("description", getDescription());
+        if (error != null) {
+            toJson.put("timestamp", getTimestamp());
+            toJson.put("description", getDescription());
+        } else {
+            toJson.put("amount", amount);
+            toJson.put("classicAccountIBAN", classicAccountIban);
+            toJson.put("description", getDescription());
+            toJson.put("savingsAccountIBAN", savingsAccountIban);
+            toJson.put("timestamp", getTimestamp());
+        }
 
         return toJson;
     }

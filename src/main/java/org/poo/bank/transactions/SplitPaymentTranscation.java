@@ -13,16 +13,18 @@ public final class SplitPaymentTranscation extends Transaction {
 
     private final String currency;
     private final double amount;
+    private final String paymentType;
     private final List<String> involvedAccounts;
     private final String error;
 
     public SplitPaymentTranscation(final Type transactionType, final int timestamp,
                                    final String description, final String currency,
                                    final double amount, final List<String> involvedAccounts,
-                                   final String error) {
+                                   final String paymentType, final String error) {
         super(transactionType, timestamp, description);
         this.currency = currency;
         this.amount = amount;
+        this.paymentType = paymentType;
         this.involvedAccounts = involvedAccounts;
         this.error = error;
     }
@@ -42,6 +44,7 @@ public final class SplitPaymentTranscation extends Transaction {
             involvedAccountsNode.add(account);
         }
         toJson.set("involvedAccounts", involvedAccountsNode);
+        toJson.put("splitPaymentType", paymentType);
 
         if (error != null) {
             toJson.put("error", error);

@@ -22,6 +22,8 @@ public final class TransactionInput {
     private final String account;
     private final Commerciant commerciant;
     private final String newPlanType;
+    private final String splitPaymentType;
+    private final List<Double> amountForUsers;
 
     private TransactionInput(final Builder builder) {
         transactionType = builder.transactionType;
@@ -39,6 +41,8 @@ public final class TransactionInput {
         account = builder.account;
         commerciant = builder.commerciant;
         newPlanType = builder.newPlanType;
+        splitPaymentType = builder.splitPaymentType;
+        amountForUsers = builder.amountForUsers;
     }
 
     public static final class Builder {
@@ -58,6 +62,8 @@ public final class TransactionInput {
         private String account = null;
         private Commerciant commerciant = null;
         private String newPlanType = null;
+        private String splitPaymentType = null;
+        private List<Double> amountForUsers = null;
 
         public Builder(final Transaction.Type transactionType, final int timestamp,
                        final String description) {
@@ -159,6 +165,16 @@ public final class TransactionInput {
          */
         public Builder newPlanType(final String setNewPlanType) {
             newPlanType = setNewPlanType;
+            return this;
+        }
+
+        public Builder setSplitPaymentType(final String setSplitPaymentType) {
+            splitPaymentType = setSplitPaymentType;
+            return this;
+        }
+
+        public Builder setAmountForUsers(final List<Double> setAmountForUsers) {
+            amountForUsers = setAmountForUsers;
             return this;
         }
 

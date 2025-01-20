@@ -53,6 +53,11 @@ public final class StandardCard extends Card {
         if (error == null) {
             associatedAccount.setBalance(associatedAccount.getBalance() - totalAmount);
             commerciant.acceptCashback(owner.getStrategy(), associatedAccount, amount, conversionRate);
+
+            /// Increment nr of transactions for automatic upgrade if needed.
+            owner.tryIncrementAutomaticUpgradePayments(conversionRate * amount);
+            /// Try to upgrade the owner plan in case he has enough transactions
+            owner.tryAutomaticUpgrade(bank, associatedAccount, timestamp);
         }
 
     }

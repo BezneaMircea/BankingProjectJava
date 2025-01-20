@@ -100,7 +100,6 @@ public final class SendMoney implements Command, Transactionable {
                                           receiverAccount.getCurrency());
         double receivedSum = amount * convertRate;
         double totalSumToPay = senderUser.getStrategy().calculateSumWithComision(amount, conversionRate);
-
         senderAccount.transfer(receiverAccount, totalSumToPay, receivedSum);
 
         TransactionInput transactionSent = createSendInput(senderAccount, null);
@@ -108,6 +107,11 @@ public final class SendMoney implements Command, Transactionable {
 
         addTransaction(transactionSent, senderUser, senderAccount);
         addTransaction(transactionReceived, receiverUser, receiverAccount);
+
+        /// Increment nr of transactions for automatic upgrade if needed.
+        senderUser.tryIncrementAutomaticUpgradePayments(conversionRate * amount);
+        /// Try to upgrade the owner plan in case he has enough transactions
+        senderUser.tryAutomaticUpgrade(bank, senderAccount, timestamp);
     }
 
     @Override
