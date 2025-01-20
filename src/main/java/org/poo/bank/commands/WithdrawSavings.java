@@ -2,11 +2,12 @@ package org.poo.bank.commands;
 
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
+import org.poo.bank.commerciants.Commerciant;
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
 import org.poo.bank.users.User;
 
-public class WithdrawSavings implements Command, Transactionable {
+public final class WithdrawSavings implements Command, Transactionable {
     private final Bank bank;
     private final String command;
     private final String account;
@@ -49,13 +50,12 @@ public class WithdrawSavings implements Command, Transactionable {
             return;
         }
 
-        double amountWithCommission = owner.getStrategy().calculateSumWithComision(amount);
 
-        double converstionRate = bank.getRate(savingsAccount.getCurrency(), currency);
-        double convertedTotalAmount = converstionRate * amountWithCommission;
+        double secondRate = bank.getRate(currency, savingsAccount.getCurrency());
+        double convertedTotalAmount = secondRate * amount;
 
         savingsAccount.setBalance(savingsAccount.getBalance() - convertedTotalAmount);
-        receiverAccount.setBalance(receiverAccount.getBalance() + amountWithCommission);
+        receiverAccount.setBalance(receiverAccount.getBalance() + amount);
     }
 
     @Override

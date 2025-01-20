@@ -2,6 +2,7 @@ package org.poo.bank.commands;
 
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
+
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
 import org.poo.bank.transactions.UpgradePlanTransaction;
@@ -9,7 +10,7 @@ import org.poo.bank.users.User;
 import org.poo.bank.users.users_strategy.UserStrategy;
 import org.poo.bank.users.users_strategy.UserStrategyFactory;
 
-public class UpgradePlan implements Command, Transactionable {
+public final class UpgradePlan implements Command, Transactionable {
     private final Bank bank;
     private final String command;
     private final String newPlanType;
@@ -44,12 +45,11 @@ public class UpgradePlan implements Command, Transactionable {
         try {
             double neededSum = Double.parseDouble(neededSumString);
             double convertedSum = neededSum * bank.getRate("RON", account.getCurrency());
-            double convertedSumWithCommision = associatedUser.getStrategy().calculateSumWithComision(convertedSum);
-            System.out.println("sum is: " + convertedSumWithCommision);
-            if (account.getBalance() < convertedSumWithCommision) {
+            System.out.println("sum is: " + convertedSum);
+            if (account.getBalance() < convertedSum) {
                 error = Account.INSUFFICIENT_FUNDS;
             } else {
-                account.setBalance(account.getBalance() - convertedSumWithCommision);
+                account.setBalance(account.getBalance() - convertedSum);
                 associatedUser.setStrategy(UserStrategy.Type.fromString(newPlanType));
             }
         } catch (NumberFormatException e) {

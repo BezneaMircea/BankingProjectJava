@@ -11,7 +11,7 @@ public abstract class Transaction {
     public enum Type {
         ADD_ACCOUNT, CHANGE_INT_RATE, CHECK_CARD_STAT, CREATE_CARD,
         DELETE_ACCOUNT, DELETE_CARD, PAY_ONLINE, SEND_MONEY, SPLIT_PAYMENT,
-        UPGRADE_PLAN, WITHDRAW_SAVINGS
+        UPGRADE_PLAN, WITHDRAW_SAVINGS, CASH_WIDRAWAL
     }
 
     private final Type transactionType;

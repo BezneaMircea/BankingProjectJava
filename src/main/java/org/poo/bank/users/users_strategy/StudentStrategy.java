@@ -38,7 +38,7 @@ public final class StudentStrategy implements UserStrategy {
     }
 
     @Override
-    public double calculateSumWithComision(double sum) {
+    public double calculateSumWithComision(double sum, double conversionRate) {
         return sum + STUDENT_COMMISSION * sum;
     }
 

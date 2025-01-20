@@ -35,7 +35,8 @@ public final class OneTimeCard extends Card {
 
         Account associatedAccount = getAccount();
         User owner = bank.getUser(associatedAccount.getOwnerEmail());
-        double totalAmount = owner.getStrategy().calculateSumWithComision(amount);
+        double conversionRate = bank.getRate(associatedAccount.getCurrency(), Commerciant.MAIN_CURRENCY);
+        double totalAmount = owner.getStrategy().calculateSumWithComision(amount, conversionRate);
 
         if (associatedAccount.getBalance() < totalAmount && error == null) {
             error = Account.INSUFFICIENT_FUNDS;
@@ -54,7 +55,6 @@ public final class OneTimeCard extends Card {
         }
 
         associatedAccount.setBalance(associatedAccount.getBalance() - totalAmount);
-        double conversionRate = bank.getRate(associatedAccount.getCurrency(), Commerciant.MAIN_CURRENCY);
         commerciant.acceptCashback(owner.getStrategy(), associatedAccount, amount, conversionRate);
 
         associatedAccount.removeCard(this);

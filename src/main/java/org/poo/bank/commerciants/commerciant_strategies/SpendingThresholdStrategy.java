@@ -18,7 +18,6 @@ public class SpendingThresholdStrategy implements CashBackStrategy {
     public void cashBack(final UserStrategy ownerStrategy, final Account account,
                          final TechCommerciant commerciant, final double amount,
                          final double conversionRate) {
-        System.out.println("Amount in dolars: " + amount);
         double cashBackSum = 1 / conversionRate * ownerStrategy.calculateCashBack(amount * conversionRate, account);
         account.setSpendingThresholdAmount(account.getSpendingThresholdAmount() + amount * conversionRate);
 
@@ -27,8 +26,6 @@ public class SpendingThresholdStrategy implements CashBackStrategy {
             account.getBonuses().setBonusUsed(AccountBonuses.BonusType.TECH);
         }
 
-        System.out.println("Balance is:" + account.getBalance());
-        System.out.println("cashback sum is" + cashBackSum);
         account.setBalance(account.getBalance() + cashBackSum);
     }
 

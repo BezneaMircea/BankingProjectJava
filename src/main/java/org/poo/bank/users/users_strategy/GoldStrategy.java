@@ -38,7 +38,7 @@ public final class GoldStrategy implements UserStrategy {
 
 
     @Override
-    public double calculateSumWithComision(double sum) {
+    public double calculateSumWithComision(double sum, double conversionRate) {
         return sum + GOLD_STRATEGY_COMMISSION * sum;
     }
 

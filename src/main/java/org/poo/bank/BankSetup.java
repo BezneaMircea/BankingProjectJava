@@ -12,10 +12,6 @@ import org.poo.bank.commerciants.commerciant_factory.ClothesCommerciantFactory;
 import org.poo.bank.commerciants.commerciant_factory.CommerciantFactory;
 import org.poo.bank.commerciants.commerciant_factory.FoodCommerciantFactory;
 import org.poo.bank.commerciants.commerciant_factory.TechCommerciantFactory;
-import org.poo.bank.commerciants.commerciant_strategies.CashBackStrategy;
-import org.poo.bank.commerciants.commerciant_strategies.CashBackStrategyFactory;
-import org.poo.bank.commerciants.commerciant_strategies.NrTransactionsStrategy;
-import org.poo.bank.commerciants.commerciant_strategies.SpendingThresholdStrategy;
 import org.poo.bank.users.User;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -91,6 +87,7 @@ public class BankSetup {
             case "spendingsReport" -> factory = new SpendingReportFactory(bank, command);
             case "upgradePlan" -> factory = new UpgradePlanFactory(bank, command);
             case "withdrawSavings" -> factory = new WithdrawSavingsFactory(bank, command);
+            case "cashWithdrawal" -> factory = new CashWithdrawalFactory(bank, command);
             case "createCard", "createOneTimeCard" -> factory = new CreateCardFactory(bank,
                                                                                       command);
             default -> {

@@ -62,7 +62,9 @@ public final class SendMoney implements Command, Transactionable {
             return;
         }
 
-        if (ErrorCheck(senderAccount, senderUser))
+        double conversionRate = bank.getRate(senderAccount.getCurrency(), Commerciant.MAIN_CURRENCY);
+
+        if (ErrorCheck(senderAccount, senderUser, conversionRate))
             return;
 
         /// Get the commerciant if the payment is towards a commerciant
@@ -92,7 +94,7 @@ public final class SendMoney implements Command, Transactionable {
         double convertRate = bank.getRate(senderAccount.getCurrency(),
                                           receiverAccount.getCurrency());
         double receivedSum = amount * convertRate;
-        double totalSumToPay = senderUser.getStrategy().calculateSumWithComision(amount);
+        double totalSumToPay = senderUser.getStrategy().calculateSumWithComision(amount, conversionRate);
 
         senderAccount.transfer(receiverAccount, totalSumToPay, receivedSum);
 
@@ -140,8 +142,8 @@ public final class SendMoney implements Command, Transactionable {
      * @param senderUser the sending user
      * @return true if an error occured, false otherwise
      */
-    private boolean ErrorCheck(Account senderAccount, User senderUser) {
-        double totalAmount = senderUser.getStrategy().calculateSumWithComision(amount);
+    private boolean ErrorCheck(Account senderAccount, User senderUser, double conversionRate) {
+        double totalAmount = senderUser.getStrategy().calculateSumWithComision(amount, conversionRate);
 
         if (senderAccount.getBalance() < totalAmount) {
             TransactionInput input = new TransactionInput.Builder(Transaction.Type.SEND_MONEY,

@@ -141,8 +141,8 @@ public final class StandardAccount extends Account {
     public void transferToCommerciant(Bank bank, double amount, int timestamp, Commerciant commerciant) {
         User accountOwner = bank.getUser(getOwnerEmail());
         double conversionRate = bank.getRate(getCurrency(), Commerciant.MAIN_CURRENCY);
+        double totalSumWithCommission = accountOwner.getStrategy().calculateSumWithComision(amount, conversionRate);
 
-        double totalSumWithCommission = accountOwner.getStrategy().calculateSumWithComision(amount);
         setBalance(getBalance() - totalSumWithCommission);
         commerciant.acceptCashback(accountOwner.getStrategy(), this, amount, conversionRate);
     }

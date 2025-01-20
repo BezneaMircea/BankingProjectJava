@@ -34,7 +34,7 @@ public final class StandardStrategy implements UserStrategy {
     }
 
     @Override
-    public double calculateSumWithComision(double sum) {
+    public double calculateSumWithComision(double sum, double conversionRate) {
         return sum + STANDARD_COMMISSION * sum;
     }
 

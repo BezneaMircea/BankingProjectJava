@@ -38,8 +38,8 @@ public final class SilverStrategy implements UserStrategy {
     }
 
     @Override
-    public double calculateSumWithComision(double sum) {
-        return sum < SILVER_COMMISSION_THRESHOLD ? sum : sum + SILVER_COMMISSION * sum;
+    public double calculateSumWithComision(double sum, double conversionRate) {
+        return sum * conversionRate < SILVER_COMMISSION_THRESHOLD ? sum : sum + SILVER_COMMISSION * sum;
     }
 
     @Override

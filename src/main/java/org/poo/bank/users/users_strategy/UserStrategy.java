@@ -45,6 +45,6 @@ public interface UserStrategy extends StrategyVisitor, VisitableStrategy {
     }
 
     double calculateCashBack(double sum, Account account);
-    double calculateSumWithComision(double sum);
+    double calculateSumWithComision(double sum, double conversionRate);
     Type getStrategy();
 }

@@ -111,6 +111,7 @@ public final class Bank {
             case SPLIT_PAYMENT -> factory = new SplitPaymenTransactionFactory(input);
             case UPGRADE_PLAN -> factory = new UpgradePlanTransactionFactory(input);
             case WITHDRAW_SAVINGS -> factory = new WithdrawSavingsTransactionFactory(input);
+            case CASH_WIDRAWAL -> factory = new CashWithdrawalTransactionFactory(input);
             default -> throw new IllegalArgumentException("Invalid transaction type");
         }
 
