@@ -47,6 +47,10 @@ public final class WithdrawSavings implements Command, Transactionable {
 
         Account receiverAccount = owner.getClassicAccWithCurrency(currency);
         if (receiverAccount == null) {
+            TransactionInput input = new TransactionInput.Builder(Transaction.Type.WITHDRAW_SAVINGS,
+                    timestamp, User.DONT_HAVE_CLASSIC)
+                    .build();
+            addTransaction(input, owner, savingsAccount);
             return;
         }
 

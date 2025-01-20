@@ -56,19 +56,36 @@ public final class SendMoney implements Command, Transactionable {
             return;
         }
 
-        /// Get the sending user
         User senderUser = bank.getUser(senderAccount.getOwnerEmail());
         if (senderUser == null) {
+            bank.errorOccured(timestamp, command, User.NOT_FOUND);
             return;
         }
 
         double conversionRate = bank.getRate(senderAccount.getCurrency(), Commerciant.MAIN_CURRENCY);
-
         if (ErrorCheck(senderAccount, senderUser, conversionRate))
             return;
 
+        Account receiverAccount = bank.getAccount(receiver);
+        if (senderUser.hasAlias(receiver)) {
+            receiverAccount = senderUser.getAccountFromAlias(receiver);
+        }
+
+        Commerciant commerciant = null;
+        User receiverUser = null;
+        if (receiverAccount == null) {
+            commerciant = bank.getCommerciant(receiver);
+            if (commerciant == null) {
+                bank.errorOccured(timestamp, command, User.NOT_FOUND);
+                return;
+            }
+        } else {
+            receiverUser = bank.getUser(receiverAccount.getOwnerEmail());
+        }
+
+
+
         /// Get the commerciant if the payment is towards a commerciant
-        Commerciant commerciant = bank.getCommerciant(receiver);
         if (commerciant != null) {
             senderAccount.transferToCommerciant(bank, amount, timestamp, commerciant);
             TransactionInput transactionSent = createSendInput(senderAccount, commerciant);
@@ -77,19 +94,7 @@ public final class SendMoney implements Command, Transactionable {
         }
 
         /// If the payment is not towards a commerciant. Get the receiver account
-        Account receiverAccount = bank.getAccount(receiver);
-        if (senderUser.hasAlias(receiver)) {
-            receiverAccount = senderUser.getAccountFromAlias(receiver);
-        }
 
-        if (receiverAccount == null) {
-            return;
-        }
-
-        User receiverUser = bank.getUser(receiverAccount.getOwnerEmail());
-        if (receiverUser == null) {
-            return;
-        }
 
         double convertRate = bank.getRate(senderAccount.getCurrency(),
                                           receiverAccount.getCurrency());

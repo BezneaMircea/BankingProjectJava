@@ -39,8 +39,10 @@ public final class EconomyAccount extends Account {
 
     @Override
     public String addInterest() {
-        setInterestRate(getInterestRate() + interestRate);
-        return null;
+        double amount = interestRate * getBalance();
+        setBalance(getBalance() + amount);
+
+        return Double.toString(amount);
     }
 
     @Override

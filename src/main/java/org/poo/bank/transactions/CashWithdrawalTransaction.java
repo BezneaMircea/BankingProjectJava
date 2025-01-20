@@ -27,8 +27,10 @@ public class CashWithdrawalTransaction extends Transaction {
     @Override
     public ObjectNode toJson() {
         ObjectNode toJson = Utils.MAPPER.createObjectNode();
-
-        if (error == null) {
+        if (error != null) {
+            toJson.put("description", error);
+            toJson.put("timestamp", getTimestamp());
+        } else {
             toJson.put("timestamp", getTimestamp());
             toJson.put("description", getDescription());
             toJson.put("amount", amount);

@@ -24,6 +24,8 @@ public abstract class User {
     public static final String HAS_PLAN;
     public static final String CANT_DOWNGRADE;
     public static final String NOT_OLD_ENOUGH;
+    public static final String DONT_HAVE_CLASSIC;
+
     public static final int MINIMUM_AGE = 21;
 
 
@@ -32,6 +34,7 @@ public abstract class User {
         HAS_PLAN = "The user already has the %s plan.";
         CANT_DOWNGRADE = "You cannot downgrade your plan.";
         NOT_OLD_ENOUGH = "You don't have the minimum age required.";
+        DONT_HAVE_CLASSIC = "You do not have a classic account.";
     }
 
     enum Type {

@@ -59,19 +59,19 @@ public final class CashWithdrawal implements Command, Transactionable {
                 } else {
                     account.setBalance(account.getBalance() - convertedAmountWithCommission);
                 }
+
+                TransactionInput transactionInput = new TransactionInput.Builder(Transaction.Type.CASH_WIDRAWAL,
+                        timestamp, String.format(CASH_WITHDRAWAL, amount))
+                        .amount(amount)
+                        .error(error)
+                        .build();
+                addTransaction(transactionInput, owner, account);
+                error = null;
             }
         }
 
         if (error != null) {
             bank.errorOccured(timestamp, command, error);
-        } else {
-            TransactionInput transactionInput = new TransactionInput.Builder(Transaction.Type.CASH_WIDRAWAL,
-                    timestamp, String.format(CASH_WITHDRAWAL, amount))
-                    .amount(amount)
-                    .error(null)
-                    .build();
-
-            addTransaction(transactionInput, owner, account);
         }
     }
 

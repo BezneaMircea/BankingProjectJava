@@ -112,6 +112,7 @@ public final class Bank {
             case UPGRADE_PLAN -> factory = new UpgradePlanTransactionFactory(input);
             case WITHDRAW_SAVINGS -> factory = new WithdrawSavingsTransactionFactory(input);
             case CASH_WIDRAWAL -> factory = new CashWithdrawalTransactionFactory(input);
+            case ADD_INTEREST -> factory = new AddInterestTransactionFactory(input);
             default -> throw new IllegalArgumentException("Invalid transaction type");
         }
 
