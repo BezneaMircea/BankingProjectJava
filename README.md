@@ -43,7 +43,12 @@ Command, Factory and Builder design patterns.
 >>>  - _**CommandFactory**_ (Interface) implemented by:
 >>>    - _**SpecificFactories**_ (e.g. AddAccountFactory)
 >>#### 4. _*commerciants*_ containing:
->>> - _**Commerciant**_
+>>> - _**Commerciant**_ abstract class
+>>>  - _**Specific Commerciants**_ (e.g. TechCommerciant)
+>>> - _**commerciant_factory**_ package
+>>>  - factory package for commerciants
+>>> - _**commerciant_strategies**_
+>>>  - _**specific cashback strategies**_ (e.g. NrOfTransactions)
 >>#### 5. _*transactions*_ containing:
 >>> - _**Transaction**_ (abstract class) extended by: 
 >>>  - _**Specific transactions**_ (e.g. AddAccountTransaction, CheckCardStatusTransaction etc.)
@@ -56,6 +61,9 @@ Command, Factory and Builder design patterns.
 >>> - _**users_factory**_ containing:
 >>>  - _**UserFactory**_ (Interface) implemented by:
 >>>    - _**SpecificFactories**_ (e.g. BasicUserFactory)  
+>>> - _**users_stategy**__ containing:
+>>>  - specific stategies for users (e.g. Gold)
+>>>  - a factory for creating a strategy.
 > - #### And the following **two** classes:
 >> 1. _**Bank**_ - represents the bank with operations like:
 >> -  createCard(cardInput card) -- creates a card  
@@ -73,6 +81,7 @@ Command, Factory and Builder design patterns.
 >  - generateIban()
 >  - generateCardNr()
 >  - MAPPER (an object mapper)
+>  - MAIN_CURRENCY (the main currency)
 > - _**CustomFloydWarshallPaths**_ that implements the Floyd Warshall algorithm.  
 > The length of the shortest path will be the product of the edges, not the sum
 >  - getRate(final V source, final V dest) used to find the distance  
@@ -93,6 +102,10 @@ Bank is the receiver and BankSetup is the invoker). Some command also need to
 generate some transactions. Those commands will also implement the Transactionable  
 interface that contains the "addTransaction" method.
 
+Users will have their own plan types represented as Strategies (Strategy Pattern)  
+Commerciants will have their own cashback plans represented as Strategies oance again  
+
+
 We will have commands for every command that we want to perform:  
 - AddAccount
 - DeleteAccount
@@ -109,11 +122,22 @@ FactoryPattern. If extra functionalities (e.g. other accounts, cards, commands e
 need to be added simply create a specificFactory of the wanted object and the  
 object class. This approach makes the code more readable and most importantly  
 it separates the creation of an object to the object itself  
-(factories are created using (CommandInput, TransactionInput etc.)).
+(factories are created using (CommandInput, TransactionInput etc.)).  
+For very simple objects (like Strategies that have no attributes)  
+it is bettern to have only one factory file for not overloading the  
+code with too unuseful files
+
 
 _**Cards, Accounts, Transactions**_ are created in _**Bank**_   
 _**Commands and Users**_ are created in _**BankSetup**_
 
+
+## <span style="color: darkgreen;">Used Patterns:</span>
+- Factory
+- Builder
+- Visitor
+- Strategy
+- Command
 
 ## <span style="color: darkgreen;">Project Feedback:</span>
 
