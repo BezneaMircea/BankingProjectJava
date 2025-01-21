@@ -4,7 +4,7 @@ import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
 import org.poo.bank.transactions.WithdrawSavingsTransaction;
 
-public class WithdrawSavingsTransactionFactory implements TransactionFactory {
+public final class WithdrawSavingsTransactionFactory implements TransactionFactory {
     private final Transaction.Type transactionType;
     private final int timestamp;
     private final String description;
@@ -13,7 +13,7 @@ public class WithdrawSavingsTransactionFactory implements TransactionFactory {
     private final String savingsAccountIban;
     private final double amount;
 
-    public WithdrawSavingsTransactionFactory(TransactionInput input) {
+    public WithdrawSavingsTransactionFactory(final TransactionInput input) {
         transactionType = input.getTransactionType();
         timestamp = input.getTimestamp();
         description = input.getDescription();

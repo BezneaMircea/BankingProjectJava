@@ -4,14 +4,19 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
+import org.poo.bank.users.User;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @Setter
-public class BusinessAccount extends Account {
+public final class BusinessAccount extends Account {
     public static final String NOT_AUTHORIZED;
     public static final double INITIAL_DEPOSIT_LIMIT = 500.0;
     public static final double INITIAL_SPENDING_LIMIT = 500.0;
-    private Double spendingThresholdAmount;
+
+    private final Map<String, User> associates;
 
     static {
         NOT_AUTHORIZED = "You are not authorized to make this transaction.";
@@ -25,7 +30,12 @@ public class BusinessAccount extends Account {
         super(ownerEmail, currency, accountType);
         this.depositLimit = depositLimit;
         this.spendingLimit = spendingLimit;
-        spendingThresholdAmount = 0.0;
+        associates = new HashMap<>();
+    }
+
+    @Override
+    public User getAssociate(final String email) {
+        return associates.get(email);
     }
 
     @Override
@@ -45,7 +55,7 @@ public class BusinessAccount extends Account {
     }
 
     @Override
-    public ObjectNode spendingsReport(int startTimestamp, int endTimestamp) {
+    public ObjectNode spendingsReport(final int startTimestamp, final int endTimestamp) {
         return null;
     }
 }

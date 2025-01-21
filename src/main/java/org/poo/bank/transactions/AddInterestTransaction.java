@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
-public class AddInterestTransaction extends Transaction {
+public final class AddInterestTransaction extends Transaction {
     public static final String INTEREST_INCOME = "Interest rate income";
 
 
@@ -20,7 +20,7 @@ public class AddInterestTransaction extends Transaction {
 
 
     @Override
-    public void addTransactionToAccount(Account account) {
+    public void addTransactionToAccount(final Account account) {
         account.addTransaction(this);
     }
 

@@ -5,7 +5,7 @@ import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
 public final class WithdrawSavingsTransaction extends Transaction {
-    public static String SAVINGS_WITHDRAWAL = "Savings withdrawal";
+    public static final String SAVINGS_WITHDRAWAL = "Savings withdrawal";
 
     private final String error;
     private final String classicAccountIban;
@@ -25,7 +25,7 @@ public final class WithdrawSavingsTransaction extends Transaction {
 
 
     @Override
-    public void addTransactionToAccount(Account account) {
+    public void addTransactionToAccount(final Account account) {
         account.addTransaction(this);
     }
 

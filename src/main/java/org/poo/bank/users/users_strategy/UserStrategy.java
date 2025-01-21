@@ -44,7 +44,26 @@ public interface UserStrategy extends StrategyVisitor, VisitableStrategy {
         }
     }
 
+    /**
+     * Method used to calculate the cashBack for the payment with
+     * the amount sum
+     * @param sum the sum
+     * @param account the account
+     * @return the cashback value
+     */
     double calculateCashBack(double sum, Account account);
-    double calculateSumWithComision(double sum, double conversionRate);
+
+    /**
+     * Method used to calculate the sum with the added commission
+     * @param sum the initial sum in the wanted currency
+     * @param conversionRate the conversion rate to the MAIN_CURRENCY
+     * @return the sum with the comision
+     */
+    double calculateSumWithCommission(double sum, double conversionRate);
+
+    /**
+     * Method used to get the strategy type
+     * @return the strategy type
+     */
     Type getStrategy();
 }

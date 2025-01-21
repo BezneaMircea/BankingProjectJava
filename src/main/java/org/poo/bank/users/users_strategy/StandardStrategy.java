@@ -13,33 +13,37 @@ public final class StandardStrategy implements UserStrategy {
 
 
     @Override
-    public double calculateCashBack(double sum, Account account) {
+    public double calculateCashBack(final double sum, final Account account) {
         Double amountSpent = account.getSpendingThresholdAmount();
 
-        if (amountSpent == null)
+        if (amountSpent == null) {
             throw new IllegalArgumentException("You can t have cashBack on this account");
+        }
 
         double commision = 0;
 
-        if (amountSpent + sum >= SpendingThresholdStrategy.FIRST_THRESHOLD)
+        if (amountSpent + sum >= SpendingThresholdStrategy.FIRST_THRESHOLD) {
             commision = FIRST_THRESHOLD_COMMISION;
+        }
 
-        if (amountSpent + sum>= SpendingThresholdStrategy.SECOND_THRESHOLD)
+        if (amountSpent + sum >= SpendingThresholdStrategy.SECOND_THRESHOLD) {
             commision = SECOND_THRESHOLD_COMMISION;
+        }
 
-        if (amountSpent + sum >= SpendingThresholdStrategy.THIRD_THRESHOLD)
+        if (amountSpent + sum >= SpendingThresholdStrategy.THIRD_THRESHOLD) {
             commision = THIRD_THRESHOLD_COMMISION;
+        }
 
         return commision * sum;
     }
 
     @Override
-    public double calculateSumWithComision(double sum, double conversionRate) {
+    public double calculateSumWithCommission(final double sum, final double conversionRate) {
         return sum + STANDARD_COMMISSION * sum;
     }
 
     @Override
-    public String accept(StrategyVisitor visitor) {
+    public String accept(final StrategyVisitor visitor) {
         return visitor.visit(this);
     }
 
@@ -49,22 +53,22 @@ public final class StandardStrategy implements UserStrategy {
     }
 
     @Override
-    public String visit(GoldStrategy strategy) {
+    public String visit(final GoldStrategy strategy) {
         return User.CANT_DOWNGRADE;
     }
 
     @Override
-    public String visit(SilverStrategy strategy) {
+    public String visit(final SilverStrategy strategy) {
         return User.CANT_DOWNGRADE;
     }
 
     @Override
-    public String visit(StandardStrategy strategy) {
+    public String visit(final StandardStrategy strategy) {
         return String.format(User.HAS_PLAN, strategy.getStrategy().getString());
     }
 
     @Override
-    public String visit(StudentStrategy strategy) {
+    public String visit(final StudentStrategy strategy) {
         return User.CANT_DOWNGRADE;
     }
 }

@@ -34,8 +34,9 @@ public final class StandardCard extends Card {
 
         Account associatedAccount = getAccount();
         User owner = bank.getUser(associatedAccount.getOwnerEmail());
-        double conversionRate = bank.getRate(associatedAccount.getCurrency(), Commerciant.MAIN_CURRENCY);
-        double totalAmount = owner.getStrategy().calculateSumWithComision(amount, conversionRate);
+        double conversionRate = bank.getRate(associatedAccount.getCurrency(),
+                                             Commerciant.MAIN_CURRENCY);
+        double totalAmount = owner.getStrategy().calculateSumWithCommission(amount, conversionRate);
 
         if (associatedAccount.getBalance() < totalAmount && error == null) {
             error = Account.INSUFFICIENT_FUNDS;
@@ -52,7 +53,8 @@ public final class StandardCard extends Card {
 
         if (error == null) {
             associatedAccount.setBalance(associatedAccount.getBalance() - totalAmount);
-            commerciant.acceptCashback(owner.getStrategy(), associatedAccount, amount, conversionRate);
+            commerciant.acceptCashback(owner.getStrategy(), associatedAccount, amount,
+                                       conversionRate);
 
             /// Increment nr of transactions for automatic upgrade if needed.
             owner.tryIncrementAutomaticUpgradePayments(conversionRate * amount);

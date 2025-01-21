@@ -35,8 +35,9 @@ public final class OneTimeCard extends Card {
 
         Account associatedAccount = getAccount();
         User owner = bank.getUser(associatedAccount.getOwnerEmail());
-        double conversionRate = bank.getRate(associatedAccount.getCurrency(), Commerciant.MAIN_CURRENCY);
-        double totalAmount = owner.getStrategy().calculateSumWithComision(amount, conversionRate);
+        double conversionRate = bank.getRate(associatedAccount.getCurrency(),
+                                             Commerciant.MAIN_CURRENCY);
+        double totalAmount = owner.getStrategy().calculateSumWithCommission(amount, conversionRate);
 
         if (associatedAccount.getBalance() < totalAmount && error == null) {
             error = Account.INSUFFICIENT_FUNDS;

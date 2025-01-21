@@ -4,7 +4,7 @@ import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
 import org.poo.bank.transactions.UpgradePlanTransaction;
 
-public class UpgradePlanTransactionFactory implements TransactionFactory {
+public final class UpgradePlanTransactionFactory implements TransactionFactory {
     private final Transaction.Type transactionType;
     private final int timestamp;
     private final String description;
@@ -12,7 +12,7 @@ public class UpgradePlanTransactionFactory implements TransactionFactory {
     private final String newPlanType;
     private final String error;
 
-    public UpgradePlanTransactionFactory(TransactionInput input) {
+    public UpgradePlanTransactionFactory(final TransactionInput input) {
         transactionType = input.getTransactionType();
         timestamp = input.getTimestamp();
         description = input.getDescription();

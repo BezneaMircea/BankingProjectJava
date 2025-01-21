@@ -4,7 +4,7 @@ import org.poo.bank.transactions.AddInterestTransaction;
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
 
-public class AddInterestTransactionFactory implements TransactionFactory {
+public final class AddInterestTransactionFactory implements TransactionFactory {
     private final Transaction.Type type;
     private final double amount;
     private final String currency;

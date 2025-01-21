@@ -6,12 +6,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.poo.bank.Bank;
-import org.poo.bank.commerciants.AccountBonuses;
 import org.poo.bank.commerciants.Commerciant;
 import org.poo.bank.transactions.PayOnlineTransaction;
 import org.poo.bank.transactions.SendMoneyTransaction;
 import org.poo.bank.transactions.Transaction;
-import org.poo.bank.transactions.TransactionInput;
 import org.poo.bank.users.User;
 import org.poo.utils.Utils;
 
@@ -28,7 +26,6 @@ import java.util.List;
 public final class StandardAccount extends Account {
     private final List<Transaction> onlineTransactions;
     private final List<Commerciant> commerciants;
-    private Double spendingThresholdAmount;
 
     /**
      * Constructor used to the StandardAccount class
@@ -41,7 +38,6 @@ public final class StandardAccount extends Account {
         super(ownerEmail, currency, accountType);
         onlineTransactions = new ArrayList<>();
         commerciants = new ArrayList<>();
-        spendingThresholdAmount = 0.0;
     }
 
 
@@ -98,9 +94,11 @@ public final class StandardAccount extends Account {
         onlineTransactions.add(transaction);
 
         Commerciant transactionCommerciant = transaction.getCommerciant();
-        addTransactionHelper(transactionCommerciant, transaction.getAmount(), transaction.getTimestamp());
+        addTransactionHelper(transactionCommerciant, transaction.getAmount(),
+                             transaction.getTimestamp());
     }
 
+    @Override
     public void addTransaction(final SendMoneyTransaction transaction) {
         if (transaction == null) {
             return;
@@ -113,7 +111,8 @@ public final class StandardAccount extends Account {
 
         onlineTransactions.add(transaction);
         Commerciant transactionCommerciant = transaction.getCommerciant();
-        addTransactionHelper(transactionCommerciant, transaction.getAmount(), transaction.getTimestamp());
+        addTransactionHelper(transactionCommerciant, transaction.getAmount(),
+                             transaction.getTimestamp());
     }
 
     private void
@@ -137,11 +136,13 @@ public final class StandardAccount extends Account {
         commerciants.add(transactionCommerciant);
     }
 
-    /// amount is without commission
-    public void transferToCommerciant(Bank bank, double amount, int timestamp, Commerciant commerciant) {
+    @Override
+    public void transferToCommerciant(final Bank bank, final double amount,
+                                      final int timestamp, final Commerciant commerciant) {
         User accountOwner = bank.getUser(getOwnerEmail());
         double conversionRate = bank.getRate(getCurrency(), Commerciant.MAIN_CURRENCY);
-        double totalSumWithCommission = accountOwner.getStrategy().calculateSumWithComision(amount, conversionRate);
+        double totalSumWithCommission = accountOwner.getStrategy().calculateSumWithCommission(amount,
+                                                                                conversionRate);
 
         setBalance(getBalance() - totalSumWithCommission);
         commerciant.acceptCashback(accountOwner.getStrategy(), this, amount, conversionRate);

@@ -5,7 +5,7 @@ import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
 
-public class UpgradePlanTransaction extends Transaction {
+public final class UpgradePlanTransaction extends Transaction {
     public static final String UPGRADE_PLAN = "Upgrade plan";
 
     private final String account;
@@ -22,8 +22,8 @@ public class UpgradePlanTransaction extends Transaction {
     }
 
     @Override
-    public void addTransactionToAccount(final Account account) {
-        account.addTransaction(this);
+    public void addTransactionToAccount(final Account associatedAccount) {
+        associatedAccount.addTransaction(this);
     }
 
     @Override

@@ -5,7 +5,7 @@ import org.poo.bank.accounts.Account;
 import org.poo.bank.accounts.BusinessAccount;
 import org.poo.bank.users.User;
 
-public class ChangeSpendingLimit implements Command {
+public final class ChangeSpendingLimit implements Command {
     private final Bank bank;
     private final String command;
     private final String email;

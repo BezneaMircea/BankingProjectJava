@@ -55,7 +55,9 @@ public final class AddInterest implements Command, Transactionable {
 
 
     @Override
-    public void addTransaction(TransactionInput input, User user, Account account) {
-        bank.generateTransaction(input).addTransaction(user, account);
+    public void addTransaction(final TransactionInput input,
+                               final User user,
+                               final Account associatedAccount) {
+        bank.generateTransaction(input).addTransaction(user, associatedAccount);
     }
 }

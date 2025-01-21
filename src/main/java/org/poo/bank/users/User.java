@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Data;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
-import org.poo.bank.commands.Command;
 import org.poo.bank.commands.SplitPayment;
 import org.poo.bank.commands.UpgradePlan;
 import org.poo.bank.commands.command_factory.SplitPaymentFactory;
@@ -29,6 +28,7 @@ public abstract class User {
     public static final String CANT_DOWNGRADE;
     public static final String NOT_OLD_ENOUGH;
     public static final String DONT_HAVE_CLASSIC;
+    public static final String ALREADY_ASOCIATE;
 
     public static final int MINIMUM_AGE = 21;
 
@@ -39,6 +39,7 @@ public abstract class User {
         CANT_DOWNGRADE = "You cannot downgrade your plan.";
         NOT_OLD_ENOUGH = "You don't have the minimum age required.";
         DONT_HAVE_CLASSIC = "You do not have a classic account.";
+        ALREADY_ASOCIATE = "The user is already an associate of the account.";
     }
 
     enum Type {
@@ -163,6 +164,10 @@ public abstract class User {
         return aliases.get(alias);
     }
 
+    /**
+     * Method used to set the user Strategy
+     * @param strategyType the strategy
+     */
     public void setStrategy(final UserStrategy.Type strategyType) {
         switch (strategyType) {
             case SILVER -> strategy = new SilverStrategy();
@@ -174,6 +179,10 @@ public abstract class User {
         }
     }
 
+    /**
+     * Method used to check if a user is old enough to withdrawSavings
+     * @return true if the user is old enough, false otherwise
+     */
     public boolean isOldEnough() {
         LocalDate birthDay = LocalDate.parse(birthDate);
         LocalDate currentTime = LocalDate.now();
@@ -188,7 +197,7 @@ public abstract class User {
      * @param currency the wanted currency for the searched account
      * @return the account or null if no account was present
      */
-    public Account getClassicAccWithCurrency(String currency) {
+    public Account getClassicAccWithCurrency(final String currency) {
         for (Account account : accounts) {
             if (account.getAccountType() == Account.Type.CLASSIC
                     && account.getCurrency().equals(currency)) {
@@ -205,17 +214,26 @@ public abstract class User {
      * the user has the silver plan
      * @param sum sum in "RON" (currently)
      */
-    public void tryIncrementAutomaticUpgradePayments(double sum) {
-        if (strategy.getStrategy() != UserStrategy.Type.SILVER)
+    public void tryIncrementAutomaticUpgradePayments(final double sum) {
+        if (strategy.getStrategy() != UserStrategy.Type.SILVER) {
             return;
+        }
 
-        if (sum < UpgradePlan.MIN_PAYMENT_FOR_UPGRADE)
+        if (sum < UpgradePlan.MIN_PAYMENT_FOR_UPGRADE) {
             return;
+        }
 
         automaticUpgradeCounter++;
     }
 
-    public void tryAutomaticUpgrade(Bank bank, Account account, final int timestamp) {
+    /**
+     * Method used to try to upgrade this user from silver to gold
+     * @param bank the bank to which the user belongs
+     * @param account the account that is owned by the user that performed
+     *                a payment that generated this automatic upgrade
+     * @param timestamp the timestamp when this happens
+     */
+    public void tryAutomaticUpgrade(final Bank bank, final Account account, final int timestamp) {
         if (strategy.getStrategy() == UserStrategy.Type.SILVER
                 && automaticUpgradeCounter == UpgradePlan.MIN_NR_OF_PAYMENTS_FOR_UPGRADE) {
             strategy = UserStrategyFactory.createStrategy(UserStrategy.Type.GOLD);
@@ -233,7 +251,7 @@ public abstract class User {
      * Get the first split payment
      * @param paymentType the type of the payment that we want
      */
-    public SplitPayment getFirstSplitPayment(String paymentType) {
+    public SplitPayment getFirstSplitPayment(final String paymentType) {
         SplitPaymentFactory.Type type = SplitPaymentFactory.Type.fromString(paymentType);
         SplitPayment splitToReturn = null;
         for (SplitPayment split : allSplitPayments) {

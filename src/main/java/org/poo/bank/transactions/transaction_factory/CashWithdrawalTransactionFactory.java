@@ -4,7 +4,7 @@ import org.poo.bank.transactions.CashWithdrawalTransaction;
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
 
-public class CashWithdrawalTransactionFactory implements TransactionFactory {
+public final class CashWithdrawalTransactionFactory implements TransactionFactory {
     private final Transaction.Type transactionType;
     private final int timestamp;
     private final String description;

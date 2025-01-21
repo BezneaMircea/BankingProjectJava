@@ -4,9 +4,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 
-import java.util.Objects;
 
-public class CashWithdrawalTransaction extends Transaction {
+public final class CashWithdrawalTransaction extends Transaction {
     private final String error;
     private final double amount;
 
@@ -20,7 +19,7 @@ public class CashWithdrawalTransaction extends Transaction {
 
 
     @Override
-    public void addTransactionToAccount(Account account) {
+    public void addTransactionToAccount(final Account account) {
         account.addTransaction(this);
     }
 

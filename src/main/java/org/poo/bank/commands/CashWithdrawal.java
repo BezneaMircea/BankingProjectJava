@@ -51,21 +51,25 @@ public final class CashWithdrawal implements Command, Transactionable {
             } else {
                 account = card.getAccount();
                 double convertedAmount = bank.getRate(CURRENCY, account.getCurrency()) * amount;
-                double convertedAmountWithCommission = owner.getStrategy().calculateSumWithComision(convertedAmount,
-                        bank.getRate(account.getCurrency(), Commerciant.MAIN_CURRENCY));
+                double convertedTotalAmount = owner
+                        .getStrategy()
+                        .calculateSumWithCommission(convertedAmount,
+                                                  bank.getRate(account.getCurrency(),
+                                                               Commerciant.MAIN_CURRENCY));
 
-                if (account.getBalance() < convertedAmountWithCommission) {
+                if (account.getBalance() < convertedTotalAmount) {
                     error = Account.INSUFFICIENT_FUNDS;
                 } else {
-                    account.setBalance(account.getBalance() - convertedAmountWithCommission);
+                    account.setBalance(account.getBalance() - convertedTotalAmount);
                 }
 
-                TransactionInput transactionInput = new TransactionInput.Builder(Transaction.Type.CASH_WIDRAWAL,
-                        timestamp, String.format(CASH_WITHDRAWAL, amount))
+                TransactionInput input = new TransactionInput
+                        .Builder(Transaction.Type.CASH_WIDRAWAL, timestamp,
+                                 String.format(CASH_WITHDRAWAL, amount))
                         .amount(amount)
                         .error(error)
                         .build();
-                addTransaction(transactionInput, owner, account);
+                addTransaction(input, owner, account);
                 error = null;
             }
         }
@@ -76,7 +80,9 @@ public final class CashWithdrawal implements Command, Transactionable {
     }
 
     @Override
-    public void addTransaction(TransactionInput input, User user, Account account) {
+    public void addTransaction(final TransactionInput input,
+                               final User user,
+                               final Account account) {
         bank.generateTransaction(input).addTransaction(user, account);
     }
 }

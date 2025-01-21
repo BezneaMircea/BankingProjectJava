@@ -168,11 +168,17 @@ public final class TransactionInput {
             return this;
         }
 
+        /**
+         * for coding style
+         */
         public Builder setSplitPaymentType(final String setSplitPaymentType) {
             splitPaymentType = setSplitPaymentType;
             return this;
         }
 
+        /**
+         * for coding style
+         */
         public Builder setAmountForUsers(final List<Double> setAmountForUsers) {
             amountForUsers = setAmountForUsers;
             return this;

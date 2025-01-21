@@ -6,7 +6,7 @@ import org.poo.bank.accounts.Account;
 import org.poo.utils.Utils;
 import java.util.List;
 
-public class SplitPaymentCoustomTransaction extends Transaction {
+public final class SplitPaymentCoustomTransaction extends Transaction {
     private final String currency;
     private final List<Double> amounts;
     private final String splitPaymentType;
@@ -27,7 +27,7 @@ public class SplitPaymentCoustomTransaction extends Transaction {
     }
 
     @Override
-    public void addTransactionToAccount(Account account) {
+    public void addTransactionToAccount(final Account account) {
         account.addTransaction(this);
     }
 

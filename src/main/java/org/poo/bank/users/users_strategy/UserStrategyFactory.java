@@ -1,6 +1,14 @@
 package org.poo.bank.users.users_strategy;
 
 public final class UserStrategyFactory {
+
+    /**
+     * for coding style
+     */
+    private UserStrategyFactory() {
+
+    }
+
     /**
      * This method returns a Strategy object of the wanted type strategyType
      * @param strategyType the enum representing the wanted strategy
@@ -15,6 +23,8 @@ public final class UserStrategyFactory {
             case SILVER -> wantedStrategy = new SilverStrategy();
             case STUDENT -> wantedStrategy = new StudentStrategy();
             case STANDARD -> wantedStrategy = new StandardStrategy();
+
+            default -> throw new IllegalArgumentException("Unknown strategy type:" + strategyType);
         }
 
         return wantedStrategy;

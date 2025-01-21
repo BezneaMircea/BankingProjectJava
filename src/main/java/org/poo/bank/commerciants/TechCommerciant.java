@@ -12,7 +12,8 @@ public final class TechCommerciant extends Commerciant {
     }
 
     @Override
-    public void acceptCashback(UserStrategy ownerStrategy, Account account, double amount, double conversionRate) {
+    public void acceptCashback(final UserStrategy ownerStrategy, final Account account,
+                               final double amount, final double conversionRate) {
         getCashBackStrategy().cashBack(ownerStrategy, account, this, amount, conversionRate);
     }
 }

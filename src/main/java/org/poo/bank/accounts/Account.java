@@ -12,6 +12,7 @@ import org.poo.bank.transactions.ChangeIntRateTransaction;
 import org.poo.bank.transactions.PayOnlineTransaction;
 import org.poo.bank.transactions.SendMoneyTransaction;
 import org.poo.bank.transactions.Transaction;
+import org.poo.bank.users.User;
 import org.poo.utils.Utils;
 
 
@@ -72,8 +73,7 @@ public abstract class Account {
                     return type;
                 }
             }
-            ///throw new IllegalArgumentException("Not a valid account type: " + input);
-            return Type.CLASSIC;
+            throw new IllegalArgumentException("Not a valid account type: " + input);
         }
 
     }
@@ -87,6 +87,7 @@ public abstract class Account {
     private final List<Card> cards;
     private final List<Transaction> transactions;
     private final AccountBonuses bonuses;
+    private Double spendingThresholdAmount;
 
 
     /**
@@ -106,6 +107,7 @@ public abstract class Account {
         bonuses = new AccountBonuses();
         balance = 0;
         minBalance = 0;
+        spendingThresholdAmount = 0.0;
     }
 
     /**
@@ -122,7 +124,16 @@ public abstract class Account {
         accountToTransfer.balance += amountToReceive;
     }
 
-    public void transferToCommerciant(Bank bank, double amount, int timestamp, Commerciant commerciant) {
+    /**
+     * This method is used to transfer money to a commerciant.
+     * Amount is without commission before calling this method
+     * @param bank the bank
+     * @param amount the amount without commission
+     * @param timestamp timestamp of the command
+     * @param commerciant the commerciant
+     */
+    public void transferToCommerciant(final Bank bank, final double amount, final int timestamp,
+                                      final Commerciant commerciant) {
     }
 
     /**
@@ -141,6 +152,9 @@ public abstract class Account {
         transactions.add(transaction);
     }
 
+    /**
+     * for coding style
+     */
     public void addTransaction(final SendMoneyTransaction transaction) {
         transactions.add(transaction);
     }
@@ -289,16 +303,43 @@ public abstract class Account {
     }
 
     /**
-     * Not all can spend money to commerciants that have spendingThreshold strategy.
-     * @return the amount spent or null if the account
-     * doesn't support bonuses
+     * Method used to get the spending limit. Only business account has this
+     * @return null if the account doesn't support having a spendingLimit
+     * or the spending limit otherwise
      */
-    public Double getSpendingThresholdAmount() { return null;}
-    public void setSpendingThresholdAmount(Double newAmount ) {}
+    public Double getSpendingLimit() {
+        return null;
+    }
 
-    public Double getSpendingLimit() {return null;}
-    public void setSpendingLimit(final double newLimit) {}
+    /**
+     * Method used to set the spending limit. Only business account has this
+     * Nothing happens if account is not of type business
+     */
+    public void setSpendingLimit(final double newLimit) {
+    }
 
-    public Double getDepositLimit() {return null;}
-    public void setDepositLimit(final double newLimit) {}
+    /**
+     * Method used to get the deposit limit. Only business account has this
+     * @return null if the account doesn't support having a spendingLimit
+     * or the spending limit otherwise
+     */
+    public Double getDepositLimit() {
+        return null;
+    }
+
+    /**
+     * Method used to set the spending limit. Only business account has this
+     * Nothing happens if account is not of type business
+     */
+    public void setDepositLimit(final double newLimit) {
+    }
+
+    /**
+     * Method used to get an associate of a business account by email
+     * @param email the email of the associate
+     * @return null if account is not of type business
+     */
+    public User getAssociate(final String email) {
+        return null;
+    }
 }

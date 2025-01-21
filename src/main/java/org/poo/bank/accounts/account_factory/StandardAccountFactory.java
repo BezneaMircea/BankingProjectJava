@@ -10,7 +10,7 @@ import org.poo.bank.accounts.StandardAccount;
  * Class used to represent the economyAccountFactory
  */
 @Getter
-public class StandardAccountFactory implements AccountFactory {
+public final class StandardAccountFactory implements AccountFactory {
     private final String ownerEmail;
     private final String currency;
     private final Account.Type accountType;

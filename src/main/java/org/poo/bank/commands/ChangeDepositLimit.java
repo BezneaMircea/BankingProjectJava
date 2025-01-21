@@ -2,11 +2,10 @@ package org.poo.bank.commands;
 
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
-import org.poo.bank.accounts.AccountInput;
 import org.poo.bank.accounts.BusinessAccount;
 import org.poo.bank.users.User;
 
-public class ChangeDepositLimit implements Command {
+public final class ChangeDepositLimit implements Command {
     private final Bank bank;
     private final String command;
     private final String email;

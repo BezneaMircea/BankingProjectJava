@@ -5,7 +5,7 @@ import org.poo.bank.accounts.Account;
 import org.poo.bank.commerciants.*;
 import org.poo.bank.users.users_strategy.UserStrategy;
 
-public class NrTransactionsStrategy implements CashBackStrategy{
+public final class NrTransactionsStrategy implements CashBackStrategy {
     public static final double FOOD_CASHBACK = 0.02;
     public static final int FOOD_THRESHOLD = 2;
 
@@ -64,7 +64,7 @@ public class NrTransactionsStrategy implements CashBackStrategy{
         tryGiveBonus(account, commerciant.getNrAccountTransactions(account));
     }
 
-    private void tryGiveBonus(Account account, int nrOfTransactions) {
+    private void tryGiveBonus(final Account account, final int nrOfTransactions) {
         AccountBonuses bonuses = account.getBonuses();
 
         if (nrOfTransactions == FOOD_THRESHOLD

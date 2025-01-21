@@ -4,7 +4,7 @@ import org.poo.bank.accounts.Account;
 import org.poo.bank.accounts.AccountInput;
 import org.poo.bank.accounts.BusinessAccount;
 
-public class BusinessAccountFactory implements AccountFactory {
+public final class BusinessAccountFactory implements AccountFactory {
     private final String ownerEmail;
     private final String currency;
     private final Account.Type accountType;

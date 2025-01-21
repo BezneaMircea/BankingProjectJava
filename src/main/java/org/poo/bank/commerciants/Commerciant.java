@@ -9,7 +9,6 @@ import org.poo.bank.commerciants.commerciant_strategies.CashBackStrategy;
 import org.poo.bank.users.users_strategy.UserStrategy;
 import org.poo.utils.Utils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +64,7 @@ public abstract class Commerciant implements Comparable<Commerciant> {
             throw new IllegalArgumentException("Not a valid commerciant type: " + input);
         }
     }
+
     /**
      * Class used to represent a payment
      */
@@ -104,13 +104,31 @@ public abstract class Commerciant implements Comparable<Commerciant> {
         receivedPaymentsFromAccount = new HashMap<>();
     }
 
-    public abstract void acceptCashback(UserStrategy ownerStrategy,
-                                        Account account, double amount, double conversionRate);
+    /**
+     * Method used to acceptCashback (Visitor pattern)
+     * @param ownerStrategy the owner strategy
+     * @param associatedAccount the account
+     * @param amount the amount
+     * @param conversionRate the conversion rate to MAIN_CURRENCY
+     */
+    public abstract void acceptCashback(UserStrategy ownerStrategy, Account associatedAccount,
+                                        double amount, double conversionRate);
 
-    public void incrementAccountTransactions(Account account) {
-        nrTransactionsByAccount.merge(account, 1, Integer::sum);
+    /**
+     * Method used to increment the number of transactions by account
+     * towards this commerciant
+     * @param associatedAccount the account
+     */
+    public void incrementAccountTransactions(Account associatedAccount) {
+        nrTransactionsByAccount.merge(associatedAccount, 1, Integer::sum);
     }
 
+    /**
+     * Method to get the number of transactions that an account made
+     * towards this commerciant
+     * @param account the account
+     * @return the integer representing the number of transactions
+     */
     public int getNrAccountTransactions(Account account) {
         Integer nrTransactions = nrTransactionsByAccount.get(account);
         if (nrTransactions == null)
@@ -128,13 +146,15 @@ public abstract class Commerciant implements Comparable<Commerciant> {
      * Method used to write the payments by account towards this commerciant in a
      * time interval
      *
-     * @param account the account that made the payments
+     * @param associatedAccount the account that made the payments
      * @param startingTimestamp start of the time interval
      * @param endingTimestamp   end o the time interval
      * @return null if no sum was paid to this commerciant, an appropriate ObjectNode otherwise
      */
-    public ObjectNode commerciantToJson(Account account, final int startingTimestamp, final int endingTimestamp) {
-        List<Payment> payments = receivedPaymentsFromAccount.get(account);
+    public ObjectNode commerciantToJson(final Account associatedAccount,
+                                        final int startingTimestamp,
+                                        final int endingTimestamp) {
+        List<Payment> payments = receivedPaymentsFromAccount.get(associatedAccount);
         double totalSumPayed = sumPayments(payments, startingTimestamp, endingTimestamp);
 
         if (totalSumPayed == 0) {
@@ -148,7 +168,9 @@ public abstract class Commerciant implements Comparable<Commerciant> {
         return nodeToReturn;
     }
 
-    private double sumPayments(final List<Payment> payments, final int startingTimestamp, final int endingTimestamp) {
+    private double sumPayments(final List<Payment> payments,
+                               final int startingTimestamp,
+                               final int endingTimestamp) {
         double sum = 0;
         for (Payment payment : payments) {
             if (payment.timestamp >= startingTimestamp && payment.timestamp <= endingTimestamp) {

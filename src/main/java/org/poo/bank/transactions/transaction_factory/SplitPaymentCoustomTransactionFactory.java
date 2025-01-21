@@ -6,7 +6,7 @@ import org.poo.bank.transactions.TransactionInput;
 
 import java.util.List;
 
-public class SplitPaymentCoustomTransactionFactory implements TransactionFactory {
+public final class SplitPaymentCoustomTransactionFactory implements TransactionFactory {
     private final Transaction.Type transactionType;
     private final int timestamp;
     private final String description;
@@ -17,7 +17,7 @@ public class SplitPaymentCoustomTransactionFactory implements TransactionFactory
     private final String error;
 
 
-    public SplitPaymentCoustomTransactionFactory(TransactionInput input) {
+    public SplitPaymentCoustomTransactionFactory(final TransactionInput input) {
         transactionType = input.getTransactionType();
         timestamp = input.getTimestamp();
         description = input.getDescription();

@@ -99,7 +99,7 @@ public final class SendMoney implements Command, Transactionable {
         double convertRate = bank.getRate(senderAccount.getCurrency(),
                                           receiverAccount.getCurrency());
         double receivedSum = amount * convertRate;
-        double totalSumToPay = senderUser.getStrategy().calculateSumWithComision(amount, conversionRate);
+        double totalSumToPay = senderUser.getStrategy().calculateSumWithCommission(amount, conversionRate);
         senderAccount.transfer(receiverAccount, totalSumToPay, receivedSum);
 
         TransactionInput transactionSent = createSendInput(senderAccount, null);
@@ -152,7 +152,7 @@ public final class SendMoney implements Command, Transactionable {
      * @return true if an error occured, false otherwise
      */
     private boolean ErrorCheck(Account senderAccount, User senderUser, double conversionRate) {
-        double totalAmount = senderUser.getStrategy().calculateSumWithComision(amount, conversionRate);
+        double totalAmount = senderUser.getStrategy().calculateSumWithCommission(amount, conversionRate);
 
         if (senderAccount.getBalance() < totalAmount) {
             TransactionInput input = new TransactionInput.Builder(Transaction.Type.SEND_MONEY,

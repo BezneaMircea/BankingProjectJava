@@ -37,18 +37,24 @@ public final class AccountInput {
         }
 
         /**
-         * Method used to set interestRate withing the builder
+         * Method used to set interestRate within the builder
          */
         public Builder interestRate(final double rate) {
             interestRate = rate;
             return this;
         }
 
+        /**
+         * Method used to set spendingLimit within the builder
+         */
         public Builder spendingLimit(final double limit) {
             spendingLimit = limit;
             return this;
         }
 
+        /**
+         * Method used to set depositLimit within the builder
+         */
         public Builder depositLimit(final double limit) {
             depositLimit = limit;
             return this;

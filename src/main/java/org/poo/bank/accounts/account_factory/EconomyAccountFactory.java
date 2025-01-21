@@ -7,7 +7,7 @@ import org.poo.bank.accounts.EconomyAccount;
 /**
  * Class used to represent the economyAccountFactory
  */
-public class EconomyAccountFactory implements AccountFactory {
+public final class EconomyAccountFactory implements AccountFactory {
     private final String ownerEmail;
     private final String currency;
     private final Account.Type accountType;
