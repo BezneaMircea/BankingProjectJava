@@ -4,7 +4,7 @@ import org.poo.bank.accounts.Account;
 import org.poo.bank.commerciants.commerciant_strategies.CashBackStrategy;
 import org.poo.bank.users.users_strategy.UserStrategy;
 
-public class ClothesCommerciant extends Commerciant{
+public final class ClothesCommerciant extends Commerciant {
 
     public ClothesCommerciant(final String name, final int id, final String account,
                               final Type type, final CashBackStrategy cashBackStrategy) {
@@ -12,8 +12,8 @@ public class ClothesCommerciant extends Commerciant{
     }
 
     @Override
-    public void acceptCashback(UserStrategy ownerStrategy, Account account,
-                               double amount, double conversionRate) {
+    public void acceptCashback(final UserStrategy ownerStrategy, final Account account,
+                               final double amount, final double conversionRate) {
         getCashBackStrategy().cashBack(ownerStrategy, account, this, amount, conversionRate);
     }
 }

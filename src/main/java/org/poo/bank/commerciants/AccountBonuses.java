@@ -26,19 +26,38 @@ public final class AccountBonuses {
         }
     }
 
-    public void giveBonus(BonusType bonusType) {
+    /**
+     * Method used to give a bonus to
+     * @param bonusType the bonus type
+     */
+    public void giveBonus(final BonusType bonusType) {
         bonuses.put(bonusType, BonusState.HAVE);
     }
 
-    public boolean hasBonus(BonusType bonusType) {
+    /**
+     * Method used to check if bonus is present
+     * @param bonusType the bonusType that is checked
+     * @return true if present, false otherwise
+     */
+    public boolean hasBonus(final BonusType bonusType) {
         return bonuses.get(bonusType) == BonusState.HAVE;
     }
 
-    public boolean usedBonus(BonusType bonusType) {
+    /**
+     * Method used to check if a bonus was used
+     * @param bonusType the bonusType that is checked
+     * @return ture if used, false otherwise
+     */
+    public boolean usedBonus(final BonusType bonusType) {
         return bonuses.get(bonusType) == BonusState.USED;
     }
 
-    public void setBonusUsed(BonusType bonusType) {
+    /**
+     * Method used to set a bonus as used
+     * @param bonusType the bonusType corresponding to the bonus
+     *                  that is to be set as used
+     */
+    public void setBonusUsed(final BonusType bonusType) {
         bonuses.put(bonusType, BonusState.USED);
     }
 

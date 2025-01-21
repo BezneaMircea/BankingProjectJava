@@ -50,7 +50,6 @@ public final class SendMoney implements Command, Transactionable {
      */
     @Override
     public void execute() {
-        /// Get the sender account
         Account senderAccount = bank.getAccount(account);
         if (senderAccount == null) {
             return;
@@ -62,9 +61,11 @@ public final class SendMoney implements Command, Transactionable {
             return;
         }
 
-        double conversionRate = bank.getRate(senderAccount.getCurrency(), Commerciant.MAIN_CURRENCY);
-        if (ErrorCheck(senderAccount, senderUser, conversionRate))
+        double conversionRate = bank.getRate(senderAccount.getCurrency(),
+                                             Commerciant.MAIN_CURRENCY);
+        if (errorCheck(senderAccount, senderUser, conversionRate)) {
             return;
+        }
 
         Account receiverAccount = bank.getAccount(receiver);
         if (senderUser.hasAlias(receiver)) {
@@ -84,8 +85,6 @@ public final class SendMoney implements Command, Transactionable {
         }
 
 
-
-        /// Get the commerciant if the payment is towards a commerciant
         if (commerciant != null) {
             senderAccount.transferToCommerciant(bank, amount, timestamp, commerciant);
             TransactionInput transactionSent = createSendInput(senderAccount, commerciant);
@@ -93,13 +92,12 @@ public final class SendMoney implements Command, Transactionable {
             return;
         }
 
-        /// If the payment is not towards a commerciant. Get the receiver account
-
 
         double convertRate = bank.getRate(senderAccount.getCurrency(),
                                           receiverAccount.getCurrency());
         double receivedSum = amount * convertRate;
-        double totalSumToPay = senderUser.getStrategy().calculateSumWithCommission(amount, conversionRate);
+        double totalSumToPay = senderUser.getStrategy()
+                .calculateSumWithCommission(amount, conversionRate);
         senderAccount.transfer(receiverAccount, totalSumToPay, receivedSum);
 
         TransactionInput transactionSent = createSendInput(senderAccount, null);
@@ -151,8 +149,11 @@ public final class SendMoney implements Command, Transactionable {
      * @param senderUser the sending user
      * @return true if an error occured, false otherwise
      */
-    private boolean ErrorCheck(Account senderAccount, User senderUser, double conversionRate) {
-        double totalAmount = senderUser.getStrategy().calculateSumWithCommission(amount, conversionRate);
+    private boolean errorCheck(final Account senderAccount,
+                               final User senderUser,
+                               final double conversionRate) {
+        double totalAmount = senderUser.getStrategy()
+                .calculateSumWithCommission(amount, conversionRate);
 
         if (senderAccount.getBalance() < totalAmount) {
             TransactionInput input = new TransactionInput.Builder(Transaction.Type.SEND_MONEY,

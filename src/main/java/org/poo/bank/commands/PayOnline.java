@@ -51,8 +51,9 @@ public final class PayOnline implements Command, Transactionable {
 
     @Override
     public void execute() {
-        if (amount == 0)
+        if (amount == 0) {
             return;
+        }
 
         Card usedCard = bank.getCard(cardNumber);
         if (usedCard == null) {

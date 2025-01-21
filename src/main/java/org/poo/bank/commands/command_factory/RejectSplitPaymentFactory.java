@@ -5,7 +5,7 @@ import org.poo.bank.commands.Command;
 import org.poo.bank.commands.RejectSplitPayment;
 import org.poo.fileio.CommandInput;
 
-public class RejectSplitPaymentFactory implements CommandFactory {
+public final class RejectSplitPaymentFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final String email;

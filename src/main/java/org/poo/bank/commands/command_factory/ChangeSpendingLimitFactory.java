@@ -5,7 +5,7 @@ import org.poo.bank.commands.ChangeSpendingLimit;
 import org.poo.bank.commands.Command;
 import org.poo.fileio.CommandInput;
 
-public class ChangeSpendingLimitFactory implements CommandFactory {
+public final class ChangeSpendingLimitFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final String email;
@@ -13,7 +13,7 @@ public class ChangeSpendingLimitFactory implements CommandFactory {
     private final double amount;
     private final int timestamp;
 
-    public ChangeSpendingLimitFactory(Bank bank, CommandInput input) {
+    public ChangeSpendingLimitFactory(final Bank bank, final CommandInput input) {
         this.bank = bank;
         command = input.getCommand();
         email = input.getEmail();

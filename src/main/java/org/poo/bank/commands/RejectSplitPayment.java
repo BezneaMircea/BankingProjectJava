@@ -3,7 +3,7 @@ package org.poo.bank.commands;
 import org.poo.bank.Bank;
 import org.poo.bank.users.User;
 
-public class RejectSplitPayment implements Command {
+public final class RejectSplitPayment implements Command {
     private final Bank bank;
     private final String command;
     private final String email;
@@ -31,6 +31,7 @@ public class RejectSplitPayment implements Command {
         try {
             payment.refusePayment();
             payment.execute();
-        } catch (NullPointerException ignored){}
+        } catch (NullPointerException ignored) {
+        }
     }
 }

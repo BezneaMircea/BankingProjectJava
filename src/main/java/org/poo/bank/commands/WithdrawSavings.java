@@ -2,7 +2,6 @@ package org.poo.bank.commands;
 
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
-import org.poo.bank.commerciants.Commerciant;
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
 import org.poo.bank.transactions.WithdrawSavingsTransaction;
@@ -76,7 +75,9 @@ public final class WithdrawSavings implements Command, Transactionable {
     }
 
     @Override
-    public void addTransaction(TransactionInput input, User user, Account account) {
-        bank.generateTransaction(input).addTransaction(user, account);
+    public void addTransaction(final TransactionInput input,
+                               final User user,
+                               final Account associatedAccount) {
+        bank.generateTransaction(input).addTransaction(user, associatedAccount);
     }
 }

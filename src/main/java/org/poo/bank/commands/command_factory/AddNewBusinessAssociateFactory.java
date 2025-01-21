@@ -5,7 +5,7 @@ import org.poo.bank.commands.AddNewBusinessAssociate;
 import org.poo.bank.commands.Command;
 import org.poo.fileio.CommandInput;
 
-public class AddNewBusinessAssociateFactory implements CommandFactory {
+public final class AddNewBusinessAssociateFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final String role;

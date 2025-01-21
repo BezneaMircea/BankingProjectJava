@@ -5,7 +5,7 @@ import org.poo.bank.commands.CashWithdrawal;
 import org.poo.bank.commands.Command;
 import org.poo.fileio.CommandInput;
 
-public class CashWithdrawalFactory implements CommandFactory {
+public final class CashWithdrawalFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final String cardNumber;

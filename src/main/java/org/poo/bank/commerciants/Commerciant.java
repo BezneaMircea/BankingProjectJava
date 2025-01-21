@@ -119,24 +119,31 @@ public abstract class Commerciant implements Comparable<Commerciant> {
      * towards this commerciant
      * @param associatedAccount the account
      */
-    public void incrementAccountTransactions(Account associatedAccount) {
+    public void incrementAccountTransactions(final Account associatedAccount) {
         nrTransactionsByAccount.merge(associatedAccount, 1, Integer::sum);
     }
 
     /**
      * Method to get the number of transactions that an account made
      * towards this commerciant
-     * @param account the account
+     * @param associatedAccount the account
      * @return the integer representing the number of transactions
      */
-    public int getNrAccountTransactions(Account account) {
-        Integer nrTransactions = nrTransactionsByAccount.get(account);
-        if (nrTransactions == null)
+    public int getNrAccountTransactions(final Account associatedAccount) {
+        Integer nrTransactions = nrTransactionsByAccount.get(associatedAccount);
+        if (nrTransactions == null) {
             return 0;
+        }
 
         return nrTransactions;
     }
 
+    /**
+     * Method used compare two commerciants.
+     * They get compared by name
+     * @param o the object to be compared.
+     * @return
+     */
     @Override
     public int compareTo(final Commerciant o) {
         return name.compareTo(o.getName());

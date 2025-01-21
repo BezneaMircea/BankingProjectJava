@@ -12,7 +12,7 @@ import org.poo.bank.users.users_strategy.UserStrategy;
 import org.poo.bank.users.users_strategy.UserStrategyFactory;
 
 public final class UpgradePlan implements Command, Transactionable {
-    /// Note that this is currently in "RON"
+    /// These constants are in the "RON" currency
     public static final int MIN_PAYMENT_FOR_UPGRADE = 300;
     public static final int MIN_NR_OF_PAYMENTS_FOR_UPGRADE = 5;
 
@@ -49,7 +49,8 @@ public final class UpgradePlan implements Command, Transactionable {
         String neededSumString = currentStrategy.accept(targetedStrategy);
         try {
             double neededSum = Double.parseDouble(neededSumString);
-            double convertedSum = neededSum * bank.getRate(Commerciant.MAIN_CURRENCY, account.getCurrency());
+            double convertedSum = neededSum * bank.getRate(Commerciant.MAIN_CURRENCY,
+                                                           account.getCurrency());
             if (account.getBalance() < convertedSum) {
                 error = Account.INSUFFICIENT_FUNDS;
             } else {
@@ -62,8 +63,9 @@ public final class UpgradePlan implements Command, Transactionable {
 
 
 
-        TransactionInput transactionInput = new TransactionInput.Builder(Transaction.Type.UPGRADE_PLAN,
-                timestamp, UpgradePlanTransaction.UPGRADE_PLAN)
+        TransactionInput transactionInput = new TransactionInput
+                .Builder(Transaction.Type.UPGRADE_PLAN,
+                         timestamp, UpgradePlanTransaction.UPGRADE_PLAN)
                 .account(accountIban)
                 .newPlanType(newPlanType)
                 .error(error)
@@ -72,7 +74,9 @@ public final class UpgradePlan implements Command, Transactionable {
     }
 
     @Override
-    public void addTransaction(TransactionInput input, User user, Account account) {
-        bank.generateTransaction(input).addTransaction(user, account);
+    public void addTransaction(final TransactionInput input,
+                               final User user,
+                               final Account associatedAccount) {
+        bank.generateTransaction(input).addTransaction(user, associatedAccount);
     }
 }

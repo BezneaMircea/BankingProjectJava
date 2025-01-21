@@ -5,7 +5,7 @@ import org.poo.bank.commands.Command;
 import org.poo.bank.commands.WithdrawSavings;
 import org.poo.fileio.CommandInput;
 
-public class WithdrawSavingsFactory implements CommandFactory {
+public final class WithdrawSavingsFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final String account;

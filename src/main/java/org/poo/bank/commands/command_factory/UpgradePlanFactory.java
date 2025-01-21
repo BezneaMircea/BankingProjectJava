@@ -5,7 +5,7 @@ import org.poo.bank.commands.Command;
 import org.poo.bank.commands.UpgradePlan;
 import org.poo.fileio.CommandInput;
 
-public class UpgradePlanFactory implements CommandFactory {
+public final class UpgradePlanFactory implements CommandFactory {
     private final Bank bank;
     private final String command;
     private final String newPlanType;

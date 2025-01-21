@@ -55,13 +55,15 @@ public class SplitPayment implements Command, Transactionable {
         users = null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute() {
         /// It s the first time this method is called
         if (users == null) {
             users = getUsers();
             if (users == null) {
-                ///TODO:
                 return;
             }
             addPaymentToUsers(users);
@@ -76,63 +78,15 @@ public class SplitPayment implements Command, Transactionable {
         }
 
         /// Not everyone accepted yet
-        if (accountsThatAccepted != accountsForSplit.size())
+        if (accountsThatAccepted != accountsForSplit.size()) {
             return;
+        }
 
         everyoneAccepted();
     }
 
-    @Override
-    public void addTransaction(final TransactionInput input, final User user, final Account account) {
-        bank.generateTransaction(input).addTransaction(user, account);
-    }
 
-    private List<User> getUsers() {
-        List<User> users = new ArrayList<>();
-
-        for (String iban : accountsForSplit) {
-            Account account = bank.getAccount(iban);
-            if (account == null) {
-                return null;
-            }
-
-            User ownerOfAccount = bank.getUser(account.getOwnerEmail());
-            if (ownerOfAccount == null) {
-                return null;
-            }
-
-            users.add(ownerOfAccount);
-        }
-        return users;
-    }
-
-    protected void addPaymentToUsers(List<User> users) {
-        for (User user : users) {
-            user.getAllSplitPayments().add(this);
-        }
-    }
-
-    protected void removePaymentFromUsers() {
-        for (User user : users) {
-            user.getAllSplitPayments().remove(this);
-        }
-    }
-
-    protected TransactionInput createTransactionRejected() {
-        String description = String.format(SplitPaymentTranscation.SPLIT_PAYMENT_DESCRIPTION,
-                amount, currency);
-
-        return new TransactionInput.Builder(Transaction.Type.SPLIT_PAYMENT,
-                timestamp, description)
-                .involvedAccounts(accountsForSplit)
-                .setSplitPaymentType(type.getString())
-                .amount(amount)
-                .currency(currency)
-                .error(REJECTED)
-                .build();
-    }
-
-    private void addTransactionToAll(TransactionInput input) {
+    private void addTransactionToAll(final TransactionInput input) {
         for (String iban : accountsForSplit) {
             Account account = bank.getAccount(iban);
             User owner = bank.getUser(account.getOwnerEmail());
@@ -140,6 +94,10 @@ public class SplitPayment implements Command, Transactionable {
         }
     }
 
+    /**
+     * Method used when everyone accepted the payment.
+     * There are different types of split payment.
+     */
     protected void everyoneAccepted() {
         int nrAccounts = accountsForSplit.size();
         double amountToPay = amount / nrAccounts;
@@ -179,13 +137,81 @@ public class SplitPayment implements Command, Transactionable {
         }
     }
 
+    private List<User> getUsers() {
+        List<User> payingUsers = new ArrayList<>();
+
+        for (String iban : accountsForSplit) {
+            Account account = bank.getAccount(iban);
+            if (account == null) {
+                return null;
+            }
+
+            User ownerOfAccount = bank.getUser(account.getOwnerEmail());
+            if (ownerOfAccount == null) {
+                return null;
+            }
+
+            payingUsers.add(ownerOfAccount);
+        }
+        return payingUsers;
+    }
+
+    private void addPaymentToUsers(final List<User> payingUsers) {
+        for (User user : payingUsers) {
+            user.getAllSplitPayments().add(this);
+        }
+    }
+
+
+    private void removePaymentFromUsers() {
+        for (User user : users) {
+            user.getAllSplitPayments().remove(this);
+        }
+    }
+
+    /**
+     * Method used to create the rejected transaction
+     * (aka a User rejected the payment)
+     * @return the TransactionInput object representing the input of the wanted
+     *         transaction
+     */
+    protected TransactionInput createTransactionRejected() {
+        String description = String.format(SplitPaymentTranscation.SPLIT_PAYMENT_DESCRIPTION,
+                amount, currency);
+
+        return new TransactionInput.Builder(Transaction.Type.SPLIT_PAYMENT,
+                timestamp, description)
+                .involvedAccounts(accountsForSplit)
+                .setSplitPaymentType(type.getString())
+                .amount(amount)
+                .currency(currency)
+                .error(REJECTED)
+                .build();
+    }
+
+
+    /**
+     * Method used to increment the number of accounts that accepted the payment
+     */
     public void incrementAccountsThatAccepted() {
         accountsThatAccepted++;
     }
 
+    /**
+     * Method used to call this payment off by making the accountsThatAccepted = -1
+     */
     public void refusePayment() {
         accountsThatAccepted = -1;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void addTransaction(final TransactionInput input,
+                               final User user,
+                               final Account account) {
+        bank.generateTransaction(input).addTransaction(user, account);
+    }
 
 }

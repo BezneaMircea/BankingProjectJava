@@ -2,7 +2,7 @@ package org.poo.bank.commands;
 
 import org.poo.bank.Bank;
 
-public class AddNewBusinessAssociate implements Command {
+public final class AddNewBusinessAssociate implements Command {
     private final Bank bank;
     private final String command;
     private final String role;
