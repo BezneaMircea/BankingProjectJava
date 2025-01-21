@@ -19,11 +19,12 @@ public final class Utils {
     private static final double POWER = 10000.0;
 
 
+
     private static Random ibanRandom = new Random(IBAN_SEED);
     private static Random cardRandom = new Random(CARD_SEED);
 
     public static final ObjectMapper MAPPER = new ObjectMapper();
-
+    public static final String MAIN_CURRENCY = "RON";
     /**
      * rounds a number to integer if it is close enough
      * @param number number to round if close

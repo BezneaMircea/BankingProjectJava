@@ -61,6 +61,7 @@ public class SplitPayment implements Command, Transactionable {
         if (users == null) {
             users = getUsers();
             if (users == null) {
+                ///TODO:
                 return;
             }
             addPaymentToUsers(users);

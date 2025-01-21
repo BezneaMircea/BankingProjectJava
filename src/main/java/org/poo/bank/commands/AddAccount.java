@@ -4,9 +4,11 @@ import lombok.Getter;
 import org.poo.bank.Bank;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.accounts.AccountInput;
+import org.poo.bank.accounts.BusinessAccount;
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransactionInput;
 import org.poo.bank.users.User;
+import org.poo.utils.Utils;
 
 /**
  * Class used to represent the addAccount command
@@ -48,8 +50,12 @@ public final class AddAccount implements Command, Transactionable {
 
     @Override
     public void execute() {
+        double rate = bank.getRate(Utils.MAIN_CURRENCY, currency);
+
         AccountInput newAccountInput = new AccountInput.Builder(email, currency, accountType)
                 .interestRate(interestRate)
+                .depositLimit(BusinessAccount.INITIAL_DEPOSIT_LIMIT * rate)
+                .spendingLimit(BusinessAccount.INITIAL_SPENDING_LIMIT * rate)
                 .build();
 
         Account accountToAdd = bank.createAccount(newAccountInput);

@@ -7,6 +7,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.poo.bank.accounts.Account;
 import org.poo.bank.accounts.AccountInput;
+import org.poo.bank.accounts.account_factory.BusinessAccountFactory;
 import org.poo.bank.cards.Card;
 import org.poo.bank.cards.CardInput;
 import org.poo.bank.cards.card_factory.CardFactory;
@@ -159,6 +160,7 @@ public final class Bank {
         switch (input.getAccountType()) {
             case Account.Type.SAVINGS -> factory = new EconomyAccountFactory(input);
             case Account.Type.CLASSIC -> factory = new StandardAccountFactory(input);
+            case Account.Type.BUSINESS -> factory = new BusinessAccountFactory(input);
             default -> throw new IllegalArgumentException("Invalid account type");
         }
 

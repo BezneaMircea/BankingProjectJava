@@ -51,7 +51,8 @@ public abstract class Account {
     @Getter
     public enum Type {
         CLASSIC("classic"),
-        SAVINGS("savings");
+        SAVINGS("savings"),
+        BUSINESS("business");
 
         private final String value;
 
@@ -295,4 +296,9 @@ public abstract class Account {
     public Double getSpendingThresholdAmount() { return null;}
     public void setSpendingThresholdAmount(Double newAmount ) {}
 
+    public Double getSpendingLimit() {return null;}
+    public void setSpendingLimit(final double newLimit) {}
+
+    public Double getDepositLimit() {return null;}
+    public void setDepositLimit(final double newLimit) {}
 }
