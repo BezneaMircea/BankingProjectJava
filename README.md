@@ -11,9 +11,9 @@
 
 ## <span style="color: darkgreen;">Introduction:</span>
 
-This project is implements the backend logic for a banking application  
+This project implements the backend logic for a banking application  
 with various operations (e.g. addAccount, payOnline, sendMoney) using the  
-Command, Factory and Builder design patterns.
+Command, Factory, Strategy, Visitor and Builder design patterns.
 
 # <span style="color: darkgreen;">Packaging:</span>
 ## 1. The _**bank**_ package
@@ -125,7 +125,7 @@ it separates the creation of an object to the object itself
 (factories are created using (CommandInput, TransactionInput etc.)).  
 For very simple objects (like Strategies that have no attributes)  
 it is bettern to have only one factory file for not overloading the  
-code with too unuseful files
+code with unusefull files
 
 
 _**Cards, Accounts, Transactions**_ are created in _**Bank**_   
