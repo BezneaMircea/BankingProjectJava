@@ -147,4 +147,3 @@ design pattern concepts take on the assignment.
 
 #### Thank you for your attention!
 
-![Homework done](https://media.tenor.com/9qooEZ2uscQAAAAM/sleepy-tom-and-jerry.gif)
